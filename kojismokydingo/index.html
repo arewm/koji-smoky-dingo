@@ -1,0 +1,944 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>Koji Smoky Dingo &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="prev" title="Koji Smoky Dingo" href="../" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../" title="Koji Smoky Dingo"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-smoky-dingo">
+<h1>Koji Smoky Dingo<a class="headerlink" href="#koji-smoky-dingo" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-kojismokydingo">
+<span id="kojismokydingo"></span><h2>kojismokydingo<a class="headerlink" href="#module-kojismokydingo" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoky Dingo - Utility functions and command line plugins for
+Koji users</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="kojismokydingo.AnonClientSession">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">AnonClientSession</code><span class="sig-paren">(</span><em class="sig-param">profile='koji'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#AnonClientSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.AnonClientSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.ManagedClientSession" title="kojismokydingo.ManagedClientSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.ManagedClientSession</span></code></a></p>
+<p>A koji.ClientSession that can be used as via the 'with' keyword to
+provide a managed session that will handle login and logout. Also
+takes care of loading the relevant profile configuration.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.BadDingo">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">BadDingo</code><a class="reference internal" href="../_modules/kojismokydingo/#BadDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.BadDingo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.BadDingo.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'Something bad happened'</em><a class="headerlink" href="#kojismokydingo.BadDingo.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.ManagedClientSession">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">ManagedClientSession</code><span class="sig-paren">(</span><em class="sig-param">profile='koji'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#ManagedClientSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.ManagedClientSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">koji.ClientSession</span></code></p>
+<p>A koji.ClientSession that can be used as via the 'with' keyword to
+provide a managed session that will handle login and logout. Also
+takes care of loading the relevant profile configuration.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchBuild">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchBuild</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchBuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchBuild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchBuild.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such build'</em><a class="headerlink" href="#kojismokydingo.NoSuchBuild.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchChannel">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchChannel</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchChannel.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such builder channel'</em><a class="headerlink" href="#kojismokydingo.NoSuchChannel.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchContentGenerator">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchContentGenerator</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchContentGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchContentGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchContentGenerator.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such content generator'</em><a class="headerlink" href="#kojismokydingo.NoSuchContentGenerator.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchPermission">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchPermission</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchPermission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchPermission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchPermission.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such permission'</em><a class="headerlink" href="#kojismokydingo.NoSuchPermission.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchTag">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchTag</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchTag.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such tag'</em><a class="headerlink" href="#kojismokydingo.NoSuchTag.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchTarget">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchTarget</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTarget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchTarget.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such target'</em><a class="headerlink" href="#kojismokydingo.NoSuchTarget.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchTask">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchTask</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchTask.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such task'</em><a class="headerlink" href="#kojismokydingo.NoSuchTask.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchUser">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchUser</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchUser.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such user'</em><a class="headerlink" href="#kojismokydingo.NoSuchUser.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NotPermitted">
+<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NotPermitted</code><a class="reference internal" href="../_modules/kojismokydingo/#NotPermitted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NotPermitted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.NotPermitted.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'Insufficient permissions'</em><a class="headerlink" href="#kojismokydingo.NotPermitted.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_build_archives">
+<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a chunking multicall to fetch the the archives of builds
+via session.listArchives for each build ID in build_ids.</p>
+<p>Returns an OrderedDict associating the individual build IDs with
+their resulting archive lists.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_buildroots">
+<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_buildroots</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">broot_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a chunking multicall to fetch the buildroot data via
+session.getBuildroot for each ID in broot_ids.</p>
+<p>Returns an OrderedDict associating the individual buildroot IDs
+with their resulting buildroot info dicts.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_builds">
+<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load many buildinfo dicts from a koji client session and a
+sequence of NVRs.</p>
+<p>Returns an OrderedDict associating the individual NVRs with their
+resulting buildinfo.</p>
+<p>If err is True (default) then any missing build info will raise a
+NoSuchBuild exception. If err is False, then a None will be
+substituted into the ordered dict for the result.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_rpm_sigs">
+<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_rpm_sigs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">rpm_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_rpm_sigs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_rpm_sigs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a chunking multicall to fetch the signatures for a list of
+RPM via session.queryRPMSigs for each ID in rpm_ids.</p>
+<p>Returns an OrderedDict associating the individual RPM IDs with their
+resulting RPM signature lists.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_tags">
+<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tags</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_tasks">
+<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tasks</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-kojismokydingo.archives">
+<span id="kojismokydingo-archives"></span><h2>kojismokydingo.archives<a class="headerlink" href="#module-kojismokydingo.archives" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoky Dingo - Archive Utilities</p>
+<p>Functions for working with gathering and transforming Koji RPMs and
+archives</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.archives.filter_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">filter_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archives</em>, <em class="sig-param">archive_types</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#filter_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.filter_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of archives (or RPMs dressed up like archives),
+return a new list of those archives which are of the given archive
+types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>archives</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- Archive infos to be filtered</p></li>
+<li><p><strong>archive_types</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) -- Desired archive type extensions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_build_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a list of archive dicts associated with a build info,
+optionally filtered by build-type and signing keys (for RPMs). The
+archives will be decorated with an additional &quot;filepath&quot; entry,
+the value of which is an expanded path to the file itself.</p>
+<p>This is very similar to the file listing that is baked into the
+koji buildinfo command.</p>
+<p>Koji does not normally consider RPMs to be archives, but we will
+attempt to homogenize them together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>binfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- Build info to fetch archives for</p></li>
+<li><p><strong>btype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- BType to filter for. Default None for all types.</p></li>
+<li><p><strong>rpmkeys</strong> -- RPM signatures to filter for, in order of</p></li>
+</ul>
+</dd>
+</dl>
+<p>preference. An empty string matches the unsigned copy. Default ()
+for no signature filtering.
+:type rpmkeys: list[str], optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- The root dir for the archive file paths, default None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_build_image_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_image_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_build_image_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_image_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers a list of image archives for a given build_info. The
+archive records are augmented with an additional &quot;filepath&quot; entry,
+the value of which is an expanded path to the file itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>binfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- Build info to fetch archives for</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- The root dir for the archive file paths, default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_build_maven_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_maven_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_build_maven_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_maven_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers a list of maven archives for a given build_info. The
+archive records are augmented with an additional &quot;filepath&quot; entry,
+the value of which is an expanded path to the file itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>binfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- Build info to fetch archives for</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- The root dir for the archive file paths, default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_build_rpms">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_build_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_rpms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_build_win_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_win_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_build_win_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_win_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers a list of Windows archives for a given build_info. The
+archive records are augmented with an additional &quot;filepath&quot; entry,
+the value of which is an expanded path to the file itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>binfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- Build info to fetch archives for</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- The root dir for the archive file paths, default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_latest_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_latest_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather the latest archives from a tag heirarchy. Rules for what
+constitutes &quot;latest&quot; may change slightly depending on the archive
+types -- specifically maven.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tagname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Name of the tag to gather archives from</p></li>
+<li><p><strong>btype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- Name of the BType to gather. Default, gather all</p></li>
+<li><p><strong>rpmkeys</strong> -- List of RPM signatures to filter by. Only used when</p></li>
+</ul>
+</dd>
+</dl>
+<p>fetching type of rpm or None (all).
+:type rpmkeys: list[str]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Path prefix for archive filepaths.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_latest_image_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_image_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_latest_image_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_image_archives" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_latest_maven_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_maven_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_latest_maven_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_maven_archives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to session.getLatestMavenArchives(tagname) but augments
+the results to include a new &quot;filepath&quot; entry which will point to
+the matching maven artifact's file location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tagname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Name of the tag to search in for maven artifacts</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_latest_rpms">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_latest_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_rpms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to session.getLatestRPMS(tagname) but will filter by
+available signatures, and augments the results to include a new
+&quot;filepath&quot; entry which will point to the matching RPM file
+location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tagname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Name of the tag to search in for RPMs</p></li>
+<li><p><strong>rpmkeys</strong> -- RPM signatures to filter for, in order of</p></li>
+</ul>
+</dd>
+</dl>
+<p>preference. An empty string matches the unsigned copy. Default ()
+for no signature filtering.
+:type rpmkeys: list[str], optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- The root dir for the archive file paths, default None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_latest_win_archives">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_win_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_latest_win_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_win_archives" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.archives.gather_signed_rpms">
+<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_signed_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archives</em>, <em class="sig-param">sigkeys</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/archives/#gather_signed_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_signed_rpms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of RPM archive dicts, query the session for all the
+pertinent signature headers, then try and find the best matching
+signed copy of each RPM. An empty string at the end of sigkeys
+will allow an unsigned copy to be included if no signed copies
+match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>archives</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- list of RPM archive dicts</p></li>
+<li><p><strong>sigkeys</strong> -- list of signature fingerprints, in order of</p></li>
+</ul>
+</dd>
+</dl>
+<p>precedence
+:type sigkeys: list[str]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kojismokydingo.builds">
+<span id="kojismokydingo-builds"></span><h2>kojismokydingo.builds<a class="headerlink" href="#module-kojismokydingo.builds" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoky Dingo - Build Utilities</p>
+<p>Functions for working with Koji builds</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.builds.build_dedup">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">build_dedup</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#build_dedup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_dedup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dictionaries, return a de-duplicated
+list of same, with order preserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be de-duplicated.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.build_id_sort">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">build_id_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#build_id_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_id_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dictionaries, return a de-duplicated
+list of same, sorted by the build ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be sorted and de-duplicated</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.build_nvr_sort">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">build_nvr_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#build_nvr_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_nvr_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dictionaries, deduplicate and then
+sort them by Name, Epoch, Version, and Release using RPM's
+variation of comparison</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be sorted and de-duplicated</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.bulk_tag_builds">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tagid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's ID</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- Build infos to be tagged</p></li>
+<li><p><strong>force</strong> -- Force tagging. Re-tags if necessary, bypasses</p></li>
+</ul>
+</dd>
+</dl>
+<p>policy. Default, False
+:type force: bool, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Send tagging notifications. Default, False</p></li>
+<li><p><strong>size</strong> -- Count of tagging operations to perform in a single</p></li>
+</ul>
+</dd>
+</dl>
+<p>multicall. Default, 100
+:type size: int, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>strict</strong> -- Raise an exception and discontinue execution at the</p>
+</dd>
+</dl>
+<p>first error. Default, False
+:type strict: bool, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.bulk_tag_nvrs">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">bulk_tag_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#bulk_tag_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_nvrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tags a large number of builds using multicall invocations of
+tagBuildBypass.</p>
+<p>The entire list of NVRs is validated first, checking that such
+a build exists. If strict is True then a missing build will cause a
+NoSuchBuild exception to be raised. If strict is False, then missing
+builds will be omitted from the tagging operation.</p>
+<p>The list of builds is de-duplicated, preserving order of the first
+instance found in the list of NVRs.</p>
+<p>Returns a list of tuples, pairing build info dicts with the result of
+a tagBuildBypass call for that build.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.decorate_build_cg_list">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">decorate_build_cg_list</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#decorate_build_cg_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.decorate_build_cg_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Augments a list of build_info dicts with two new keys:</p>
+<ul class="simple">
+<li><p>archive_cg_ids is a set of content generator IDs for each
+archive of the build</p></li>
+<li><p>archive_cg_names is a set of content generator names for each
+archive of the build</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- list of build infos to decorate and return</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.filter_imported">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">by_cg=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dicts, return those which are
+imports.</p>
+<p>if negate is True, then behavior is flipped and only non-imports
+are emitted (and the by_cg parameter is ignored)</p>
+<p>If by_cg is not specified, then only non CG imports are emitted.
+If by_cg is specified, then emit only those imports which are from
+a content generator in that set (or any content generators if
+'any' is in the by_cg list).</p>
+<p>build_infos may have been decorated by the decorate_build_cg_list
+function. This provides an accurate listing of the content
+generators which have been used to import the build (if any). In
+the event that they have not been thus decorated, the cg filtering
+will rely on the cg_name setting on the build itself, which will
+only have been provided if the content generator reserved the
+build ahead of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to filter through</p></li>
+<li><p><strong>negate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- whether to negate the imported test, Default False</p></li>
+<li><p><strong>by_cg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- Content generator names to filter for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.iter_bulk_tag_builds">
+<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">iter_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagid</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/builds/#iter_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tags a large number of builds using multicall invocations of
+tagBuildBypass. Builds are specified by build info dicts.</p>
+<p>yields lists of tuples containing a build info dict and the result
+of the tagBuildBypass call for that build. This gives the caller a
+chance to record the results of each multicall, and to present
+feedback to a user to indicate that the operations are continuing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tagid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's ID</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- Build infos to be tagged</p></li>
+<li><p><strong>force</strong> -- Force tagging. Re-tags if necessary, bypasses</p></li>
+</ul>
+</dd>
+</dl>
+<p>policy. Default, False
+:type force: bool, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Send tagging notifications. Default, False</p></li>
+<li><p><strong>size</strong> -- Count of tagging operations to perform in a single</p></li>
+</ul>
+</dd>
+</dl>
+<p>multicall. Default, 100
+:type size: int, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>strict</strong> -- Raise an exception and discontinue execution at the</p>
+</dd>
+</dl>
+<p>first error. Default, False
+:type strict: bool, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kojismokydingo.clients">
+<span id="kojismokydingo-client"></span><h2>kojismokydingo.client<a class="headerlink" href="#module-kojismokydingo.clients" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoky Dingo - Client Utils</p>
+<p>Some simple functions for working with the local client configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.clients.rebuild_client_config">
+<code class="sig-prename descclassname">kojismokydingo.clients.</code><code class="sig-name descname">rebuild_client_config</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">goptions</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/clients/#rebuild_client_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.clients.rebuild_client_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstructs a koji client configuration based on the fields of a
+session and a session's goptions. Returns a tuple containing the
+active profile's name, and the configuration as a dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kojismokydingo.hosts">
+<span id="kojismokydingo-hosts"></span><h2>kojismokydingo.hosts<a class="headerlink" href="#module-kojismokydingo.hosts" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoky Dingo - Host Utilities</p>
+<p>Functions for working with Koji hosts</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.hosts.gather_hosts_checkins">
+<code class="sig-prename descclassname">kojismokydingo.hosts.</code><code class="sig-name descname">gather_hosts_checkins</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">arches=None</em>, <em class="sig-param">channel=None</em>, <em class="sig-param">skiplist=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/hosts/#gather_hosts_checkins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.hosts.gather_hosts_checkins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to session.listHosts, but results are decorated with a new
+&quot;last_update&quot; entry, which is the timestamp for the host's most
+recent check-in with the hub. This can be used to identify
+builders which are enabled, but no longer responding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arches</strong> -- List of architecture names to filter builders by.</p>
+</dd>
+</dl>
+<p>Default, all arches
+:type arches: list[str], optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> -- Channel name to filter builders by. Default,</p>
+</dd>
+</dl>
+<p>builders in any channel.
+:type channel: str, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>skiplist</strong> -- List of glob-style patterns of builders to</p>
+</dd>
+</dl>
+<p>omit. Default, all builders included
+:type skiplist: list[str], optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kojismokydingo.tags">
+<span id="kojismokydingo-tags"></span><h2>kojismokydingo.tags<a class="headerlink" href="#module-kojismokydingo.tags" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoky Dingo - tags and targets</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p><a class="reference external" href="mailto:cobrien&#37;&#52;&#48;redhat&#46;com">cobrien<span>&#64;</span>redhat<span>&#46;</span>com</a></p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL version 3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.tags.collect_tag_extras">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">collect_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/tags/#collect_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.collect_tag_extras" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to session.getBuildConfig but with additional information
+recording which tag in the inheritance supplied the setting.</p>
+<p>Returns an OrderedDict of tag extra settings, keyed by the name of
+the setting. Each setting is represented as its own dict composed
+of the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>name - the extra setting key</p></li>
+<li><p>value - the extra setting value</p></li>
+<li><p>tag_name - the name of the tag this setting came from</p></li>
+<li><p>tag_id - the ID of the tag this setting came from</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.convert_tag_extras">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">convert_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">taginfo</em>, <em class="sig-param">into=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/tags/#convert_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.convert_tag_extras" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.find_inheritance">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">find_inheritance</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">parent_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/tags/#find_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.find_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.get_affected_targets">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">get_affected_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname_list</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/tags/#get_affected_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.get_affected_targets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.renum_inheritance">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">renum_inheritance</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">begin</em>, <em class="sig-param">step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/tags/#renum_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.renum_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd><p>a new copy of the tag inheritance data, renumbered</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.resolve_tag">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">resolve_tag</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">name</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/tags/#resolve_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.resolve_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a name, resolve it to a taginfo.</p>
+<p>If target is False, name is treated as a tag's name.</p>
+<p>If target is True, name is treated as a target's name, and the
+resulting taginfo will be from that target's build tag.</p>
+<p>Raises NoSuchTarget or NoSuchTag as appropriate</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kojismokydingo.users">
+<span id="kojismokydingo-users"></span><h2>kojismokydingo.users<a class="headerlink" href="#module-kojismokydingo.users" title="Permalink to this headline">¶</a></h2>
+<p>Koji Smoki Dingo - users and permissions</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p><a class="reference external" href="mailto:cobrien&#37;&#52;&#48;redhat&#46;com">cobrien<span>&#64;</span>redhat<span>&#46;</span>com</a></p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL version 3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.users.collect_cg_access">
+<code class="sig-prename descclassname">kojismokydingo.users.</code><code class="sig-name descname">collect_cg_access</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">username</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/users/#collect_cg_access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.users.collect_cg_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of names of content generators username has access to
+run CGImport with.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.users.collect_cgs">
+<code class="sig-prename descclassname">kojismokydingo.users.</code><code class="sig-name descname">collect_cgs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/users/#collect_cgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.users.collect_cgs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.users.collect_perminfo">
+<code class="sig-prename descclassname">kojismokydingo.users.</code><code class="sig-name descname">collect_perminfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">permission</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/users/#collect_perminfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.users.collect_perminfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather information about a named permission, including the list of
+users granted the permission, as well as the date that the
+permission was granted and the user that granted it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>session - an active koji session</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>permission - the string name of a permission</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.users.collect_userinfo">
+<code class="sig-prename descclassname">kojismokydingo.users.</code><code class="sig-name descname">collect_userinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/users/#collect_userinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.users.collect_userinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather information about a named user, including the list of
+permissions the user has.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>session - an active koji session</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>user - the string name of a user or their kerberos ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Koji Smoky Dingo</a><ul>
+<li><a class="reference internal" href="#module-kojismokydingo">kojismokydingo</a></li>
+<li><a class="reference internal" href="#module-kojismokydingo.archives">kojismokydingo.archives</a></li>
+<li><a class="reference internal" href="#module-kojismokydingo.builds">kojismokydingo.builds</a></li>
+<li><a class="reference internal" href="#module-kojismokydingo.clients">kojismokydingo.client</a></li>
+<li><a class="reference internal" href="#module-kojismokydingo.hosts">kojismokydingo.hosts</a></li>
+<li><a class="reference internal" href="#module-kojismokydingo.tags">kojismokydingo.tags</a></li>
+<li><a class="reference internal" href="#module-kojismokydingo.users">kojismokydingo.users</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Koji Smoky Dingo</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/kojismokydingo.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../" title="Koji Smoky Dingo"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

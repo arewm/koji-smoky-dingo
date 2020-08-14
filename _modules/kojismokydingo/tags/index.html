@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.tags</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - tags and targets</span>
+
+<span class="sd">:author: cobrien@redhat.com</span>
+<span class="sd">:license: GPL version 3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">NoSuchTarget</span>
+
+
+<div class="viewcode-block" id="resolve_tag"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.resolve_tag">[docs]</a><span class="k">def</span> <span class="nf">resolve_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a name, resolve it to a taginfo.</span>
+
+<span class="sd">    If target is False, name is treated as a tag&#39;s name.</span>
+
+<span class="sd">    If target is True, name is treated as a target&#39;s name, and the</span>
+<span class="sd">    resulting taginfo will be from that target&#39;s build tag.</span>
+
+<span class="sd">    Raises NoSuchTarget or NoSuchTag as appropriate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">tinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTarget</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tinfo</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTarget</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">tinfo</span><span class="p">[</span><span class="s2">&quot;build_tag_name&quot;</span><span class="p">]</span>
+
+    <span class="n">tinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tinfo</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tinfo</span></div>
+
+
+<div class="viewcode-block" id="get_affected_targets"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.get_affected_targets">[docs]</a><span class="k">def</span> <span class="nf">get_affected_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname_list</span><span class="p">):</span>
+
+    <span class="n">tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">tname</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">tagname_list</span><span class="p">):</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tag</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tname</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="p">]</span>
+
+    <span class="n">tagids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">((</span><span class="n">ch</span><span class="p">[</span><span class="s1">&#39;tag_id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">ti</span><span class="p">)</span> <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">)))</span>
+    <span class="n">tagids</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">)</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="n">tagids</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">getBuildTargets</span><span class="p">(</span><span class="n">buildTagID</span><span class="o">=</span><span class="n">ti</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span> <span class="k">if</span> <span class="n">t</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="renum_inheritance"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.renum_inheritance">[docs]</a><span class="k">def</span> <span class="nf">renum_inheritance</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    a new copy of the tag inheritance data, renumbered</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">renumbered</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">inher</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inheritance</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">inher</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">begin</span> <span class="o">+</span> <span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span>
+        <span class="n">renumbered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">renumbered</span></div>
+
+
+<div class="viewcode-block" id="find_inheritance"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.find_inheritance">[docs]</a><span class="k">def</span> <span class="nf">find_inheritance</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inheritance</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">parent_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="convert_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.convert_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">convert_tag_extras</span><span class="p">(</span><span class="n">taginfo</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">into</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">into</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;extra&quot;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+            <span class="n">found</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">val</span><span class="p">,</span>
+                <span class="s2">&quot;tag_name&quot;</span><span class="p">:</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;tag_id&quot;</span><span class="p">:</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="collect_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.collect_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">collect_tag_extras</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Similar to session.getBuildConfig but with additional information</span>
+<span class="sd">    recording which tag in the inheritance supplied the setting.</span>
+
+<span class="sd">    Returns an OrderedDict of tag extra settings, keyed by the name of</span>
+<span class="sd">    the setting. Each setting is represented as its own dict composed</span>
+<span class="sd">    of the following keys:</span>
+<span class="sd">      * name - the extra setting key</span>
+<span class="sd">      * value - the extra setting value</span>
+<span class="sd">      * tag_name - the name of the tag this setting came from</span>
+<span class="sd">      * tag_id - the ID of the tag this setting came from</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># this borrows heavily from the hub implementation of</span>
+    <span class="c1"># getBuildConfig, but gives us a chance to record what tag in the</span>
+    <span class="c1"># inheritance that the setting is coming from</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="n">convert_tag_extras</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+
+    <span class="n">inher</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">inher</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">link</span><span class="p">[</span><span class="s2">&quot;noconfig&quot;</span><span class="p">]:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">])</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+        <span class="n">convert_tag_extras</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="n">found</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

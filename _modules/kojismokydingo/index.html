@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Utility functions and command line plugins for</span>
+<span class="sd">Koji users</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">convertFault</span><span class="p">,</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">Fault</span><span class="p">,</span> <span class="n">ClientSession</span>
+<span class="kn">from</span> <span class="nn">koji_cli.lib</span> <span class="k">import</span> <span class="n">activate_session</span><span class="p">,</span> <span class="n">ensure_connection</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">zip</span>
+
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">chunkseq</span>
+
+
+<div class="viewcode-block" id="ManagedClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.ManagedClientSession">[docs]</a><span class="k">class</span> <span class="nc">ManagedClientSession</span><span class="p">(</span><span class="n">ClientSession</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A koji.ClientSession that can be used as via the &#39;with&#39; keyword to</span>
+<span class="sd">    provide a managed session that will handle login and logout. Also</span>
+<span class="sd">    takes care of loading the relevant profile configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;koji&quot;</span><span class="p">):</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;server&quot;</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ManagedClientSession</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">activate_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">_exc_val</span><span class="p">,</span> <span class="n">_exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rsession</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rsession</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rsession</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">exc_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnonClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.AnonClientSession">[docs]</a><span class="k">class</span> <span class="nc">AnonClientSession</span><span class="p">(</span><span class="n">ManagedClientSession</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A koji.ClientSession that can be used as via the &#39;with&#39; keyword to</span>
+<span class="sd">    provide a managed session that will handle login and logout. Also</span>
+<span class="sd">    takes care of loading the relevant profile configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># we could always set up a connection ahead of time,</span>
+        <span class="c1"># but... the connection will be created when we make our first</span>
+        <span class="c1"># call, so let&#39;s be lazy instead.</span>
+
+        <span class="c1"># ensure_connection(self)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BadDingo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.BadDingo">[docs]</a><span class="k">class</span> <span class="nc">BadDingo</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;Something bad happened&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">orig</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot;: &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">complaint</span><span class="p">,</span> <span class="n">orig</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="NoSuchBuild"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchBuild">[docs]</a><span class="k">class</span> <span class="nc">NoSuchBuild</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such build&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchChannel"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchChannel">[docs]</a><span class="k">class</span> <span class="nc">NoSuchChannel</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such builder channel&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchContentGenerator"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchContentGenerator">[docs]</a><span class="k">class</span> <span class="nc">NoSuchContentGenerator</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such content generator&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchTag"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchTag">[docs]</a><span class="k">class</span> <span class="nc">NoSuchTag</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such tag&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchTarget"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchTarget">[docs]</a><span class="k">class</span> <span class="nc">NoSuchTarget</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such target&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchTask"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchTask">[docs]</a><span class="k">class</span> <span class="nc">NoSuchTask</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such task&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchUser"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchUser">[docs]</a><span class="k">class</span> <span class="nc">NoSuchUser</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such user&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchPermission"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchPermission">[docs]</a><span class="k">class</span> <span class="nc">NoSuchPermission</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such permission&quot;</span></div>
+
+
+<div class="viewcode-block" id="NotPermitted"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NotPermitted">[docs]</a><span class="k">class</span> <span class="nc">NotPermitted</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;Insufficient permissions&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generator utility for multicall loading data from a koji client</span>
+<span class="sd">    session.</span>
+
+<span class="sd">    loadfn is a bound method which will be called with each key in the</span>
+<span class="sd">    keys sequence. Up to size calls will be made at a time.</span>
+
+<span class="sd">    Yields key, result pairs.</span>
+
+<span class="sd">    Will convert any koji faults to exceptions and raise them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">key_chunk</span> <span class="ow">in</span> <span class="n">chunkseq</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">key_chunk</span><span class="p">:</span>
+            <span class="c1"># print(key, file=sys.stderr)</span>
+            <span class="n">loadfn</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">key_chunk</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()):</span>
+            <span class="c1"># print(key, info, file=sys.stderr)</span>
+
+            <span class="k">if</span> <span class="n">info</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;faultCode&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">convertFault</span><span class="p">(</span><span class="n">Fault</span><span class="p">(</span><span class="o">**</span><span class="n">info</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="bulk_load_builds"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_builds">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load many buildinfo dicts from a koji client session and a</span>
+<span class="sd">    sequence of NVRs.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual NVRs with their</span>
+<span class="sd">    resulting buildinfo.</span>
+
+<span class="sd">    If err is True (default) then any missing build info will raise a</span>
+<span class="sd">    NoSuchBuild exception. If err is False, then a None will be</span>
+<span class="sd">    substituted into the ordered dict for the result.</span>
+
+<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
+<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
+<span class="sd">    return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_tasks"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tasks">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tasks</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getTask</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_tags"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tags">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_rpm_sigs"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_rpm_sigs">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_rpm_sigs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">rpm_ids</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a chunking multicall to fetch the signatures for a list of</span>
+<span class="sd">    RPM via session.queryRPMSigs for each ID in rpm_ids.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual RPM IDs with their</span>
+<span class="sd">    resulting RPM signature lists.</span>
+
+<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
+<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
+<span class="sd">    return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">queryRPMSigs</span><span class="p">,</span>
+                                <span class="n">rpm_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_build_archives"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_build_archives">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a chunking multicall to fetch the the archives of builds</span>
+<span class="sd">    via session.listArchives for each build ID in build_ids.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual build IDs with</span>
+<span class="sd">    their resulting archive lists.</span>
+
+<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
+<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
+<span class="sd">    return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">if</span> <span class="n">btype</span><span class="p">:</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_buildroots"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_buildroots">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_buildroots</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">broot_ids</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a chunking multicall to fetch the buildroot data via</span>
+<span class="sd">    session.getBuildroot for each ID in broot_ids.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual buildroot IDs</span>
+<span class="sd">    with their resulting buildroot info dicts.</span>
+
+<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
+<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
+<span class="sd">    return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildroot</span><span class="p">,</span>
+                                <span class="n">broot_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

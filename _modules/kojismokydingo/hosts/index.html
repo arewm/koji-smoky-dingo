@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.hosts &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.hosts</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Host Utilities</span>
+
+<span class="sd">Functions for working with Koji hosts</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iterkeys</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">zip</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchChannel</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">globfilter</span>
+
+
+<div class="viewcode-block" id="gather_hosts_checkins"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.hosts.gather_hosts_checkins">[docs]</a><span class="k">def</span> <span class="nf">gather_hosts_checkins</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">arches</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skiplist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Similar to session.listHosts, but results are decorated with a new</span>
+<span class="sd">    &quot;last_update&quot; entry, which is the timestamp for the host&#39;s most</span>
+<span class="sd">    recent check-in with the hub. This can be used to identify</span>
+<span class="sd">    builders which are enabled, but no longer responding.</span>
+
+<span class="sd">    :param arches: List of architecture names to filter builders by.</span>
+<span class="sd">    Default, all arches</span>
+<span class="sd">    :type arches: list[str], optional</span>
+
+<span class="sd">    :param channel: Channel name to filter builders by. Default,</span>
+<span class="sd">    builders in any channel.</span>
+<span class="sd">    :type channel: str, optional</span>
+
+<span class="sd">    :param skiplist: List of glob-style patterns of builders to</span>
+<span class="sd">    omit. Default, all builders included</span>
+<span class="sd">    :type skiplist: list[str], optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">arches</span> <span class="o">=</span> <span class="n">arches</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="c1"># listHosts only accepts channel filtering by the ID, so let&#39;s</span>
+    <span class="c1"># resolve those. This should also work if channel is already an</span>
+    <span class="c1"># ID, and should validate that the channel exists.</span>
+    <span class="k">if</span> <span class="n">channel</span><span class="p">:</span>
+        <span class="n">chan_data</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getChannel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">chan_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchChannel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+        <span class="n">chan_id</span> <span class="o">=</span> <span class="n">chan_data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">chan_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">bldrs</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listHosts</span><span class="p">(</span><span class="n">arches</span><span class="p">,</span> <span class="n">chan_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">skiplist</span><span class="p">:</span>
+        <span class="n">bldrs</span> <span class="o">=</span> <span class="n">globfilter</span><span class="p">(</span><span class="n">bldrs</span><span class="p">,</span> <span class="n">skiplist</span><span class="p">,</span>
+                           <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span> <span class="n">invert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># collect a mapping of builder ids to builder info</span>
+    <span class="n">bldrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bldrs</span><span class="p">)</span>
+
+    <span class="c1"># correlate the update timestamps with the builder info</span>
+    <span class="n">bldr_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterkeys</span><span class="p">(</span><span class="n">bldrs</span><span class="p">))</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">bid</span> <span class="ow">in</span> <span class="n">bldr_ids</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">getLastHostUpdate</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
+    <span class="n">mc</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">bid</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bldr_ids</span><span class="p">,</span> <span class="n">mc</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">data</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="s2">&quot; UTC&quot;</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2"> %Z&quot;</span><span class="p">)</span>
+
+        <span class="n">bldrs</span><span class="p">[</span><span class="n">bid</span><span class="p">][</span><span class="s2">&quot;last_update&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="k">return</span> <span class="n">bldrs</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

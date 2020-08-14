@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.archives &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.archives</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Archive Utilities</span>
+
+<span class="sd">Functions for working with gathering and transforming Koji RPMs and</span>
+<span class="sd">archives</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">PathInfo</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iterkeys</span><span class="p">,</span> <span class="n">iteritems</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">bulk_load_rpm_sigs</span>
+
+
+<span class="k">def</span> <span class="nf">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">PathInfo</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">PathInfo</span><span class="p">(</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="filter_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.filter_archives">[docs]</a><span class="k">def</span> <span class="nf">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">archive_types</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a list of archives (or RPMs dressed up like archives),</span>
+<span class="sd">    return a new list of those archives which are of the given archive</span>
+<span class="sd">    types.</span>
+
+<span class="sd">    :param archives: Archive infos to be filtered</span>
+<span class="sd">    :type archives: list[dict]</span>
+
+<span class="sd">    :param archive_types: Desired archive type extensions</span>
+<span class="sd">    :type archive_types: list[str]</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># convert the list of string extensions from atypes into a set of</span>
+    <span class="c1"># archive type IDs</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">archive_types</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">getArchiveType</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">atypes</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span>
+    <span class="n">atypes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">atypes</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># RPM is a special type, which isn&#39;t considered an archive but</span>
+    <span class="c1"># rather its own first-class type. However, we want to pretend</span>
+    <span class="c1"># like it&#39;s any other archive type, so we&#39;ll give it the otherwise</span>
+    <span class="c1"># unused ID of 0</span>
+    <span class="k">if</span> <span class="s2">&quot;rpm&quot;</span> <span class="ow">in</span> <span class="n">archive_types</span><span class="p">:</span>
+        <span class="n">atypes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># find only those archives whose type_id is in the set of desired</span>
+    <span class="c1"># archive types</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;type_id&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">atypes</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="gather_signed_rpms"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_signed_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_signed_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">sigkeys</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a list of RPM archive dicts, query the session for all the</span>
+<span class="sd">    pertinent signature headers, then try and find the best matching</span>
+<span class="sd">    signed copy of each RPM. An empty string at the end of sigkeys</span>
+<span class="sd">    will allow an unsigned copy to be included if no signed copies</span>
+<span class="sd">    match.</span>
+
+<span class="sd">    :param archives: list of RPM archive dicts</span>
+<span class="sd">    :type archives: list[dict]</span>
+
+<span class="sd">    :param sigkeys: list of signature fingerprints, in order of</span>
+<span class="sd">    precedence</span>
+<span class="sd">    :type sigkeys: list[str]</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sigkeys</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">archives</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># an ID: RPM Archive mapping</span>
+    <span class="n">rpms</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">rpm</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">rpm</span><span class="p">)</span> <span class="k">for</span> <span class="n">rpm</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">)</span>
+
+    <span class="c1"># now bulk load all the sigs for each RPM ID</span>
+    <span class="n">rpm_sigs</span> <span class="o">=</span> <span class="n">bulk_load_rpm_sigs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">iterkeys</span><span class="p">(</span><span class="n">rpms</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">rpm_id</span><span class="p">,</span> <span class="n">rpm</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">rpms</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="s2">&quot;sigkey&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">sig</span> <span class="ow">in</span> <span class="n">rpm_sigs</span><span class="p">[</span><span class="n">rpm_id</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">wanted</span> <span class="ow">in</span> <span class="n">sigkeys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">wanted</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+                <span class="n">rpm</span><span class="p">[</span><span class="s2">&quot;sigkey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wanted</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rpm</span><span class="p">)</span>
+                <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="gather_build_rpms"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">bid</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">binfo</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bid</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rpmkeys</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">gather_signed_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;sigkey&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">rpmkeys</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">rpmpath</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">signed</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">if</span> <span class="n">key</span> <span class="k">else</span> <span class="n">path</span><span class="o">.</span><span class="n">rpm</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">rpmpath</span><span class="p">)</span>
+
+        <span class="c1"># fake some archive members, since RPMs are missing these</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;type_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;type_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rpm&quot;</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_build_maven_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_maven_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gathers a list of maven archives for a given build_info. The</span>
+<span class="sd">    archive records are augmented with an additional &quot;filepath&quot; entry,</span>
+<span class="sd">    the value of which is an expanded path to the file itself.</span>
+
+<span class="sd">    :param binfo: Build info to fetch archives for</span>
+<span class="sd">    :type binfo: dict</span>
+
+<span class="sd">    :param path: The root dir for the archive file paths, default None</span>
+<span class="sd">    :type path: str, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bid</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">mavenbuild</span><span class="p">(</span><span class="n">binfo</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;maven&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">mavenfile</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_build_win_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_win_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gathers a list of Windows archives for a given build_info. The</span>
+<span class="sd">    archive records are augmented with an additional &quot;filepath&quot; entry,</span>
+<span class="sd">    the value of which is an expanded path to the file itself.</span>
+
+<span class="sd">    :param binfo: Build info to fetch archives for</span>
+<span class="sd">    :type binfo: dict</span>
+
+<span class="sd">    :param path: The root dir for the archive file paths, default None</span>
+<span class="sd">    :type path: str, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bid</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">winbuild</span><span class="p">(</span><span class="n">binfo</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;win&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">winfile</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_build_image_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_image_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gathers a list of image archives for a given build_info. The</span>
+<span class="sd">    archive records are augmented with an additional &quot;filepath&quot; entry,</span>
+<span class="sd">    the value of which is an expanded path to the file itself.</span>
+
+<span class="sd">    :param binfo: Build info to fetch archives for</span>
+<span class="sd">    :type binfo: dict</span>
+
+<span class="sd">    :param path: The root dir for the archive file paths, default None</span>
+<span class="sd">    :type path: str, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bid</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">imagebuild</span><span class="p">(</span><span class="n">binfo</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_build_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Produce a list of archive dicts associated with a build info,</span>
+<span class="sd">    optionally filtered by build-type and signing keys (for RPMs). The</span>
+<span class="sd">    archives will be decorated with an additional &quot;filepath&quot; entry,</span>
+<span class="sd">    the value of which is an expanded path to the file itself.</span>
+
+<span class="sd">    This is very similar to the file listing that is baked into the</span>
+<span class="sd">    koji buildinfo command.</span>
+
+<span class="sd">    Koji does not normally consider RPMs to be archives, but we will</span>
+<span class="sd">    attempt to homogenize them together.</span>
+
+<span class="sd">    :param binfo: Build info to fetch archives for</span>
+<span class="sd">    :type binfo: dict</span>
+
+<span class="sd">    :param btype: BType to filter for. Default None for all types.</span>
+<span class="sd">    :type btype: str, optional</span>
+
+<span class="sd">    :param rpmkeys: RPM signatures to filter for, in order of</span>
+<span class="sd">    preference. An empty string matches the unsigned copy. Default ()</span>
+<span class="sd">    for no signature filtering.</span>
+<span class="sd">    :type rpmkeys: list[str], optional</span>
+
+<span class="sd">    :param path: The root dir for the archive file paths, default None</span>
+<span class="sd">    :type path: str, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">known_types</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;rpm&quot;</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;rpm&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="n">known_types</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">found</span>
+
+    <span class="n">bid</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+    <span class="c1"># at this point, btype is either None or not one of the known</span>
+    <span class="c1"># types. Therefore, we&#39;ll pass that directly on to the query, and</span>
+    <span class="c1"># filter out the known types from the resuls in the event the type</span>
+    <span class="c1"># was None (as we&#39;ll have done special work to load those</span>
+    <span class="c1"># already).</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bid</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+        <span class="n">abtype</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;btype&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">abtype</span> <span class="ow">in</span> <span class="n">known_types</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">typedir</span><span class="p">(</span><span class="n">binfo</span><span class="p">,</span> <span class="n">abtype</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">])</span>
+
+        <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<span class="k">def</span> <span class="nf">_fake_maven_build</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="s2">&quot;maven&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    produces something that looks like a build info dict based on the</span>
+<span class="sd">    values from within a maven archive dict. This can then be used</span>
+<span class="sd">    with a koji.PathInfo instance to determine the path to a build</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">bid</span> <span class="o">=</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_id&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">bid</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span>
+
+    <span class="n">bld</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">bid</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_version&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;release&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_release&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_epoch&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;volume_id&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;volume_id&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;volume_name&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;volume_name&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;package_id&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;pkg_id&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_name&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;build_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">typedir</span><span class="p">(</span><span class="n">bld</span><span class="p">,</span> <span class="n">btype</span><span class="p">)</span>
+    <span class="n">cache</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span> <span class="o">=</span> <span class="n">bld</span>
+
+    <span class="k">return</span> <span class="n">bld</span>
+
+
+<div class="viewcode-block" id="gather_latest_rpms"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Similar to session.getLatestRPMS(tagname) but will filter by</span>
+<span class="sd">    available signatures, and augments the results to include a new</span>
+<span class="sd">    &quot;filepath&quot; entry which will point to the matching RPM file</span>
+<span class="sd">    location.</span>
+
+<span class="sd">    :param tagname: Name of the tag to search in for RPMs</span>
+<span class="sd">    :type tagname: str</span>
+
+<span class="sd">    :param rpmkeys: RPM signatures to filter for, in order of</span>
+<span class="sd">    preference. An empty string matches the unsigned copy. Default ()</span>
+<span class="sd">    for no signature filtering.</span>
+<span class="sd">    :type rpmkeys: list[str], optional</span>
+
+<span class="sd">    :param path: The root dir for the archive file paths, default None</span>
+<span class="sd">    :type path: str, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">found</span><span class="p">,</span> <span class="n">builds</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getLatestRPMS</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+
+    <span class="c1"># decorate the build info with its path data</span>
+    <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;build_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">bld</span><span class="p">)</span>
+
+    <span class="n">builds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">bld</span><span class="p">)</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rpmkeys</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">gather_signed_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;build_id&quot;</span><span class="p">]]</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;sigkey&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">rpmkeys</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">rpmpath</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">signed</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">if</span> <span class="n">key</span> <span class="k">else</span> <span class="n">path</span><span class="o">.</span><span class="n">rpm</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;build_path&quot;</span><span class="p">],</span> <span class="n">rpmpath</span><span class="p">)</span>
+
+        <span class="c1"># fake some archive members, since RPMs are missing these</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;type_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;type_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rpm&quot;</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_latest_maven_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_maven_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Similar to session.getLatestMavenArchives(tagname) but augments</span>
+<span class="sd">    the results to include a new &quot;filepath&quot; entry which will point to</span>
+<span class="sd">    the matching maven artifact&#39;s file location.</span>
+
+<span class="sd">    :param tagname: Name of the tag to search in for maven artifacts</span>
+<span class="sd">    :type tagname: str</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getLatestMavenArchives</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">_fake_maven_build</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;build_path&quot;</span><span class="p">],</span> <span class="n">path</span><span class="o">.</span><span class="n">mavenfile</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_latest_win_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_win_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">archives</span><span class="p">,</span> <span class="n">builds</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listTaggedArchives</span><span class="p">(</span><span class="n">tagname</span><span class="p">,</span>
+                                                  <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                  <span class="n">latest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                  <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;win&quot;</span><span class="p">)</span>
+
+    <span class="c1"># decorate the build infos with the type paths for windows</span>
+    <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;build_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">winbuild</span><span class="p">(</span><span class="n">bld</span><span class="p">)</span>
+
+    <span class="c1"># convert builds to an id:binfo mapping</span>
+    <span class="n">builds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">bld</span><span class="p">)</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_id&quot;</span><span class="p">]]</span>
+        <span class="n">build_path</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;build_path&quot;</span><span class="p">]</span>
+
+        <span class="c1"># build an archive filepath from that</span>
+        <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">winfile</span><span class="p">(</span><span class="n">archive</span><span class="p">))</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_latest_image_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_image_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">builds</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getLatestBuilds</span><span class="p">(</span><span class="n">tagname</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+        <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">imagebuild</span><span class="p">(</span><span class="n">bld</span><span class="p">)</span>
+        <span class="n">archives</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+            <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">])</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">archives</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="gather_latest_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gather the latest archives from a tag heirarchy. Rules for what</span>
+<span class="sd">    constitutes &quot;latest&quot; may change slightly depending on the archive</span>
+<span class="sd">    types -- specifically maven.</span>
+
+<span class="sd">    :param tagname: Name of the tag to gather archives from</span>
+<span class="sd">    :type tagname: str</span>
+
+<span class="sd">    :param btype: Name of the BType to gather. Default, gather all</span>
+<span class="sd">    :type btype: str, optional</span>
+
+<span class="sd">    :param rpmkeys: List of RPM signatures to filter by. Only used when</span>
+<span class="sd">    fetching type of rpm or None (all).</span>
+<span class="sd">    :type rpmkeys: list[str]</span>
+
+<span class="sd">    :param path: Path prefix for archive filepaths.</span>
+<span class="sd">    :type path: str</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">taginfo</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+
+    <span class="n">known_types</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;rpm&quot;</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># the known types have additional metadata when queried, and have</span>
+    <span class="c1"># pre-defined path structures. We&#39;ll be querying those directly</span>
+    <span class="c1"># first.</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;rpm&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_latest_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_latest_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_latest_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">):</span>
+        <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_latest_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="n">known_types</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">found</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># listTaggedArchives is very convenient, but only works with</span>
+        <span class="c1"># win, maven, and None</span>
+        <span class="n">archives</span><span class="p">,</span> <span class="n">builds</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listTaggedArchives</span><span class="p">(</span><span class="n">tagname</span><span class="p">,</span>
+                                                      <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                      <span class="n">latest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                      <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># convert builds to an id:binfo mapping</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">bld</span><span class="p">)</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+            <span class="n">abtype</span> <span class="o">=</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;btype&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">abtype</span> <span class="ow">in</span> <span class="n">known_types</span><span class="p">:</span>
+                <span class="c1"># filter out any of the types we would have queried on</span>
+                <span class="c1"># their own earlier. Unfortunately there doesn&#39;t seem</span>
+                <span class="c1"># to be a way to get around throwing away this</span>
+                <span class="c1"># duplicate data for cases where btype is None</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># determine the path specific to this build and the</span>
+            <span class="c1"># discovered archive btype</span>
+            <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">archive</span><span class="p">[</span><span class="s2">&quot;build_id&quot;</span><span class="p">]]</span>
+            <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">typedir</span><span class="p">(</span><span class="n">bld</span><span class="p">,</span> <span class="n">abtype</span><span class="p">)</span>
+
+            <span class="c1"># build an archive filepath from that</span>
+            <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">])</span>
+            <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># btype is not one of the known ones, and it&#39;s also not None.</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getLatestBuilds</span><span class="p">(</span><span class="n">tagname</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+            <span class="n">build_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">typedir</span><span class="p">(</span><span class="n">bld</span><span class="p">,</span> <span class="n">btype</span><span class="p">)</span>
+            <span class="n">archives</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+                <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">build_path</span><span class="p">,</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">])</span>
+            <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">archives</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>
