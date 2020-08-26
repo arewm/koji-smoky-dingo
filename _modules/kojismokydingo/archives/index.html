@@ -93,7 +93,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="as_pathinfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.as_pathinfo">[docs]</a><span class="k">def</span> <span class="nf">as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="as_pathinfo"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.as_pathinfo">[docs]</a><span class="k">def</span> <span class="nf">as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts path into a PathInfo if it is not one already</span>
 
@@ -106,7 +106,7 @@
         <span class="k">return</span> <span class="n">PathInfo</span><span class="p">(</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="filter_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.filter_archives">[docs]</a><span class="k">def</span> <span class="nf">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">archive_types</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.filter_archives">[docs]</a><span class="k">def</span> <span class="nf">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">archive_types</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a list of archives (or RPMs dressed up like archives),</span>
 <span class="sd">    return a new list of those archives which are of the given archive</span>
@@ -148,7 +148,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="gather_signed_rpms"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_signed_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_signed_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">sigkeys</span><span class="p">):</span>
+<div class="viewcode-block" id="gather_signed_rpms"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_signed_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_signed_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">sigkeys</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a list of RPM archive dicts, query the session for all the</span>
 <span class="sd">    pertinent signature headers, then try and find the best matching</span>
@@ -190,7 +190,7 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-<div class="viewcode-block" id="gather_build_rpms"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gather_build_rpms"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_build_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="n">bid</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -213,7 +213,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_build_maven_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_maven_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gather_build_maven_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_build_maven_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gathers a list of maven archives for a given build_info. The</span>
 <span class="sd">    archive records are augmented with an additional &quot;filepath&quot; entry,</span>
@@ -241,7 +241,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_build_win_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_win_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gather_build_win_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_build_win_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gathers a list of Windows archives for a given build_info. The</span>
 <span class="sd">    archive records are augmented with an additional &quot;filepath&quot; entry,</span>
@@ -267,7 +267,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_build_image_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_image_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gather_build_image_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_build_image_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gathers a list of image archives for a given build_info. The</span>
 <span class="sd">    archive records are augmented with an additional &quot;filepath&quot; entry,</span>
@@ -295,7 +295,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_build_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_build_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="gather_build_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_build_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -372,7 +372,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_latest_rpms"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
+<div class="viewcode-block" id="gather_latest_rpms"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_latest_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
                        <span class="n">iherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Similar to session.getLatestRPMS(tagname) but will filter by</span>
@@ -458,7 +458,7 @@
     <span class="k">return</span> <span class="n">bld</span>
 
 
-<div class="viewcode-block" id="gather_latest_maven_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_maven_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span>
+<div class="viewcode-block" id="gather_latest_maven_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_latest_maven_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span>
                                  <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Similar to session.getLatestMavenArchives(tagname) but augments</span>
@@ -491,7 +491,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_latest_win_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_win_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span>
+<div class="viewcode-block" id="gather_latest_win_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_latest_win_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span>
                                <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Similar to session.listTaggedArchives(tagname, type=&quot;win&quot;) but</span>
@@ -536,7 +536,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_latest_image_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_image_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span>
+<div class="viewcode-block" id="gather_latest_image_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_latest_image_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span>
                                  <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -567,7 +567,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="gather_latest_archives"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.archives.gather_latest_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="gather_latest_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_latest_archives">[docs]</a><span class="k">def</span> <span class="nf">gather_latest_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>

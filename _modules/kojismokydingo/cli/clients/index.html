@@ -79,7 +79,7 @@
 <span class="kn">from</span> <span class="nn">..clients</span> <span class="k">import</span> <span class="n">rebuild_client_config</span>
 
 
-<div class="viewcode-block" id="cli_client_config"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.cli_client_config">[docs]</a><span class="k">def</span> <span class="nf">cli_client_config</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span>
+<div class="viewcode-block" id="cli_client_config"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.cli_client_config">[docs]</a><span class="k">def</span> <span class="nf">cli_client_config</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span>
                       <span class="n">only</span><span class="o">=</span><span class="p">(),</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">profile</span><span class="p">,</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">rebuild_client_config</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">)</span>
@@ -114,13 +114,13 @@
     <span class="nb">print</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="ClientConfig"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig">[docs]</a><span class="k">class</span> <span class="nc">ClientConfig</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="ClientConfig"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientConfig">[docs]</a><span class="k">class</span> <span class="nc">ClientConfig</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
 
     <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show client profile settings&quot;</span>
 
 
-<div class="viewcode-block" id="ClientConfig.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClientConfig.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientConfig.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ClientConfig</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
@@ -143,12 +143,12 @@
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="ClientConfig.activate"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ClientConfig.activate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientConfig.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># entirely local, do not even attempt to connect to koji</span>
         <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="ClientConfig.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="ClientConfig.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientConfig.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cli_client_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span><span class="p">,</span>
                                  <span class="n">only</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">only</span><span class="p">,</span>
                                  <span class="n">quiet</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">quiet</span><span class="p">,</span>

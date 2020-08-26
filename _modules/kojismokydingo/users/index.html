@@ -81,7 +81,7 @@
 <span class="n">STATUS_BLOCKED</span> <span class="o">=</span> <span class="n">USER_STATUS</span><span class="p">[</span><span class="s1">&#39;BLOCKED&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="as_userinfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.as_userinfo">[docs]</a><span class="k">def</span> <span class="nf">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+<div class="viewcode-block" id="as_userinfo"><a class="viewcode-back" href="../../../kojismokydingo/users/#kojismokydingo.users.as_userinfo">[docs]</a><span class="k">def</span> <span class="nf">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resolves user to a userinfo dict.</span>
 
@@ -120,7 +120,7 @@
     <span class="k">return</span> <span class="n">info</span></div>
 
 
-<div class="viewcode-block" id="collect_userinfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_userinfo">[docs]</a><span class="k">def</span> <span class="nf">collect_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_userinfo"><a class="viewcode-back" href="../../../kojismokydingo/users/#kojismokydingo.users.collect_userinfo">[docs]</a><span class="k">def</span> <span class="nf">collect_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gather information about a named user, including the list of</span>
 <span class="sd">    permissions the user has.</span>
@@ -163,7 +163,7 @@
     <span class="k">return</span> <span class="n">userinfo</span></div>
 
 
-<div class="viewcode-block" id="collect_cg_access"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_cg_access">[docs]</a><span class="k">def</span> <span class="nf">collect_cg_access</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_cg_access"><a class="viewcode-back" href="../../../kojismokydingo/users/#kojismokydingo.users.collect_cg_access">[docs]</a><span class="k">def</span> <span class="nf">collect_cg_access</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List of names of content generators user has access to run</span>
 <span class="sd">    CGImport with.</span>
@@ -188,7 +188,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="collect_cgs"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_cgs">[docs]</a><span class="k">def</span> <span class="nf">collect_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_cgs"><a class="viewcode-back" href="../../../kojismokydingo/users/#kojismokydingo.users.collect_cgs">[docs]</a><span class="k">def</span> <span class="nf">collect_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param name: only collect the given CG. Default, collect all</span>
 
@@ -220,7 +220,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="collect_perminfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_perminfo">[docs]</a><span class="k">def</span> <span class="nf">collect_perminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_perminfo"><a class="viewcode-back" href="../../../kojismokydingo/users/#kojismokydingo.users.collect_perminfo">[docs]</a><span class="k">def</span> <span class="nf">collect_perminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gather information about a named permission, including the list of</span>
 <span class="sd">    users granted the permission, as well as the date that the</span>

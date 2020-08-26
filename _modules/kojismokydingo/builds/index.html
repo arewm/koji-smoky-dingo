@@ -76,7 +76,7 @@
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">chunkseq</span><span class="p">,</span> <span class="n">rpm_evr_compare</span><span class="p">,</span> <span class="n">unique</span>
 
 
-<div class="viewcode-block" id="BuildNEVRCompare"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.BuildNEVRCompare">[docs]</a><span class="k">class</span> <span class="nc">BuildNEVRCompare</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildNEVRCompare"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildNEVRCompare">[docs]</a><span class="k">class</span> <span class="nc">BuildNEVRCompare</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An adapter for Name, Epoch, Version, Release comparisons of a</span>
 <span class="sd">    build info dictionary. Used by the nevr_sort_builds function.</span>
@@ -117,7 +117,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cmp__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
 
-<div class="viewcode-block" id="build_nvr_sort"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.build_nvr_sort">[docs]</a><span class="k">def</span> <span class="nf">build_nvr_sort</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
+<div class="viewcode-block" id="build_nvr_sort"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.build_nvr_sort">[docs]</a><span class="k">def</span> <span class="nf">build_nvr_sort</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dictionaries, deduplicate and then</span>
 <span class="sd">    sort them by Name, Epoch, Version, and Release using RPM&#39;s</span>
@@ -133,7 +133,7 @@
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">dedup</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">BuildNEVRCompare</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="build_id_sort"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.build_id_sort">[docs]</a><span class="k">def</span> <span class="nf">build_id_sort</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
+<div class="viewcode-block" id="build_id_sort"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.build_id_sort">[docs]</a><span class="k">def</span> <span class="nf">build_id_sort</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dictionaries, return a de-duplicated</span>
 <span class="sd">    list of same, sorted by the build ID</span>
@@ -148,7 +148,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">_bid</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iteritems</span><span class="p">(</span><span class="n">dedup</span><span class="p">))]</span></div>
 
 
-<div class="viewcode-block" id="build_dedup"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.build_dedup">[docs]</a><span class="k">def</span> <span class="nf">build_dedup</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
+<div class="viewcode-block" id="build_dedup"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.build_dedup">[docs]</a><span class="k">def</span> <span class="nf">build_dedup</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dictionaries, return a de-duplicated</span>
 <span class="sd">    list of same, with order preserved.</span>
@@ -163,7 +163,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">dedup</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="iter_bulk_tag_builds"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.iter_bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">iter_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagid</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
+<div class="viewcode-block" id="iter_bulk_tag_builds"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.iter_bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">iter_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagid</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
                          <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                          <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
@@ -214,7 +214,7 @@
         <span class="k">yield</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">build_chunk</span><span class="p">,</span> <span class="n">results</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="bulk_tag_builds"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
+<div class="viewcode-block" id="bulk_tag_builds"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
                     <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
@@ -257,7 +257,7 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-<div class="viewcode-block" id="bulk_tag_nvrs"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.bulk_tag_nvrs">[docs]</a><span class="k">def</span> <span class="nf">bulk_tag_nvrs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
+<div class="viewcode-block" id="bulk_tag_nvrs"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.bulk_tag_nvrs">[docs]</a><span class="k">def</span> <span class="nf">bulk_tag_nvrs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
                   <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
@@ -285,7 +285,7 @@
                            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="decorate_build_archive_data"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.decorate_build_archive_data">[docs]</a><span class="k">def</span> <span class="nf">decorate_build_archive_data</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
+<div class="viewcode-block" id="decorate_build_archive_data"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.decorate_build_archive_data">[docs]</a><span class="k">def</span> <span class="nf">decorate_build_archive_data</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Augments a list of build_info dicts with four new keys:</span>
 
@@ -356,7 +356,7 @@
     <span class="k">return</span> <span class="n">build_infos</span></div>
 
 
-<div class="viewcode-block" id="filter_imported"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.filter_imported">[docs]</a><span class="k">def</span> <span class="nf">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">by_cg</span><span class="o">=</span><span class="p">()):</span>
+<div class="viewcode-block" id="filter_imported"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_imported">[docs]</a><span class="k">def</span> <span class="nf">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">by_cg</span><span class="o">=</span><span class="p">()):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dicts, return those which are</span>
 <span class="sd">    imports.</span>

@@ -90,7 +90,7 @@
 <span class="n">SORT_BY_NVR</span> <span class="o">=</span> <span class="s2">&quot;sort-by-nvr&quot;</span>
 
 
-<div class="viewcode-block" id="cli_bulk_tag_builds"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.cli_bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">cli_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
+<div class="viewcode-block" id="cli_bulk_tag_builds"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.cli_bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">cli_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
                         <span class="n">sorting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -203,13 +203,13 @@
     <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;All done!&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BulkTagBuilds"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.BulkTagBuilds">[docs]</a><span class="k">class</span> <span class="nc">BulkTagBuilds</span><span class="p">(</span><span class="n">TagSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="BulkTagBuilds"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.BulkTagBuilds">[docs]</a><span class="k">class</span> <span class="nc">BulkTagBuilds</span><span class="p">(</span><span class="n">TagSmokyDingo</span><span class="p">):</span>
 
     <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;bind&quot;</span>
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Quickly tag a large number of builds&quot;</span>
 
 
-<div class="viewcode-block" id="BulkTagBuilds.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.BulkTagBuilds.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BulkTagBuilds.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.BulkTagBuilds.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BulkTagBuilds</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
 
@@ -257,7 +257,7 @@
         <span class="k">return</span> <span class="n">argp</span></div>
 
 
-<div class="viewcode-block" id="BulkTagBuilds.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.BulkTagBuilds.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="BulkTagBuilds.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.BulkTagBuilds.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="n">nvrs</span> <span class="o">=</span> <span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">cli_bulk_tag_builds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
@@ -270,7 +270,7 @@
                                    <span class="n">strict</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">strict</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="cli_list_imported"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.cli_list_imported">[docs]</a><span class="k">def</span> <span class="nf">cli_list_imported</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nvr_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="cli_list_imported"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.cli_list_imported">[docs]</a><span class="k">def</span> <span class="nf">cli_list_imported</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nvr_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                       <span class="n">cg_list</span><span class="o">=</span><span class="p">()):</span>
 
@@ -307,12 +307,12 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">build</span><span class="p">[</span><span class="s2">&quot;nvr&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="ListImported"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported">[docs]</a><span class="k">class</span> <span class="nc">ListImported</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="ListImported"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.ListImported">[docs]</a><span class="k">class</span> <span class="nc">ListImported</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Detect imported builds&quot;</span>
 
 
-<div class="viewcode-block" id="ListImported.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ListImported.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.ListImported.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListImported</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
 
         <span class="n">group</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
@@ -348,7 +348,7 @@
         <span class="k">return</span> <span class="n">argp</span></div>
 
 
-<div class="viewcode-block" id="ListImported.validate"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="ListImported.validate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.ListImported.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tag</span> <span class="ow">or</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">):</span>
             <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please specify either a tag to scan, or&quot;</span>
                          <span class="s2">&quot; --file=NVR_FILE&quot;</span><span class="p">)</span>
@@ -361,7 +361,7 @@
             <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unable to read NVR list </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ioe</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ListImported.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="ListImported.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.ListImported.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="n">nvr_list</span> <span class="o">=</span> <span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">cli_list_imported</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>

@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli.builds &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="kojismokydingo.cli.clients" href="../clients/" />
+    <link rel="prev" title="kojismokydingo.cli.archives" href="../archives/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../clients/" title="kojismokydingo.cli.clients"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../archives/" title="kojismokydingo.cli.archives"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo.cli Contents</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kojismokydingo.cli.builds">
+<span id="kojismokydingo-cli-builds"></span><h1>kojismokydingo.cli.builds<a class="headerlink" href="#module-kojismokydingo.cli.builds" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo - Bulk tagging commands</p>
+<p>Allows for large numbers of builds to be tagged rapidly, via multicall
+to tagBuildBypass</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p><a class="reference external" href="mailto:cobrien&#37;&#52;&#48;redhat&#46;com">cobrien<span>&#64;</span>redhat<span>&#46;</span>com</a></p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL version 3</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="kojismokydingo.cli.builds.BulkTagBuilds">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">BulkTagBuilds</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#BulkTagBuilds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.cli.builds.BulkTagBuilds.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Quickly tag a large number of builds'</em><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.cli.builds.BulkTagBuilds.group">
+<code class="sig-name descname">group</code><em class="property"> = 'bind'</em><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.builds.BulkTagBuilds.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#BulkTagBuilds.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.builds.BulkTagBuilds.parser">
+<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#BulkTagBuilds.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to provide an ArgumentParser instance with all the
+relevant positional arguments and options added.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.builds.ListImported">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">ListImported</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#ListImported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.cli.builds.ListImported.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Detect imported builds'</em><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.builds.ListImported.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#ListImported.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.builds.ListImported.parser">
+<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#ListImported.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to provide an ArgumentParser instance with all the
+relevant positional arguments and options added.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.builds.ListImported.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">parser</em>, <em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#ListImported.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to perform validation on options values. Return value is
+ignored, use parser.error if needed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.cli.builds.cli_bulk_tag_builds">
+<code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">cli_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">sorting=None</em>, <em class="sig-param">owner=None</em>, <em class="sig-param">inherit=False</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#cli_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.cli_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.cli.builds.cli_list_imported">
+<code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">cli_list_imported</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname=None</em>, <em class="sig-param">nvr_list=None</em>, <em class="sig-param">inherit=False</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">cg_list=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#cli_list_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.cli_list_imported" title="Permalink to this definition">¶</a></dt>
+<dd><p>CLI handler for <cite>koji list-imported</cite></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.cli.builds.printerr">
+<code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">printerr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kojismokydingo.cli.builds.printerr" title="Permalink to this definition">¶</a></dt>
+<dd><p>print(value, ..., sep=' ', end='n', file=sys.stdout, flush=False)</p>
+<p>Prints the values to a stream, or to sys.stdout by default.
+Optional keyword arguments:
+file:  a file-like object (stream); defaults to the current sys.stdout.
+sep:   string inserted between values, default a space.
+end:   string appended after the last value, default a newline.
+flush: whether to forcibly flush the stream.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../archives/"
+                        title="previous chapter">kojismokydingo.cli.archives</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../clients/"
+                        title="next chapter">kojismokydingo.cli.clients</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/kojismokydingo/cli/builds.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../clients/" title="kojismokydingo.cli.clients"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../archives/" title="kojismokydingo.cli.archives"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo.cli Contents</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

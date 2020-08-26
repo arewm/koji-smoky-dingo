@@ -78,7 +78,7 @@
 <span class="kn">from</span> <span class="nn">..hosts</span> <span class="k">import</span> <span class="n">gather_hosts_checkins</span>
 
 
-<div class="viewcode-block" id="cli_check_hosts"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.cli_check_hosts">[docs]</a><span class="k">def</span> <span class="nf">cli_check_hosts</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="cli_check_hosts"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.cli_check_hosts">[docs]</a><span class="k">def</span> <span class="nf">cli_check_hosts</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">ignore</span><span class="o">=</span><span class="p">(),</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shush</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">timeout</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="p">(</span><span class="n">timeout</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
@@ -118,12 +118,12 @@
     <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">collected</span> <span class="k">else</span> <span class="mi">0</span></div>
 
 
-<div class="viewcode-block" id="CheckHosts"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.CheckHosts">[docs]</a><span class="k">class</span> <span class="nc">CheckHosts</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="CheckHosts"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.CheckHosts">[docs]</a><span class="k">class</span> <span class="nc">CheckHosts</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show enabled builders which aren&#39;t checking in&quot;</span>
 
 
-<div class="viewcode-block" id="CheckHosts.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.CheckHosts.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CheckHosts.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.CheckHosts.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CheckHosts</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
 
@@ -157,7 +157,7 @@
         <span class="k">return</span> <span class="n">argp</span></div>
 
 
-<div class="viewcode-block" id="CheckHosts.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.CheckHosts.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="CheckHosts.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.CheckHosts.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
 
         <span class="n">ignore</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">ignore</span>
         <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">ignore_file</span><span class="p">:</span>

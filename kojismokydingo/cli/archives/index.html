@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="kojismokydingo.cli.builds" href="../builds/" />
+    <link rel="prev" title="Package kojismokydingo.cli Contents" href="../" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../builds/" title="kojismokydingo.cli.builds"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Package kojismokydingo.cli Contents"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo.cli Contents</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kojismokydingo.cli.archives">
+<span id="kojismokydingo-cli-archives"></span><h1>kojismokydingo.cli.archives<a class="headerlink" href="#module-kojismokydingo.cli.archives" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo - CLI Archive and RPM Commands</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="kojismokydingo.cli.archives.ArchiveDingo">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.archives.</code><code class="sig-name descname">ArchiveDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#ArchiveDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.ArchiveDingo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.cli.archives.ArchiveDingo.group">
+<code class="sig-name descname">group</code><em class="property"> = 'info'</em><a class="headerlink" href="#kojismokydingo.cli.archives.ArchiveDingo.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.archives.ArchiveDingo.parser">
+<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#ArchiveDingo.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.ArchiveDingo.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to provide an ArgumentParser instance with all the
+relevant positional arguments and options added.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.archives.ArchiveDingo.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">parser</em>, <em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#ArchiveDingo.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.ArchiveDingo.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to perform validation on options values. Return value is
+ignored, use parser.error if needed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.archives.LatestArchives">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.archives.</code><code class="sig-name descname">LatestArchives</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#LatestArchives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.LatestArchives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.archives.ArchiveDingo" title="kojismokydingo.cli.archives.ArchiveDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.archives.ArchiveDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.cli.archives.LatestArchives.description">
+<code class="sig-name descname">description</code><em class="property"> = 'List latest archives from a tag'</em><a class="headerlink" href="#kojismokydingo.cli.archives.LatestArchives.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.archives.LatestArchives.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#LatestArchives.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.LatestArchives.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.archives.LatestArchives.parser">
+<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#LatestArchives.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.LatestArchives.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to provide an ArgumentParser instance with all the
+relevant positional arguments and options added.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.archives.ListBuildArchives">
+<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.archives.</code><code class="sig-name descname">ListBuildArchives</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#ListBuildArchives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.ListBuildArchives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.archives.ArchiveDingo" title="kojismokydingo.cli.archives.ArchiveDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.archives.ArchiveDingo</span></code></a></p>
+<dl class="attribute">
+<dt id="kojismokydingo.cli.archives.ListBuildArchives.description">
+<code class="sig-name descname">description</code><em class="property"> = 'List archives from a build'</em><a class="headerlink" href="#kojismokydingo.cli.archives.ListBuildArchives.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.archives.ListBuildArchives.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#ListBuildArchives.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.ListBuildArchives.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.archives.ListBuildArchives.parser">
+<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#ListBuildArchives.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.ListBuildArchives.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to provide an ArgumentParser instance with all the
+relevant positional arguments and options added.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.cli.archives.cli_latest_tag_archives">
+<code class="sig-prename descclassname">kojismokydingo.cli.archives.</code><code class="sig-name descname">cli_latest_tag_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">btype</em>, <em class="sig-param">atypes=()</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em>, <em class="sig-param">json=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#cli_latest_tag_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.cli_latest_tag_archives" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.cli.archives.cli_list_build_archives">
+<code class="sig-prename descclassname">kojismokydingo.cli.archives.</code><code class="sig-name descname">cli_list_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">nvr</em>, <em class="sig-param">btype</em>, <em class="sig-param">atypes=()</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em>, <em class="sig-param">json=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/archives/#cli_list_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.archives.cli_list_build_archives" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Package kojismokydingo.cli Contents</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../builds/"
+                        title="next chapter">kojismokydingo.cli.builds</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/kojismokydingo/cli/archives.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../builds/" title="kojismokydingo.cli.builds"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Package kojismokydingo.cli Contents"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo.cli Contents</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

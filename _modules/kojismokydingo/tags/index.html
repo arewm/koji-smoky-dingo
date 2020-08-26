@@ -72,7 +72,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">NoSuchTarget</span>
 
 
-<div class="viewcode-block" id="resolve_tag"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.resolve_tag">[docs]</a><span class="k">def</span> <span class="nf">resolve_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="resolve_tag"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.resolve_tag">[docs]</a><span class="k">def</span> <span class="nf">resolve_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a name, resolve it to a taginfo.</span>
 
@@ -105,7 +105,7 @@
     <span class="k">return</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="as_taginfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.as_taginfo">[docs]</a><span class="k">def</span> <span class="nf">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+<div class="viewcode-block" id="as_taginfo"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.as_taginfo">[docs]</a><span class="k">def</span> <span class="nf">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
@@ -120,7 +120,7 @@
     <span class="k">return</span> <span class="n">info</span></div>
 
 
-<div class="viewcode-block" id="as_targetinfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.as_targetinfo">[docs]</a><span class="k">def</span> <span class="nf">as_targetinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<div class="viewcode-block" id="as_targetinfo"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.as_targetinfo">[docs]</a><span class="k">def</span> <span class="nf">as_targetinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
@@ -135,7 +135,7 @@
     <span class="k">return</span> <span class="n">info</span></div>
 
 
-<div class="viewcode-block" id="get_affected_targets"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.get_affected_targets">[docs]</a><span class="k">def</span> <span class="nf">get_affected_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagnames</span><span class="p">):</span>
+<div class="viewcode-block" id="get_affected_targets"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.get_affected_targets">[docs]</a><span class="k">def</span> <span class="nf">get_affected_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagnames</span><span class="p">):</span>
 
     <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">tagnames</span><span class="p">)]</span>
 
@@ -154,7 +154,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span> <span class="k">if</span> <span class="n">t</span><span class="p">)))</span></div>
 
 
-<div class="viewcode-block" id="renum_inheritance"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.renum_inheritance">[docs]</a><span class="k">def</span> <span class="nf">renum_inheritance</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="renum_inheritance"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.renum_inheritance">[docs]</a><span class="k">def</span> <span class="nf">renum_inheritance</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    a new copy of the tag inheritance data, renumbered</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -169,7 +169,7 @@
     <span class="k">return</span> <span class="n">renumbered</span></div>
 
 
-<div class="viewcode-block" id="find_inheritance_parent"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.find_inheritance_parent">[docs]</a><span class="k">def</span> <span class="nf">find_inheritance_parent</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">):</span>
+<div class="viewcode-block" id="find_inheritance_parent"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.find_inheritance_parent">[docs]</a><span class="k">def</span> <span class="nf">find_inheritance_parent</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param inheritance: the output of a getFullInheritance call</span>
 
@@ -191,7 +191,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="convert_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.convert_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">convert_tag_extras</span><span class="p">(</span><span class="n">taginfo</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.convert_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">convert_tag_extras</span><span class="p">(</span><span class="n">taginfo</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param into: Existing dict to collect extras into. Default, create</span>
 <span class="sd">        a new OrderedDict</span>
@@ -223,7 +223,7 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
-<div class="viewcode-block" id="collect_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.tags.collect_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">collect_tag_extras</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.collect_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">collect_tag_extras</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Similar to session.getBuildConfig but with additional information</span>
 <span class="sd">    recording which tag in the inheritance supplied the setting.</span>

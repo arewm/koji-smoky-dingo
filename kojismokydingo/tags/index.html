@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="kojismokydingo.users" href="../users/" />
+    <link rel="prev" title="kojismokydingo.hosts" href="../hosts/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../users/" title="kojismokydingo.users"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../hosts/" title="kojismokydingo.hosts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo Contents</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kojismokydingo.tags">
+<span id="kojismokydingo-tags"></span><h1>kojismokydingo.tags<a class="headerlink" href="#module-kojismokydingo.tags" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo - tags and targets</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p><a class="reference external" href="mailto:cobrien&#37;&#52;&#48;redhat&#46;com">cobrien<span>&#64;</span>redhat<span>&#46;</span>com</a></p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL version 3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.tags.as_taginfo">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">as_taginfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#as_taginfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.as_taginfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.as_targetinfo">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">as_targetinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#as_targetinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.as_targetinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.collect_tag_extras">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">collect_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em>, <em class="sig-param">prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#collect_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.collect_tag_extras" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to session.getBuildConfig but with additional information
+recording which tag in the inheritance supplied the setting.</p>
+<p>Returns an OrderedDict of tag extra settings, keyed by the name of
+the setting. Each setting is represented as its own dict composed
+of the following keys:</p>
+<ul class="simple">
+<li><p>name - the extra setting key</p></li>
+<li><p>value - the extra setting value</p></li>
+<li><p>tag_name - the name of the tag this setting came from</p></li>
+<li><p>tag_id - the ID of the tag this setting came from</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>taginfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- koji tag info dict, or tag name</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- Extra name prefix to select for. If set, only tag
+extra fields whose key starts with the prefix string will be
+collected. Default, collect all.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.8)">collections.OrderedDict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.convert_tag_extras">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">convert_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">taginfo</em>, <em class="sig-param">into=None</em>, <em class="sig-param">prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#convert_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.convert_tag_extras" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>into</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) -- Existing dict to collect extras into. Default, create
+a new OrderedDict</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- Only gather and convert extras with key's having
+this prefix. Default, gather all keys not already found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.find_inheritance_parent">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">find_inheritance_parent</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">parent_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#find_inheritance_parent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.find_inheritance_parent" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inheritance</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>)</em>) -- the output of a getFullInheritance call</p></li>
+<li><p><strong>parent_id</strong> -- the ID of a parent tag to look for in the
+inheritance data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>matching inheritance link data, or None if none are
+found with the given parent_id</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.get_affected_targets">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">get_affected_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#get_affected_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.get_affected_targets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.renum_inheritance">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">renum_inheritance</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">begin</em>, <em class="sig-param">step</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#renum_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.renum_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd><p>a new copy of the tag inheritance data, renumbered</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.resolve_tag">
+<code class="sig-prename descclassname">kojismokydingo.tags.</code><code class="sig-name descname">resolve_tag</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">name</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#resolve_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.resolve_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a name, resolve it to a taginfo.</p>
+<p>If target is False, name is treated as a tag's name.</p>
+<p>If target is True, name is treated as a target's name, and the
+resulting taginfo will be from that target's build tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Tag or Target name</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- name specified a target rather than a tag, fetch
+the build tag name from the target and look up that. Default,
+name specifies a tag.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>NoSuchTag</strong></a> -- </p></li>
+<li><p><a class="reference internal" href="../#kojismokydingo.NoSuchTarget" title="kojismokydingo.NoSuchTarget"><strong>NoSuchTarget</strong></a> -- </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../hosts/"
+                        title="previous chapter">kojismokydingo.hosts</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../users/"
+                        title="next chapter">kojismokydingo.users</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/kojismokydingo/tags.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../users/" title="kojismokydingo.users"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../hosts/" title="kojismokydingo.hosts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo Contents</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

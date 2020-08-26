@@ -77,7 +77,7 @@
     <span class="n">collect_cgs</span><span class="p">,</span> <span class="n">collect_perminfo</span><span class="p">,</span> <span class="n">collect_userinfo</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_usertype_str"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.get_usertype_str">[docs]</a><span class="k">def</span> <span class="nf">get_usertype_str</span><span class="p">(</span><span class="n">userinfo</span><span class="p">):</span>
+<div class="viewcode-block" id="get_usertype_str"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.get_usertype_str">[docs]</a><span class="k">def</span> <span class="nf">get_usertype_str</span><span class="p">(</span><span class="n">userinfo</span><span class="p">):</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">userinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;usertype&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">USER_NORMAL</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;NORMAL (user)&quot;</span>
@@ -89,7 +89,7 @@
         <span class="k">return</span> <span class="s2">&quot;Unknown (</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">val</span></div>
 
 
-<div class="viewcode-block" id="get_userstatus_str"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.get_userstatus_str">[docs]</a><span class="k">def</span> <span class="nf">get_userstatus_str</span><span class="p">(</span><span class="n">userinfo</span><span class="p">):</span>
+<div class="viewcode-block" id="get_userstatus_str"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.get_userstatus_str">[docs]</a><span class="k">def</span> <span class="nf">get_userstatus_str</span><span class="p">(</span><span class="n">userinfo</span><span class="p">):</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">userinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="n">STATUS_NORMAL</span><span class="p">)</span> <span class="ow">or</span> <span class="n">STATUS_NORMAL</span>
     <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">STATUS_NORMAL</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;NORMAL (enabled)&quot;</span>
@@ -99,7 +99,7 @@
         <span class="k">return</span> <span class="s2">&quot;Unknown (</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">val</span></div>
 
 
-<div class="viewcode-block" id="cli_userinfo"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.cli_userinfo">[docs]</a><span class="k">def</span> <span class="nf">cli_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="cli_userinfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.cli_userinfo">[docs]</a><span class="k">def</span> <span class="nf">cli_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">userinfo</span> <span class="o">=</span> <span class="n">collect_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
@@ -137,13 +137,13 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{name}</span><span class="s2"> [</span><span class="si">{id}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">member</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="UserInfo"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.UserInfo">[docs]</a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="UserInfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.UserInfo">[docs]</a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
 
     <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show information about a user&quot;</span>
 
 
-<div class="viewcode-block" id="UserInfo.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.UserInfo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserInfo.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.UserInfo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserInfo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
@@ -156,12 +156,12 @@
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="UserInfo.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.UserInfo.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="UserInfo.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.UserInfo.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cli_userinfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
                             <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="cli_perminfo"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.cli_perminfo">[docs]</a><span class="k">def</span> <span class="nf">cli_perminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span>
+<div class="viewcode-block" id="cli_perminfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.cli_perminfo">[docs]</a><span class="k">def</span> <span class="nf">cli_perminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span>
                  <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">by_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
@@ -186,12 +186,12 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">user</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="PermissionInfo"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.PermissionInfo">[docs]</a><span class="k">class</span> <span class="nc">PermissionInfo</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="PermissionInfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.PermissionInfo">[docs]</a><span class="k">class</span> <span class="nc">PermissionInfo</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show information about a permission&quot;</span>
 
 
-<div class="viewcode-block" id="PermissionInfo.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.PermissionInfo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PermissionInfo.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.PermissionInfo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">PermissionInfo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
@@ -210,14 +210,14 @@
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="PermissionInfo.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.PermissionInfo.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="PermissionInfo.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.PermissionInfo.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cli_perminfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">permission</span><span class="p">,</span>
                             <span class="n">verbose</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
                             <span class="n">by_date</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">by_date</span><span class="p">,</span>
                             <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="cli_list_cgs"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.cli_list_cgs">[docs]</a><span class="k">def</span> <span class="nf">cli_list_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="cli_list_cgs"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.cli_list_cgs">[docs]</a><span class="k">def</span> <span class="nf">cli_list_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">cgs</span> <span class="o">=</span> <span class="n">collect_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -237,12 +237,12 @@
         <span class="nb">print</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="ListCGs"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.ListCGs">[docs]</a><span class="k">class</span> <span class="nc">ListCGs</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="ListCGs"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.ListCGs">[docs]</a><span class="k">class</span> <span class="nc">ListCGs</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;List content generators and their users&quot;</span>
 
 
-<div class="viewcode-block" id="ListCGs.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.ListCGs.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ListCGs.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.ListCGs.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListCGs</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
@@ -255,7 +255,7 @@
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="ListCGs.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.users.ListCGs.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="ListCGs.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.ListCGs.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cli_list_cgs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
                             <span class="n">name</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                             <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
