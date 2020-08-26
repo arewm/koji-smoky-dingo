@@ -5,18 +5,23 @@
   <head>
     <meta charset="utf-8" />
     <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
     <link rel="index" title="Index" href="../../../genindex/" />
-    <link rel="search" title="Search" href="../../../search/" /> 
+    <link rel="search" title="Search" href="../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head><body>
+
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -68,7 +73,48 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">bulk_load_build_archives</span><span class="p">,</span> <span class="n">bulk_load_builds</span><span class="p">,</span>
     <span class="n">bulk_load_buildroots</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">NEVRCompare</span><span class="p">,</span> <span class="n">chunkseq</span><span class="p">,</span> <span class="n">unique</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">chunkseq</span><span class="p">,</span> <span class="n">rpm_evr_compare</span><span class="p">,</span> <span class="n">unique</span>
+
+
+<div class="viewcode-block" id="BuildNEVRCompare"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.BuildNEVRCompare">[docs]</a><span class="k">class</span> <span class="nc">BuildNEVRCompare</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An adapter for Name, Epoch, Version, Release comparisons of a</span>
+<span class="sd">    build info dictionary. Used by the nevr_sort_builds function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binfo</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build</span> <span class="o">=</span> <span class="n">binfo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+
+        <span class="n">evr</span> <span class="o">=</span> <span class="p">(</span><span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">],</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span> <span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;release&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evr</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="s2">&quot;0&quot;</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">evr</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__cmp__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># cmp is a python2-ism, and has no replacement in python3 via</span>
+        <span class="c1"># six, so we&#39;ll have to create our own simplistic behavior</span>
+        <span class="c1"># similarly</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rpm_evr_compare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evr</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">evr</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cmp__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cmp__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cmp__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="build_nvr_sort"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.build_nvr_sort">[docs]</a><span class="k">def</span> <span class="nf">build_nvr_sort</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
@@ -84,7 +130,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">dedup</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="n">b</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">dedup</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">NEVRCompare</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">dedup</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">BuildNEVRCompare</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="build_id_sort"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.build_id_sort">[docs]</a><span class="k">def</span> <span class="nf">build_id_sort</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
@@ -131,24 +177,30 @@
 <span class="sd">    feedback to a user to indicate that the operations are continuing.</span>
 
 <span class="sd">    :param tagid: Destination tag&#39;s ID</span>
+
 <span class="sd">    :type tagid: int</span>
 
 <span class="sd">    :param build_infos: Build infos to be tagged</span>
+
 <span class="sd">    :type build_infos: list[dict]</span>
 
 <span class="sd">    :param force: Force tagging. Re-tags if necessary, bypasses</span>
-<span class="sd">    policy. Default, False</span>
+<span class="sd">        policy. Default, False</span>
+
 <span class="sd">    :type force: bool, optional</span>
 
 <span class="sd">    :param notify: Send tagging notifications. Default, False</span>
+
 <span class="sd">    :type notify: bool, optional</span>
 
 <span class="sd">    :param size: Count of tagging operations to perform in a single</span>
-<span class="sd">    multicall. Default, 100</span>
+<span class="sd">        multicall. Default, 100</span>
+
 <span class="sd">    :type size: int, optional</span>
 
 <span class="sd">    :param strict: Raise an exception and discontinue execution at the</span>
-<span class="sd">    first error. Default, False</span>
+<span class="sd">        first error. Default, False</span>
+
 <span class="sd">    :type strict: bool, optional</span>
 
 <span class="sd">    :rtype: Generator[list[tuple]]</span>
@@ -168,24 +220,30 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param tagid: Destination tag&#39;s ID</span>
+
 <span class="sd">    :type tagid: int</span>
 
 <span class="sd">    :param build_infos: Build infos to be tagged</span>
+
 <span class="sd">    :type build_infos: list[dict]</span>
 
 <span class="sd">    :param force: Force tagging. Re-tags if necessary, bypasses</span>
-<span class="sd">    policy. Default, False</span>
+<span class="sd">      policy. Default, False</span>
+
 <span class="sd">    :type force: bool, optional</span>
 
 <span class="sd">    :param notify: Send tagging notifications. Default, False</span>
+
 <span class="sd">    :type notify: bool, optional</span>
 
 <span class="sd">    :param size: Count of tagging operations to perform in a single</span>
-<span class="sd">    multicall. Default, 100</span>
+<span class="sd">      multicall. Default, 100</span>
+
 <span class="sd">    :type size: int, optional</span>
 
 <span class="sd">    :param strict: Raise an exception and discontinue execution at the</span>
-<span class="sd">    first error. Default, False</span>
+<span class="sd">      first error. Default, False</span>
+
 <span class="sd">    :type strict: bool, optional</span>
 
 <span class="sd">    :rtype: list[tuple]</span>
@@ -227,15 +285,21 @@
                            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="decorate_build_cg_list"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.decorate_build_cg_list">[docs]</a><span class="k">def</span> <span class="nf">decorate_build_cg_list</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
+<div class="viewcode-block" id="decorate_build_archive_data"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.builds.decorate_build_archive_data">[docs]</a><span class="k">def</span> <span class="nf">decorate_build_archive_data</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Augments a list of build_info dicts with two new keys:</span>
+<span class="sd">    Augments a list of build_info dicts with four new keys:</span>
 
 <span class="sd">    * archive_cg_ids is a set of content generator IDs for each</span>
 <span class="sd">      archive of the build</span>
 
 <span class="sd">    * archive_cg_names is a set of content generator names for each</span>
 <span class="sd">      archive of the build</span>
+
+<span class="sd">    * archive_btype_ids is a set of btype IDs for each archive of the</span>
+<span class="sd">      build</span>
+
+<span class="sd">    * archive_btype_names is a set of btype names for each archive of</span>
+<span class="sd">      the build</span>
 
 <span class="sd">    :param build_infos: list of build infos to decorate and return</span>
 <span class="sd">    :type build_infos: list[dict]</span>
@@ -246,7 +310,7 @@
     <span class="c1"># convert build_infos into an id:info dict</span>
     <span class="n">builds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span><span class="p">)</span>
 
-    <span class="c1"># multicall to fetch the artifacts for all build_infos</span>
+    <span class="c1"># multicall to fetch the artifacts for all build IDs</span>
     <span class="n">archives</span> <span class="o">=</span> <span class="n">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">builds</span><span class="p">))</span>
 
     <span class="c1"># gather all the buildroot IDs</span>
@@ -264,10 +328,17 @@
     <span class="c1"># gather the cg_id and cg_name from each buildroot, and associate</span>
     <span class="c1"># it back with the original build info</span>
     <span class="k">for</span> <span class="n">build_id</span><span class="p">,</span> <span class="n">archive_list</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">archives</span><span class="p">):</span>
-        <span class="n">cg_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">cg_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cg_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cg_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">btype_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">btype_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archive_list</span><span class="p">:</span>
+            <span class="n">btype_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">archive</span><span class="p">[</span><span class="s2">&quot;btype_id&quot;</span><span class="p">])</span>
+            <span class="n">btype_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">archive</span><span class="p">[</span><span class="s2">&quot;btype&quot;</span><span class="p">])</span>
+
             <span class="n">broot_id</span> <span class="o">=</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;buildroot_id&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">broot_id</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -281,10 +352,6 @@
             <span class="n">cg_name</span> <span class="o">=</span> <span class="n">broot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cg_name&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cg_name</span><span class="p">:</span>
                 <span class="n">cg_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cg_name</span><span class="p">)</span>
-
-        <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cg_ids</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cg_names</span>
 
     <span class="k">return</span> <span class="n">build_infos</span></div>
 

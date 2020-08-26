@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli.builds &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.cli.builds</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Bulk tagging commands</span>
+
+<span class="sd">Allows for large numbers of builds to be tagged rapidly, via multicall</span>
+<span class="sd">to tagBuildBypass</span>
+
+<span class="sd">:author: cobrien@redhat.com</span>
+<span class="sd">:license: GPL version 3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">itervalues</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">TagSmokyDingo</span><span class="p">,</span>
+    <span class="n">read_clean_lines</span><span class="p">,</span> <span class="n">printerr</span><span class="p">,</span> <span class="n">resplit</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">NoSuchUser</span><span class="p">,</span> <span class="n">bulk_load_builds</span>
+<span class="kn">from</span> <span class="nn">..builds</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">build_dedup</span><span class="p">,</span> <span class="n">build_id_sort</span><span class="p">,</span> <span class="n">build_nvr_sort</span><span class="p">,</span>
+    <span class="n">decorate_build_archive_data</span><span class="p">,</span> <span class="n">iter_bulk_tag_builds</span><span class="p">,</span> <span class="n">filter_imported</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">chunkseq</span><span class="p">,</span> <span class="n">unique</span>
+
+
+<span class="n">SORT_BY_ID</span> <span class="o">=</span> <span class="s2">&quot;sort-by-id&quot;</span>
+<span class="n">SORT_BY_NVR</span> <span class="o">=</span> <span class="s2">&quot;sort-by-nvr&quot;</span>
+
+
+<div class="viewcode-block" id="cli_bulk_tag_builds"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.cli_bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">cli_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
+                        <span class="n">sorting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="c1"># set up the verbose debugging output function</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">printerr</span><span class="p">(</span><span class="n">message</span> <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="c1"># fetch the destination tag info (and make sure it actually</span>
+    <span class="c1"># exists)</span>
+    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">taginfo</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+    <span class="n">tagid</span> <span class="o">=</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+    <span class="c1"># figure out how we&#39;re going to be dealing with builds that don&#39;t</span>
+    <span class="c1"># have a matching pkg entry already. Someone needs to own them...</span>
+    <span class="n">ownerid</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">owner</span><span class="p">:</span>
+        <span class="n">ownerinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ownerinfo</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchUser</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
+        <span class="n">ownerid</span> <span class="o">=</span> <span class="n">ownerinfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+    <span class="c1"># load the buildinfo for all of the NVRs</span>
+    <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fed with </span><span class="si">%i</span><span class="s2"> builds&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nvrs</span><span class="p">))</span>
+
+    <span class="c1"># validate our list of NVRs first by attempting to load them</span>
+    <span class="n">builds</span> <span class="o">=</span> <span class="n">bulk_load_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">unique</span><span class="p">(</span><span class="n">nvrs</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span>
+    <span class="n">builds</span> <span class="o">=</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span>
+
+    <span class="c1"># sort/dedup as requested</span>
+    <span class="k">if</span> <span class="n">sorting</span> <span class="o">==</span> <span class="n">SORT_BY_NVR</span><span class="p">:</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;NVR sorting specified&quot;</span><span class="p">)</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="n">build_nvr_sort</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sorting</span> <span class="o">==</span> <span class="n">SORT_BY_ID</span><span class="p">:</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ID sorting specified&quot;</span><span class="p">)</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="n">build_id_sort</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No sorting specified, preserving feed order&quot;</span><span class="p">)</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="n">build_dedup</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span>
+
+    <span class="c1"># at this point builds is a list of build info dicts</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Sorted and trimmed duplicates to </span><span class="si">%i</span><span class="s2"> builds&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">builds</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">build</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+            <span class="n">debug</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">%s</span><span class="s2"> </span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">build</span><span class="p">[</span><span class="s2">&quot;nvr&quot;</span><span class="p">],</span> <span class="n">build</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">builds</span><span class="p">:</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Nothing to do!&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># check for missing package listings, and add as necessary</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listPackages</span><span class="p">(</span><span class="n">tagID</span><span class="o">=</span><span class="n">tagid</span><span class="p">,</span>
+                                    <span class="n">inherited</span><span class="o">=</span><span class="n">inherit</span><span class="p">)</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">pkg</span><span class="p">[</span><span class="s2">&quot;package_id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">)</span>
+
+    <span class="n">package_todo</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">build</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+        <span class="n">pkgid</span> <span class="o">=</span> <span class="n">build</span><span class="p">[</span><span class="s2">&quot;package_id&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">pkgid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+            <span class="n">packages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pkgid</span><span class="p">)</span>
+            <span class="n">package_todo</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pkgid</span><span class="p">,</span> <span class="n">ownerid</span> <span class="ow">or</span> <span class="n">build</span><span class="p">[</span><span class="s2">&quot;owner_id&quot;</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">package_todo</span><span class="p">:</span>
+        <span class="c1"># we&#39;ve got some package listings that need adding</span>
+
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Beginning package additions&quot;</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">pkgid</span><span class="p">,</span> <span class="n">oid</span> <span class="ow">in</span> <span class="n">package_todo</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">packageListAdd</span><span class="p">(</span><span class="n">tagid</span><span class="p">,</span> <span class="n">pkgid</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="n">oid</span><span class="p">,</span>
+                                   <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span>
+
+        <span class="c1"># verify the results of our add-pkg calls. If strict was set</span>
+        <span class="c1"># then the multicall would have raised an exception, but we</span>
+        <span class="c1"># need to present any issues for the non-strict cases as well</span>
+        <span class="k">for</span> <span class="n">res</span><span class="p">,</span> <span class="n">pad</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">done</span><span class="p">,</span> <span class="n">package_todo</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;faultCode&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                <span class="n">printerr</span><span class="p">(</span><span class="s2">&quot;Error adding package&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;faultString&quot;</span><span class="p">])</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Package additions completed&quot;</span><span class="p">)</span>
+
+    <span class="c1"># and finally, tag the builds themselves in chunks of 100</span>
+    <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Begining build tagging&quot;</span><span class="p">)</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">done</span> <span class="ow">in</span> <span class="n">iter_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagid</span><span class="p">,</span> <span class="n">builds</span><span class="p">,</span>
+                                     <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="n">notify</span><span class="p">,</span>
+                                     <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">build</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">done</span><span class="p">:</span>
+            <span class="c1"># same as with the add-pkg -- if strict was True then any</span>
+            <span class="c1"># issues would raise an exception, but for non-strict</span>
+            <span class="c1"># invocations we need to present the error messages</span>
+            <span class="k">if</span> <span class="s2">&quot;faultCode&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                <span class="n">printerr</span><span class="p">(</span><span class="s2">&quot;Error tagging build&quot;</span><span class="p">,</span> <span class="n">build</span><span class="p">[</span><span class="s2">&quot;nvr&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;faultString&quot;</span><span class="p">])</span>
+
+        <span class="c1"># and of course display the courtesy counter so the user</span>
+        <span class="c1"># knows we&#39;re actually doing something</span>
+        <span class="n">counter</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot; tagged </span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">counter</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">builds</span><span class="p">))</span>
+
+    <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;All done!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BulkTagBuilds"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.BulkTagBuilds">[docs]</a><span class="k">class</span> <span class="nc">BulkTagBuilds</span><span class="p">(</span><span class="n">TagSmokyDingo</span><span class="p">):</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;bind&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Quickly tag a large number of builds&quot;</span>
+
+
+<div class="viewcode-block" id="BulkTagBuilds.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.BulkTagBuilds.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BulkTagBuilds</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tag to associate builds with&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print debugging information&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--owner&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Force missing package listings to be created&quot;</span>
+               <span class="s2">&quot; with the specified owner&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--no-inherit&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_false&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;inherit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Do not use parent tags to&quot;</span>
+               <span class="s2">&quot; determine existing package listing.&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--file&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;nvr_file&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NVR_FILE&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Read list of builds from file, one NVR per line.&quot;</span>
+               <span class="s2">&quot; Omit for default behavior: read build NVRs from stdin&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--strict&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Stop processing at the first failure&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--force&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Force tagging.&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--notify&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Send tagging notifications.&quot;</span><span class="p">)</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--nvr-sort&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sorting&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">SORT_BY_NVR</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;pre-sort build list by NVR, so highest NVR is&quot;</span>
+               <span class="s2">&quot; tagged last&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--id-sort&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sorting&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">SORT_BY_ID</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;pre-sort build list by build ID, so most recently&quot;</span>
+               <span class="s2">&quot; completed build is tagged last&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">argp</span></div>
+
+
+<div class="viewcode-block" id="BulkTagBuilds.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.BulkTagBuilds.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">nvrs</span> <span class="o">=</span> <span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cli_bulk_tag_builds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
+                                   <span class="n">sorting</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">sorting</span><span class="p">,</span>
+                                   <span class="n">owner</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span>
+                                   <span class="n">inherit</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">inherit</span><span class="p">,</span>
+                                   <span class="n">force</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">force</span><span class="p">,</span>
+                                   <span class="n">notify</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">notify</span><span class="p">,</span>
+                                   <span class="n">verbose</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                                   <span class="n">strict</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">strict</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="cli_list_imported"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.cli_list_imported">[docs]</a><span class="k">def</span> <span class="nf">cli_list_imported</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nvr_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">cg_list</span><span class="o">=</span><span class="p">()):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    CLI handler for `koji list-imported`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">nvr_list</span><span class="p">:</span>
+        <span class="n">nvr_list</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">nvr_list</span><span class="p">)</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="n">bulk_load_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvr_list</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">tagname</span><span class="p">:</span>
+        <span class="n">taginfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">taginfo</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+
+        <span class="n">builds</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listTagged</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">inherit</span><span class="o">=</span><span class="n">inherit</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># from the CLI, one of these should be specified.</span>
+        <span class="n">builds</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">negate</span><span class="p">:</span>
+        <span class="c1"># we&#39;ll be trying to match content generators, which will</span>
+        <span class="c1"># require us doing some extra work to actually determine what</span>
+        <span class="c1"># content generators were used to produce a build. This will</span>
+        <span class="c1"># mean digging through every archive in every build, then</span>
+        <span class="c1"># finding the buildroots for each... so we only want to do</span>
+        <span class="c1"># this if we&#39;ll actually be using the additional info!</span>
+        <span class="n">decorate_build_archive_data</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">builds</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">build</span> <span class="ow">in</span> <span class="n">filter_imported</span><span class="p">(</span><span class="n">builds</span><span class="p">,</span> <span class="n">negate</span><span class="p">,</span> <span class="n">cg_list</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">build</span><span class="p">[</span><span class="s2">&quot;nvr&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="ListImported"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported">[docs]</a><span class="k">class</span> <span class="nc">ListImported</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Detect imported builds&quot;</span>
+
+
+<div class="viewcode-block" id="ListImported.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListImported</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tag containing builds to check.&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--file&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;nvr_file&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NVR_FILE&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Read list of builds from file, one NVR per line.&quot;</span>
+               <span class="s2">&quot; Set to - to read from stdin.&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--inherit&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;also scan any parent tags when checking&quot;</span>
+               <span class="s2">&quot; for imported builds&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--negate&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;inverted behavior, list non-imports instead&quot;</span>
+               <span class="s2">&quot; of imports&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--content-generator&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;cg_list&quot;</span><span class="p">,</span>
+               <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+               <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CG_NAME&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;show content generator imports by build&quot;</span>
+               <span class="s2">&quot; system name. Default: display no CG builds.&quot;</span>
+               <span class="s2">&quot; Specify &#39;any&#39; to see CG imports from any system.&quot;</span>
+               <span class="s2">&quot; May be specified more than once.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">argp</span></div>
+
+
+<div class="viewcode-block" id="ListImported.validate"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tag</span> <span class="ow">or</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">):</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please specify either a tag to scan, or&quot;</span>
+                         <span class="s2">&quot; --file=NVR_FILE&quot;</span><span class="p">)</span>
+
+        <span class="n">options</span><span class="o">.</span><span class="n">cg_list</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">cg_list</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">nvr_list</span> <span class="o">=</span> <span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">ioe</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unable to read NVR list </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ioe</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ListImported.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.builds.ListImported.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">nvr_list</span> <span class="o">=</span> <span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cli_list_imported</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+                                 <span class="n">tagname</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span>
+                                 <span class="n">nvr_list</span><span class="o">=</span><span class="n">nvr_list</span><span class="p">,</span>
+                                 <span class="n">inherit</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">inherit</span><span class="p">,</span>
+                                 <span class="n">negate</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">negate</span><span class="p">,</span>
+                                 <span class="n">cg_list</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">cg_list</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

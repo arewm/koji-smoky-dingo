@@ -5,18 +5,23 @@
   <head>
     <meta charset="utf-8" />
     <title>kojismokydingo.hosts &#8212; kojismokydingo 0.9.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
     <link rel="index" title="Index" href="../../../genindex/" />
-    <link rel="search" title="Search" href="../../../search/" /> 
+    <link rel="search" title="Search" href="../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head><body>
+
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -79,15 +84,18 @@
 <span class="sd">    builders which are enabled, but no longer responding.</span>
 
 <span class="sd">    :param arches: List of architecture names to filter builders by.</span>
-<span class="sd">    Default, all arches</span>
+<span class="sd">        Default, all arches</span>
+
 <span class="sd">    :type arches: list[str], optional</span>
 
 <span class="sd">    :param channel: Channel name to filter builders by. Default,</span>
-<span class="sd">    builders in any channel.</span>
+<span class="sd">        builders in any channel.</span>
+
 <span class="sd">    :type channel: str, optional</span>
 
 <span class="sd">    :param skiplist: List of glob-style patterns of builders to</span>
-<span class="sd">    omit. Default, all builders included</span>
+<span class="sd">        omit. Default, all builders included</span>
+
 <span class="sd">    :type skiplist: list[str], optional</span>
 
 <span class="sd">    :rtype: list[dict]</span>
@@ -115,7 +123,6 @@
     <span class="c1"># collect a mapping of builder ids to builder info</span>
     <span class="n">bldrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bldrs</span><span class="p">)</span>
 
-    <span class="c1"># correlate the update timestamps with the builder info</span>
     <span class="n">bldr_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterkeys</span><span class="p">(</span><span class="n">bldrs</span><span class="p">))</span>
 
     <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
@@ -123,6 +130,7 @@
         <span class="n">session</span><span class="o">.</span><span class="n">getLastHostUpdate</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
     <span class="n">mc</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span>
 
+    <span class="c1"># correlate the update timestamps with the builder info</span>
     <span class="k">for</span> <span class="n">bid</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bldr_ids</span><span class="p">,</span> <span class="n">mc</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">data</span> <span class="k">else</span> <span class="kc">None</span>
 

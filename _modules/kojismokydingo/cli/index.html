@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.cli</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - CLI</span>
+
+<span class="sd">This package contains mechanisms for more easily adding new</span>
+<span class="sd">command-line features to the Koji client, in coordination with the</span>
+<span class="sd">kojismokydingometa plugin.</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="k">import</span> <span class="n">dump</span>
+<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">GenericError</span>
+<span class="kn">from</span> <span class="nn">koji_cli.lib</span> <span class="k">import</span> <span class="n">activate_session</span><span class="p">,</span> <span class="n">ensure_connection</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">basename</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">add_metaclass</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">zip_longest</span>
+
+<span class="kn">from</span> <span class="nn">kojismokydingo</span> <span class="k">import</span> <span class="n">BadDingo</span><span class="p">,</span> <span class="n">NotPermitted</span>
+
+
+<span class="c1"># these mimic the default format for jq output</span>
+<span class="n">JSON_PRETTY_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;indent&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;separators&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">),</span>
+    <span class="s2">&quot;sort_keys&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="pretty_json"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.pretty_json">[docs]</a><span class="k">def</span> <span class="nf">pretty_json</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">pretty</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Presents JSON in a pretty way.</span>
+
+<span class="sd">    Keyword arguments are passed along to :py:func:`json.dump` to</span>
+<span class="sd">    alter the default output format defined by</span>
+<span class="sd">    :py:obj:`JSON_PRETTY_OPTIONS`</span>
+
+<span class="sd">    :param data: value to be printed</span>
+
+<span class="sd">    :type data: int or str or dict or list or None</span>
+
+<span class="sd">    :param output: stream to print to. Default, :py:obj:`sys.stdout`</span>
+
+<span class="sd">    :type output: io.TextIOBase, optional</span>
+
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="n">pretty_options</span> <span class="o">=</span> <span class="n">JSON_PRETTY_OPTIONS</span>
+    <span class="k">if</span> <span class="n">pretty</span><span class="p">:</span>
+        <span class="n">pretty_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">pretty_options</span><span class="p">)</span>
+        <span class="n">pretty_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pretty</span><span class="p">)</span>
+
+    <span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="o">**</span><span class="n">pretty_options</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="resplit"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.resplit">[docs]</a><span class="k">def</span> <span class="nf">resplit</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collapses comma-separated and multi-specified items into a single</span>
+<span class="sd">    list. Useful with action=&quot;append&quot; in an argparse argument.</span>
+
+<span class="sd">    this allows arguments like:</span>
+<span class="sd">    -x 1 -x 2, -x 3,4,5 -x ,6,7, -x 8</span>
+
+<span class="sd">    to become</span>
+<span class="sd">    x = [1, 2, 3, 4, 5, 6, 7, 8]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">work</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">work</span> <span class="k">if</span> <span class="n">a</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="clean_lines"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.clean_lines">[docs]</a><span class="k">def</span> <span class="nf">clean_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">skip_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filters clean lines from a sequence.</span>
+
+<span class="sd">    Each line will be stripped of leading and trailing whitespace.</span>
+
+<span class="sd">    If skip_comments is True (the default), then any line with a</span>
+<span class="sd">    leading hash (&#39;#&#39;) will be considered a comment and omitted from</span>
+<span class="sd">    the output.</span>
+
+<span class="sd">    :param lines: Sequence of lines to process</span>
+
+<span class="sd">    :type lines: Iterator[str]</span>
+
+<span class="sd">    :param skip_comments: Skip over lines with leading # characters.</span>
+<span class="sd">      Default, True</span>
+
+<span class="sd">    :type skip_comments: bool, optional</span>
+
+<span class="sd">    :rtype: List[str]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">skip_comments</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="read_clean_lines"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.read_clean_lines">[docs]</a><span class="k">def</span> <span class="nf">read_clean_lines</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">skip_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads clean lines from a named file. If filename is &#39;-&#39; then read</span>
+<span class="sd">    from :py:obj:`sys.stdin` instead.</span>
+
+<span class="sd">    Each line will be stripped of leading and trailing whitespace.</span>
+
+<span class="sd">    If skip_comments is True (the default), then any line with a</span>
+<span class="sd">    leading hash (&#39;#&#39;) will be considered a comment and omitted from</span>
+<span class="sd">    the output.</span>
+
+<span class="sd">    Content will be fully collected into a list and the file (if not</span>
+<span class="sd">    stdin) will be closed before returning.</span>
+
+<span class="sd">    :param filename: File name to read lines from, or - to indicate</span>
+<span class="sd">      stdin. Default, read from :py:obj:`sys.stdin`</span>
+
+<span class="sd">    :type filename: str, optional</span>
+
+<span class="sd">    :param skip_comments: Skip over lines with leading # characters.</span>
+<span class="sd">      Default, True</span>
+
+<span class="sd">    :type skip_comments: bool, optional</span>
+
+<span class="sd">    :rtype: list[str]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">elif</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">clean_lines</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">clean_lines</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span></div>
+
+
+<span class="n">printerr</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="tabulate"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.tabulate">[docs]</a><span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="n">headings</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sorting</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">quiet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints tabulated data, with the given headings.</span>
+
+<span class="sd">    This function is not resilient -- the headings and data must have</span>
+<span class="sd">    the same count of rows, nothing will inject empty values.</span>
+
+<span class="sd">    Output will be configured to set the columns to their maximum</span>
+<span class="sd">    width necessary for the longest value from all the rows or the</span>
+<span class="sd">    heading.</span>
+
+<span class="sd">    :param headings: The column titles</span>
+
+<span class="sd">    :type headings: list[str]</span>
+
+<span class="sd">    :param data: Rows of data</span>
+
+<span class="sd">    :type data: list</span>
+
+<span class="sd">    :param key: Transformation to apply to each row of data to get the</span>
+<span class="sd">      actual individual columns. Should be a unary function. Default,</span>
+<span class="sd">      data is iterated as-is.</span>
+
+<span class="sd">    :type key: Callable[[object], object]</span>
+
+<span class="sd">    :param sorting: Whether data rows should be sorted and in what</span>
+<span class="sd">      direction. 0 for no sorting, 1 for ascending, -1 for</span>
+<span class="sd">      descending. If key is specified, then sorting will be based on</span>
+<span class="sd">      those transformations. Default, no sorting.</span>
+
+<span class="sd">    :type sorting: int, optional</span>
+
+<span class="sd">    :param quiet: Whether to print headings or not. Default, only print</span>
+<span class="sd">      headings if out is a TTY device.</span>
+
+<span class="sd">    :type quiet: bool, optional</span>
+
+<span class="sd">    :param out: Stream to write output to. Default, :py:obj:`sys.stdout`</span>
+
+<span class="sd">    :type out: io.TextIOBase, optional</span>
+
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="c1"># The quiet setting has three values. True meaning no header,</span>
+    <span class="c1"># False meaning header, and None meaning no header if out is not a</span>
+    <span class="c1"># TTY.</span>
+    <span class="k">if</span> <span class="n">quiet</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">quiet</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">out</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
+
+    <span class="c1"># convert data to a list, and apply the key if necessary to find</span>
+    <span class="c1"># the real columns</span>
+    <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sorting</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="p">(</span><span class="n">sorting</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># now we need to compute the maximum width of each columns</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">col</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">fillvalue</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">widths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">headings</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">w</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span>
+                  <span class="n">zip_longest</span><span class="p">(</span><span class="n">widths</span><span class="p">,</span> <span class="n">headings</span><span class="p">)]</span>
+
+    <span class="c1"># now we create the format string based on the max width of each</span>
+    <span class="c1"># column plus some spacing. Note that python 2.6 mandates the</span>
+    <span class="c1"># field index be specified, so we MUST use enumerate here.</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;  &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;{</span><span class="si">%i</span><span class="s2">:&lt;</span><span class="si">%i</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">iw</span> <span class="k">for</span> <span class="n">iw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">widths</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">headings</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">headings</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">widths</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">out</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SmokyDingo"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.SmokyDingo">[docs]</a><span class="nd">@add_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SmokyDingo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for new sub-commands in Koji. Subclasses may be</span>
+<span class="sd">    referenced via an entry point under the koji_smoky_dingo group to</span>
+<span class="sd">    be loaded at runtime by the kojismokydingometa Koji client plugin.</span>
+
+<span class="sd">    Summary of behavior is as follows</span>
+
+<span class="sd">    * kojismokydingometa plugin loads when koji client launches</span>
+
+<span class="sd">    * the meta plugin loads all `koji_smoky_dingo` entry points</span>
+
+<span class="sd">    * each entry point name is a command name, and the reference should</span>
+<span class="sd">      resolve to a subclass of `SmokyDingo`</span>
+
+<span class="sd">    * each entry point is instantiated, and presented to the koji cli</span>
+<span class="sd">      as a new sub-command</span>
+
+<span class="sd">    * if the sub-command is invoked, then the `SmokyDingo` instance is</span>
+<span class="sd">      called, this triggers the following:</span>
+
+<span class="sd">      * the `SmokyDingo.parser` method provides additional argument</span>
+<span class="sd">        parsing</span>
+
+<span class="sd">      * the `SmokyDingo.validate` method provides a chance to validate</span>
+<span class="sd">        and/or manipulate the parsed arguments</span>
+
+<span class="sd">      * the `SmokyDingo.activate` method authenticates with the hub</span>
+
+<span class="sd">      * the `SmokyDingo.handle` method invokes the actual work of the</span>
+<span class="sd">        sub-command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;misc&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;A CLI Plugin&quot;</span>
+
+    <span class="c1"># set of permission names that can grant use of this command. None</span>
+    <span class="c1"># or empty for anonymous access. Checked in pre_handle</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># this is used to register the command with koji in a manner</span>
+        <span class="c1"># that it expects to deal with</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;handle_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+
+        <span class="c1"># this is necessary for koji to recognize us as a cli command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exported_cli</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># allow a docstr to be specified on subclasses, but if absent</span>
+        <span class="c1"># let&#39;s set it based on the group and description.</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;__doc__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+        <span class="c1"># these will be populated once the command instance is</span>
+        <span class="c1"># actually called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="SmokyDingo.parser"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.SmokyDingo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override to provide an ArgumentParser instance with all the</span>
+<span class="sd">        relevant positional arguments and options added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">invoke</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="n">invoke</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SmokyDingo.validate"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.SmokyDingo.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override to perform validation on options values. Return value is</span>
+<span class="sd">        ignored, use parser.error if needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SmokyDingo.pre_handle"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.SmokyDingo.pre_handle">[docs]</a>    <span class="k">def</span> <span class="nf">pre_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verify necessary permissions are in place before attempting any</span>
+<span class="sd">        further calls.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">permission</span><span class="p">:</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+            <span class="n">userinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getLoggedInUser</span><span class="p">()</span>
+            <span class="n">userperms</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUserPerms</span><span class="p">(</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">permission</span> <span class="ow">in</span> <span class="n">userperms</span> <span class="ow">or</span> <span class="s2">&quot;admin&quot;</span> <span class="ow">in</span> <span class="n">userperms</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Insufficient permissions for command </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="k">raise</span> <span class="n">NotPermitted</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SmokyDingo.handle"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.SmokyDingo.handle">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform the full set of actions for this command.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SmokyDingo.activate"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.SmokyDingo.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Activate the session</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">activate_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is the koji CLI handler interface. The global options, the</span>
+<span class="sd">        session, and the unparsed command arguments are provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span> <span class="o">=</span> <span class="n">goptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+
+        <span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_handle</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">printerr</span><span class="p">()</span>
+            <span class="k">return</span> <span class="mi">130</span>
+
+        <span class="k">except</span> <span class="n">GenericError</span> <span class="k">as</span> <span class="n">kge</span><span class="p">:</span>
+            <span class="n">printerr</span><span class="p">(</span><span class="n">kge</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">except</span> <span class="n">BadDingo</span> <span class="k">as</span> <span class="n">bad</span><span class="p">:</span>
+            <span class="n">printerr</span><span class="p">(</span><span class="n">bad</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">2</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># koji CLI hides tracebacks from us. If something goes</span>
+            <span class="c1"># wrong, we want to see it</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="AnonSmokyDingo"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.AnonSmokyDingo">[docs]</a><span class="k">class</span> <span class="nc">AnonSmokyDingo</span><span class="p">(</span><span class="n">SmokyDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A SmokyDingo which upon activation will connect to koji hub, but</span>
+<span class="sd">    will not authenticate. This means only hub RPC endpoints which do</span>
+<span class="sd">    not enforce require some permission will work. This is normal for</span>
+<span class="sd">    many information-only endpoints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># koji won&#39;t even bother fully authenticating our session for</span>
+        <span class="c1"># this command if we tweak the name like this. Since</span>
+        <span class="c1"># subclasses of this are meant to be anonymous commands</span>
+        <span class="c1"># anyway, we may as well omit the session init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;anon_handle_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AnonSmokyDingo.activate"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.AnonSmokyDingo.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># rather than logging on, we only open a connection</span>
+        <span class="n">ensure_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnonSmokyDingo.pre_handle"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.AnonSmokyDingo.pre_handle">[docs]</a>    <span class="k">def</span> <span class="nf">pre_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="c1"># do not check permissions at all, we won&#39;t be logged in</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="AdminSmokyDingo"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.AdminSmokyDingo">[docs]</a><span class="k">class</span> <span class="nc">AdminSmokyDingo</span><span class="p">(</span><span class="n">SmokyDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A SmokyDingo which checks for the &#39;admin&#39; permission after</span>
+<span class="sd">    activation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span></div>
+
+
+<div class="viewcode-block" id="TagSmokyDingo"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.TagSmokyDingo">[docs]</a><span class="k">class</span> <span class="nc">TagSmokyDingo</span><span class="p">(</span><span class="n">SmokyDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A SmokyDingo which checks for the &#39;tag&#39; or &#39;admin&#39; permission after</span>
+<span class="sd">    activation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="s2">&quot;tag&quot;</span></div>
+
+
+<div class="viewcode-block" id="TargetSmokyDingo"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.TargetSmokyDingo">[docs]</a><span class="k">class</span> <span class="nc">TargetSmokyDingo</span><span class="p">(</span><span class="n">SmokyDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A SmokyDingo which checks for the &#39;target&#39; or &#39;admin&#39; permission</span>
+<span class="sd">    after activation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="s2">&quot;target&quot;</span></div>
+
+
+<div class="viewcode-block" id="HostSmokyDingo"><a class="viewcode-back" href="../../../cli/#kojismokydingo.cli.HostSmokyDingo">[docs]</a><span class="k">class</span> <span class="nc">HostSmokyDingo</span><span class="p">(</span><span class="n">SmokyDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A SmokyDingo which checks for the &#39;host&#39; or &#39;admin&#39; permisson</span>
+<span class="sd">    after activation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="s2">&quot;host&quot;</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

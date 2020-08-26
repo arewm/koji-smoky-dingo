@@ -5,19 +5,24 @@
   <head>
     <meta charset="utf-8" />
     <title>Koji Smoky Dingo &#8212; kojismokydingo 0.9.0 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript" id="documentation_options" data-url_root="#" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
-    
     <link rel="index" title="Index" href="genindex/" />
     <link rel="search" title="Search" href="search/" />
-    <link rel="next" title="Overview of koji-smoky-dingo" href="overview/" /> 
+    <link rel="next" title="Overview" href="overview/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head><body>
+
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -28,7 +33,7 @@
           <a href="py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="overview/" title="Overview of koji-smoky-dingo"
+          <a href="overview/" title="Overview"
              accesskey="N">next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
       </ul>
@@ -44,20 +49,20 @@
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview/">Overview of koji-smoky-dingo</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="overview/">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="overview/#meta-plugin">Meta Plugin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview/#tag-commands">Tag Commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview/#informational-commands">Informational Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#information-commands">Information Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview/#install">Install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="overview/#meta-plugin-1">Meta Plugin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="overview/#package-kojismokydingo">Package kojismokydingo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview/#the-meta-plugin">The Meta Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview/#the-kojismokydingo-package">The kojismokydingo Package</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="overview/#contact">Contact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview/#license">License</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="kojismokydingo/">Koji Smoky Dingo</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="kojismokydingo/">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="kojismokydingo/#module-kojismokydingo">kojismokydingo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kojismokydingo/#module-kojismokydingo.archives">kojismokydingo.archives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kojismokydingo/#module-kojismokydingo.builds">kojismokydingo.builds</a></li>
@@ -65,6 +70,16 @@
 <li class="toctree-l2"><a class="reference internal" href="kojismokydingo/#module-kojismokydingo.hosts">kojismokydingo.hosts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kojismokydingo/#module-kojismokydingo.tags">kojismokydingo.tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kojismokydingo/#module-kojismokydingo.users">kojismokydingo.users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli/">CLI API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli">kojismokydingo.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli.archives">kojismokydingo.cli.archives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli.builds">kojismokydingo.cli.builds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli.clients">kojismokydingo.cli.client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli.hosts">kojismokydingo.cli.hosts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli.tags">kojismokydingo.cli.tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#module-kojismokydingo.cli.users">kojismokydingo.cli.users</a></li>
 </ul>
 </li>
 </ul>
@@ -79,7 +94,7 @@
         <div class="sphinxsidebarwrapper">
   <h4>Next topic</h4>
   <p class="topless"><a href="overview/"
-                        title="next chapter">Overview of koji-smoky-dingo</a></p>
+                        title="next chapter">Overview</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -111,7 +126,7 @@
           <a href="py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="overview/" title="Overview of koji-smoky-dingo"
+          <a href="overview/" title="Overview"
              >next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
       </ul>

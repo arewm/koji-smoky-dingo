@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli.clients &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.cli.clients</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - info command client-config</span>
+
+<span class="sd">Get information about local client configuration settings</span>
+
+<span class="sd">:author: cobrien@redhat.com</span>
+<span class="sd">:license: GPL version 3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iterkeys</span>
+<span class="kn">from</span> <span class="nn">six.moves.configparser</span> <span class="k">import</span> <span class="n">ConfigParser</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">pretty_json</span>
+<span class="kn">from</span> <span class="nn">..clients</span> <span class="k">import</span> <span class="n">rebuild_client_config</span>
+
+
+<div class="viewcode-block" id="cli_client_config"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.cli_client_config">[docs]</a><span class="k">def</span> <span class="nf">cli_client_config</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span>
+                      <span class="n">only</span><span class="o">=</span><span class="p">(),</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="n">profile</span><span class="p">,</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">rebuild_client_config</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">only</span><span class="p">:</span>
+        <span class="c1"># supporting RHEL 6 means supporting python 2.6, which doesn&#39;t</span>
+        <span class="c1"># have dict comprehensions.</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">opts</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">only</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">only</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iterkeys</span><span class="p">(</span><span class="n">opts</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
+        <span class="n">pretty_json</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+        <span class="c1"># under python3 we&#39;d just set defaults and the default section</span>
+        <span class="c1"># name, but koji still operates under python2 (see RHEL 6), so</span>
+        <span class="c1"># we need to be sure to work under both environments.</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">_sections</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="o">=</span> <span class="n">opts</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">only</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">only</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">opts</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+
+    <span class="nb">print</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ClientConfig"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig">[docs]</a><span class="k">class</span> <span class="nc">ClientConfig</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show client profile settings&quot;</span>
+
+
+<div class="viewcode-block" id="ClientConfig.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ClientConfig</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;only&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">(),</span>
+               <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;SETTING&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Limit to these settings (default: all settings)&quot;</span><span class="p">)</span>
+
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--quiet&quot;</span><span class="p">,</span> <span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Do not print setting keys&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output settings as JSON&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--cfg&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output settings as a config file&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="ClientConfig.activate"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># entirely local, do not even attempt to connect to koji</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ClientConfig.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.clients.ClientConfig.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cli_client_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span><span class="p">,</span>
+                                 <span class="n">only</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">only</span><span class="p">,</span>
+                                 <span class="n">quiet</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">quiet</span><span class="p">,</span>
+                                 <span class="n">config</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">cfg</span><span class="p">,</span>
+                                 <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

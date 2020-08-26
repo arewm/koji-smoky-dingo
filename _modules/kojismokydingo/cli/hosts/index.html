@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli.hosts &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.cli.hosts</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - CLI Host Commands</span>
+
+<span class="sd">Simple utility for querying brew to check for builders which are</span>
+<span class="sd">enabled but which are not checking in.</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">itervalues</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span>
+<span class="kn">from</span> <span class="nn">..hosts</span> <span class="k">import</span> <span class="n">gather_hosts_checkins</span>
+
+
+<div class="viewcode-block" id="cli_check_hosts"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.cli_check_hosts">[docs]</a><span class="k">def</span> <span class="nf">cli_check_hosts</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ignore</span><span class="o">=</span><span class="p">(),</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shush</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="n">timeout</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="p">(</span><span class="n">timeout</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
+
+    <span class="n">bldr_data</span> <span class="o">=</span> <span class="n">gather_hosts_checkins</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
+                                      <span class="n">arches</span><span class="o">=</span><span class="n">arches</span><span class="p">,</span>
+                                      <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
+                                      <span class="n">skiplist</span><span class="o">=</span><span class="n">ignore</span><span class="p">)</span>
+
+    <span class="n">collected</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">bldr</span> <span class="ow">in</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">bldr_data</span><span class="p">):</span>
+        <span class="n">lup</span> <span class="o">=</span> <span class="n">bldr</span><span class="p">[</span><span class="s2">&quot;last_update&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">lup</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lup</span> <span class="o">&lt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="n">collected</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bldr</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">lup</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">collected</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bldr</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot; --&quot;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">host</span><span class="p">,</span> <span class="n">_lup</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">collected</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">host</span><span class="p">,</span> <span class="n">lup</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">collected</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">lup</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">collected</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">shush</span><span class="p">:</span>
+            <span class="c1"># only print the summary if we have MIA builders or</span>
+            <span class="c1"># options.shush isn&#39;t set</span>
+
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">collected</span><span class="p">),</span>
+                  <span class="s2">&quot;hosts that have not checked in since&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">collected</span> <span class="k">else</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="CheckHosts"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.CheckHosts">[docs]</a><span class="k">class</span> <span class="nc">CheckHosts</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show enabled builders which aren&#39;t checking in&quot;</span>
+
+
+<div class="viewcode-block" id="CheckHosts.parser"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.CheckHosts.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CheckHosts</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--timeout&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Timeout in minutes before builder is considered&quot;</span>
+               <span class="s2">&quot; AWOL (default: 60)&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--channel&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Limit check to builders in this channel&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--arch&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;arches&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Limit check to builders of this architecture. Can be&quot;</span>
+               <span class="s2">&quot; specified multiple times&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--ignore&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Hostname pattern to ignore. Can be specified&quot;</span>
+               <span class="s2">&quot; multiple times&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--ignore-file&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File containing ignore patterns&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="s2">&quot;--quiet&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;quiet&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only print builder names, not checkin time or summary&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--shush&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;shush&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only print summary when 1 or more builders are failing&quot;</span>
+               <span class="s2">&quot; to check in (cron-job friendly)&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">argp</span></div>
+
+
+<div class="viewcode-block" id="CheckHosts.handle"><a class="viewcode-back" href="../../../../cli/#kojismokydingo.cli.hosts.CheckHosts.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+
+        <span class="n">ignore</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">ignore</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">ignore_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">ignore_file</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ignf</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ignf</span><span class="p">:</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">ignore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cli_check_hosts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+                               <span class="n">options</span><span class="o">.</span><span class="n">arches</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+                               <span class="n">ignore</span><span class="p">,</span>
+                               <span class="n">options</span><span class="o">.</span><span class="n">quiet</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">shush</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

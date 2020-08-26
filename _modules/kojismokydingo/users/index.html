@@ -5,18 +5,23 @@
   <head>
     <meta charset="utf-8" />
     <title>kojismokydingo.users &#8212; kojismokydingo 0.9.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
     <link rel="index" title="Index" href="../../../genindex/" />
-    <link rel="search" title="Search" href="../../../search/" /> 
+    <link rel="search" title="Search" href="../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head><body>
+
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -67,6 +72,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchContentGenerator</span><span class="p">,</span> <span class="n">NoSuchPermission</span><span class="p">,</span> <span class="n">NoSuchUser</span>
 
 
+<span class="c1"># just borrowing from Koji&#39;s definitions</span>
 <span class="n">USER_NORMAL</span> <span class="o">=</span> <span class="n">USERTYPES</span><span class="p">[</span><span class="s1">&#39;NORMAL&#39;</span><span class="p">]</span>
 <span class="n">USER_HOST</span> <span class="o">=</span> <span class="n">USERTYPES</span><span class="p">[</span><span class="s1">&#39;HOST&#39;</span><span class="p">]</span>
 <span class="n">USER_GROUP</span> <span class="o">=</span> <span class="n">USERTYPES</span><span class="p">[</span><span class="s1">&#39;GROUP&#39;</span><span class="p">]</span>
@@ -75,22 +81,59 @@
 <span class="n">STATUS_BLOCKED</span> <span class="o">=</span> <span class="n">USER_STATUS</span><span class="p">[</span><span class="s1">&#39;BLOCKED&#39;</span><span class="p">]</span>
 
 
+<div class="viewcode-block" id="as_userinfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.as_userinfo">[docs]</a><span class="k">def</span> <span class="nf">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolves user to a userinfo dict.</span>
+
+<span class="sd">    If user is a str or int, then getUser will be invoked. If user is</span>
+<span class="sd">    already a dict, it&#39;s presumed to be a userinfo already and it&#39;s</span>
+<span class="sd">    returned unaltered.</span>
+
+<span class="sd">    :param user: Name, ID, or User Info describing a koji user</span>
+
+<span class="sd">    :type user: str or int or dict</span>
+
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    :raises NoSuchUser: when user cannot be resolved via</span>
+<span class="sd">        :py:meth:`session.getUser`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="c1"># an API incompatibility emerged at some point in Koji&#39;s past,</span>
+        <span class="c1"># so we need to try the new way first and fall back to the</span>
+        <span class="c1"># older signature if that fails</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParameterError</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">user</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
 <div class="viewcode-block" id="collect_userinfo"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_userinfo">[docs]</a><span class="k">def</span> <span class="nf">collect_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gather information about a named user, including the list of</span>
 <span class="sd">    permissions the user has.</span>
 
-<span class="sd">    :param: session - an active koji session</span>
-<span class="sd">    :param: user - the string name of a user or their kerberos ID</span>
+<span class="sd">    :param user: name of a user or their kerberos ID</span>
+<span class="sd">    :type user: str</span>
+
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    :raises NoSuchUser:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">userinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">ParameterError</span><span class="p">:</span>
-        <span class="n">userinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">userinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">NoSuchUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">userinfo</span> <span class="o">=</span> <span class="n">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
     <span class="c1"># depending on koji version, getUser resulted in either a</span>
     <span class="c1"># krb_principal or krb_principals entry (or neither if it&#39;s not</span>
@@ -114,17 +157,29 @@
             <span class="c1"># non-admin accounts cannot query group membership, so omit</span>
             <span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">cgs</span> <span class="o">=</span> <span class="n">collect_cg_access</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+    <span class="n">cgs</span> <span class="o">=</span> <span class="n">collect_cg_access</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">userinfo</span><span class="p">)</span>
     <span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;content_generators&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cgs</span>
 
     <span class="k">return</span> <span class="n">userinfo</span></div>
 
 
-<div class="viewcode-block" id="collect_cg_access"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_cg_access">[docs]</a><span class="k">def</span> <span class="nf">collect_cg_access</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_cg_access"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_cg_access">[docs]</a><span class="k">def</span> <span class="nf">collect_cg_access</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    List of names of content generators username has access to</span>
-<span class="sd">    run CGImport with.</span>
+<span class="sd">    List of names of content generators user has access to run</span>
+<span class="sd">    CGImport with.</span>
+
+<span class="sd">    :param user: Name, ID, or userinfo dict</span>
+
+<span class="sd">    :type user: str or int or dict</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+
+<span class="sd">    :raises NoSuchUser: if user is an ID or name which cannot be</span>
+<span class="sd">      resolved</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">userinfo</span> <span class="o">=</span> <span class="n">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
     <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">cgname</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">listCGs</span><span class="p">()):</span>
@@ -134,14 +189,25 @@
 
 
 <div class="viewcode-block" id="collect_cgs"><a class="viewcode-back" href="../../../kojismokydingo/#kojismokydingo.users.collect_cgs">[docs]</a><span class="k">def</span> <span class="nf">collect_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param name: only collect the given CG. Default, collect all</span>
+
+<span class="sd">    :type name: str, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+
+<span class="sd">    :raises NoSuchContentGenerator: if name is specified and no</span>
+<span class="sd">      content generator matches</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">cgs</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listCGs</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
         <span class="c1"># filter the cgs dict down to just the named one</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cgs</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoSuchContentGenerator</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">cgs</span><span class="p">:</span>
             <span class="n">cgs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">cgs</span><span class="p">[</span><span class="n">name</span><span class="p">]}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchContentGenerator</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -160,8 +226,12 @@
 <span class="sd">    users granted the permission, as well as the date that the</span>
 <span class="sd">    permission was granted and the user that granted it.</span>
 
-<span class="sd">    :param: session - an active koji session</span>
-<span class="sd">    :param: permission - the string name of a permission</span>
+<span class="sd">    :param permission: the string name of a permission</span>
+<span class="sd">    :type permission: str</span>
+
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    :raises NoSuchPermission: if there is no matching permission found</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">getAllPerms</span><span class="p">():</span>
