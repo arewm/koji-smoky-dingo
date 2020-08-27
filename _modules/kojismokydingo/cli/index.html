@@ -98,15 +98,14 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Presents JSON in a pretty way.</span>
 
-<span class="sd">    Keyword arguments are passed along to :py:func:`json.dump` to</span>
-<span class="sd">    alter the default output format defined by</span>
-<span class="sd">    :py:obj:`JSON_PRETTY_OPTIONS`</span>
+<span class="sd">    Keyword arguments are passed along to `json.dump` to alter the</span>
+<span class="sd">    default output format defined by `JSON_PRETTY_OPTIONS`</span>
 
 <span class="sd">    :param data: value to be printed</span>
 
 <span class="sd">    :type data: int or str or dict or list or None</span>
 
-<span class="sd">    :param output: stream to print to. Default, :py:obj:`sys.stdout`</span>
+<span class="sd">    :param output: stream to print to. Default, `sys.stdout`</span>
 
 <span class="sd">    :type output: io.TextIOBase, optional</span>
 
@@ -116,10 +115,10 @@
     <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
 
-    <span class="n">pretty_options</span> <span class="o">=</span> <span class="n">JSON_PRETTY_OPTIONS</span>
     <span class="k">if</span> <span class="n">pretty</span><span class="p">:</span>
-        <span class="n">pretty_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">pretty_options</span><span class="p">)</span>
-        <span class="n">pretty_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pretty</span><span class="p">)</span>
+        <span class="n">pretty_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">JSON_PRETTY_OPTIONS</span><span class="p">,</span> <span class="o">**</span><span class="n">pretty</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pretty_options</span> <span class="o">=</span> <span class="n">JSON_PRETTY_OPTIONS</span>
 
     <span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="o">**</span><span class="n">pretty_options</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="p">)</span></div>
@@ -128,13 +127,16 @@
 <div class="viewcode-block" id="resplit"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.resplit">[docs]</a><span class="k">def</span> <span class="nf">resplit</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Collapses comma-separated and multi-specified items into a single</span>
-<span class="sd">    list. Useful with action=&quot;append&quot; in an argparse argument.</span>
+<span class="sd">    list. Useful with ``action=&quot;append&quot;`` in an argparse</span>
+<span class="sd">    argument.</span>
 
-<span class="sd">    this allows arguments like:</span>
-<span class="sd">    -x 1 -x 2, -x 3,4,5 -x ,6,7, -x 8</span>
+<span class="sd">    this allows command-line arguments like</span>
+
+<span class="sd">    ``-x 1 -x 2, -x 3,4,5 -x ,6,7, -x 8``</span>
 
 <span class="sd">    to become</span>
-<span class="sd">    x = [1, 2, 3, 4, 5, 6, 7, 8]</span>
+
+<span class="sd">    ``x = [1, 2, 3, 4, 5, 6, 7, 8]``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">work</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
@@ -172,8 +174,8 @@
 
 <div class="viewcode-block" id="read_clean_lines"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.read_clean_lines">[docs]</a><span class="k">def</span> <span class="nf">read_clean_lines</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">skip_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Reads clean lines from a named file. If filename is &#39;-&#39; then read</span>
-<span class="sd">    from :py:obj:`sys.stdin` instead.</span>
+<span class="sd">    Reads clean lines from a named file. If filename is ``-`` then</span>
+<span class="sd">    read from `sys.stdin` instead.</span>
 
 <span class="sd">    Each line will be stripped of leading and trailing whitespace.</span>
 
@@ -184,8 +186,8 @@
 <span class="sd">    Content will be fully collected into a list and the file (if not</span>
 <span class="sd">    stdin) will be closed before returning.</span>
 
-<span class="sd">    :param filename: File name to read lines from, or - to indicate</span>
-<span class="sd">      stdin. Default, read from :py:obj:`sys.stdin`</span>
+<span class="sd">    :param filename: File name to read lines from, or ``-`` to indicate</span>
+<span class="sd">      stdin. Default, read from `sys.stdin`</span>
 
 <span class="sd">    :type filename: str, optional</span>
 
@@ -249,7 +251,7 @@
 
 <span class="sd">    :type quiet: bool, optional</span>
 
-<span class="sd">    :param out: Stream to write output to. Default, :py:obj:`sys.stdout`</span>
+<span class="sd">    :param out: Stream to write output to. Default, `sys.stdout`</span>
 
 <span class="sd">    :type out: io.TextIOBase, optional</span>
 

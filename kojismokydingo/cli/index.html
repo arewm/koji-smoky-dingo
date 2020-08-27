@@ -64,7 +64,7 @@ kojismokydingometa plugin.</p>
 </dl>
 <dl class="class">
 <dt id="kojismokydingo.cli.AdminSmokyDingo">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">AdminSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#AdminSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.AdminSmokyDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">AdminSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#AdminSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.AdminSmokyDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.SmokyDingo</span></code></a></p>
 <p>A SmokyDingo which checks for the 'admin' permission after
 activation.</p>
@@ -82,7 +82,7 @@ activation.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.AnonSmokyDingo">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">AnonSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#AnonSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.AnonSmokyDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">AnonSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#AnonSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.AnonSmokyDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.SmokyDingo</span></code></a></p>
 <p>A SmokyDingo which upon activation will connect to koji hub, but
 will not authenticate. This means only hub RPC endpoints which do
@@ -115,7 +115,7 @@ further calls.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.HostSmokyDingo">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">HostSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#HostSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.HostSmokyDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">HostSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#HostSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.HostSmokyDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.SmokyDingo</span></code></a></p>
 <p>A SmokyDingo which checks for the 'host' or 'admin' permisson
 after activation.</p>
@@ -133,7 +133,7 @@ after activation.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.SmokyDingo">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">SmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#SmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.SmokyDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#SmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.SmokyDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for new sub-commands in Koji. Subclasses may be
 referenced via an entry point under the koji_smoky_dingo group to
@@ -141,20 +141,20 @@ be loaded at runtime by the kojismokydingometa Koji client plugin.</p>
 <p>Summary of behavior is as follows</p>
 <ul class="simple">
 <li><p>kojismokydingometa plugin loads when koji client launches</p></li>
-<li><p>the meta plugin loads all <cite>koji_smoky_dingo</cite> entry points</p></li>
+<li><p>the meta plugin loads all <code class="xref py py-obj docutils literal notranslate"><span class="pre">koji_smoky_dingo</span></code> entry points</p></li>
 <li><p>each entry point name is a command name, and the reference should
-resolve to a subclass of <cite>SmokyDingo</cite></p></li>
+resolve to a subclass of <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmokyDingo</span></code></a></p></li>
 <li><p>each entry point is instantiated, and presented to the koji cli
 as a new sub-command</p></li>
-<li><p>if the sub-command is invoked, then the <cite>SmokyDingo</cite> instance is
+<li><p>if the sub-command is invoked, then the <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmokyDingo</span></code></a> instance is
 called, this triggers the following:</p>
 <ul>
-<li><p>the <cite>SmokyDingo.parser</cite> method provides additional argument
+<li><p>the <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo.parser" title="kojismokydingo.cli.SmokyDingo.parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmokyDingo.parser</span></code></a> method provides additional argument
 parsing</p></li>
-<li><p>the <cite>SmokyDingo.validate</cite> method provides a chance to validate
+<li><p>the <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo.validate" title="kojismokydingo.cli.SmokyDingo.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmokyDingo.validate</span></code></a> method provides a chance to validate
 and/or manipulate the parsed arguments</p></li>
-<li><p>the <cite>SmokyDingo.activate</cite> method authenticates with the hub</p></li>
-<li><p>the <cite>SmokyDingo.handle</cite> method invokes the actual work of the
+<li><p>the <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo.activate" title="kojismokydingo.cli.SmokyDingo.activate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmokyDingo.activate</span></code></a> method authenticates with the hub</p></li>
+<li><p>the <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo.handle" title="kojismokydingo.cli.SmokyDingo.handle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmokyDingo.handle</span></code></a> method invokes the actual work of the
 sub-command</p></li>
 </ul>
 </li>
@@ -211,7 +211,7 @@ ignored, use parser.error if needed.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.TagSmokyDingo">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">TagSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#TagSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.TagSmokyDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TagSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#TagSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.TagSmokyDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.SmokyDingo</span></code></a></p>
 <p>A SmokyDingo which checks for the 'tag' or 'admin' permission after
 activation.</p>
@@ -229,7 +229,7 @@ activation.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.TargetSmokyDingo">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">TargetSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#TargetSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.TargetSmokyDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TargetSmokyDingo</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#TargetSmokyDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.TargetSmokyDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.cli.SmokyDingo" title="kojismokydingo.cli.SmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.SmokyDingo</span></code></a></p>
 <p>A SmokyDingo which checks for the 'target' or 'admin' permission
 after activation.</p>
@@ -247,7 +247,7 @@ after activation.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.clean_lines">
-<code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">clean_lines</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">skip_comments=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#clean_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.clean_lines" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clean_lines</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">skip_comments=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#clean_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.clean_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters clean lines from a sequence.</p>
 <p>Each line will be stripped of leading and trailing whitespace.</p>
 <p>If skip_comments is True (the default), then any line with a
@@ -269,11 +269,10 @@ Default, True</p></li>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.pretty_json">
-<code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">pretty_json</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">output=None</em>, <em class="sig-param">**pretty</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#pretty_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.pretty_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pretty_json</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">output=None</em>, <em class="sig-param">**pretty</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#pretty_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.pretty_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Presents JSON in a pretty way.</p>
-<p>Keyword arguments are passed along to <a class="reference external" href="https://docs.python.org/3/library/json.html#json.dump" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">json.dump()</span></code></a> to
-alter the default output format defined by
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">JSON_PRETTY_OPTIONS</span></code></p>
+<p>Keyword arguments are passed along to <a class="reference external" href="https://docs.python.org/3/library/json.html#json.dump" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">json.dump</span></code></a> to alter the
+default output format defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">JSON_PRETTY_OPTIONS</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -289,7 +288,7 @@ alter the default output format defined by
 
 <dl class="function">
 <dt id="kojismokydingo.cli.printerr">
-<code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">printerr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kojismokydingo.cli.printerr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">printerr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kojismokydingo.cli.printerr" title="Permalink to this definition">¶</a></dt>
 <dd><p>print(value, ..., sep=' ', end='n', file=sys.stdout, flush=False)</p>
 <p>Prints the values to a stream, or to sys.stdout by default.
 Optional keyword arguments:
@@ -301,9 +300,9 @@ flush: whether to forcibly flush the stream.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.read_clean_lines">
-<code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">read_clean_lines</code><span class="sig-paren">(</span><em class="sig-param">filename='-'</em>, <em class="sig-param">skip_comments=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#read_clean_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.read_clean_lines" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads clean lines from a named file. If filename is '-' then read
-from <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stdin" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sys.stdin</span></code></a> instead.</p>
+<code class="sig-name descname">read_clean_lines</code><span class="sig-paren">(</span><em class="sig-param">filename='-'</em>, <em class="sig-param">skip_comments=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#read_clean_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.read_clean_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads clean lines from a named file. If filename is <code class="docutils literal notranslate"><span class="pre">-</span></code> then
+read from <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stdin" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sys.stdin</span></code></a> instead.</p>
 <p>Each line will be stripped of leading and trailing whitespace.</p>
 <p>If skip_comments is True (the default), then any line with a
 leading hash ('#') will be considered a comment and omitted from
@@ -313,7 +312,7 @@ stdin) will be closed before returning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- File name to read lines from, or - to indicate
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- File name to read lines from, or <code class="docutils literal notranslate"><span class="pre">-</span></code> to indicate
 stdin. Default, read from <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.stdin" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sys.stdin</span></code></a></p></li>
 <li><p><strong>skip_comments</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Skip over lines with leading # characters.
 Default, True</p></li>
@@ -327,18 +326,19 @@ Default, True</p></li>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.resplit">
-<code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">resplit</code><span class="sig-paren">(</span><em class="sig-param">arglist</em>, <em class="sig-param">sep='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#resplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.resplit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resplit</code><span class="sig-paren">(</span><em class="sig-param">arglist</em>, <em class="sig-param">sep='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#resplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.resplit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collapses comma-separated and multi-specified items into a single
-list. Useful with action=&quot;append&quot; in an argparse argument.</p>
-<p>this allows arguments like:
--x 1 -x 2, -x 3,4,5 -x ,6,7, -x 8</p>
-<p>to become
-x = [1, 2, 3, 4, 5, 6, 7, 8]</p>
+list. Useful with <code class="docutils literal notranslate"><span class="pre">action=&quot;append&quot;</span></code> in an argparse
+argument.</p>
+<p>this allows command-line arguments like</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span> <span class="pre">1</span> <span class="pre">-x</span> <span class="pre">2,</span> <span class="pre">-x</span> <span class="pre">3,4,5</span> <span class="pre">-x</span> <span class="pre">,6,7,</span> <span class="pre">-x</span> <span class="pre">8</span></code></p>
+<p>to become</p>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8]</span></code></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.tabulate">
-<code class="sig-prename descclassname">kojismokydingo.cli.</code><code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param">headings</em>, <em class="sig-param">data</em>, <em class="sig-param">key=None</em>, <em class="sig-param">sorting=0</em>, <em class="sig-param">quiet=None</em>, <em class="sig-param">out=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tabulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param">headings</em>, <em class="sig-param">data</em>, <em class="sig-param">key=None</em>, <em class="sig-param">sorting=0</em>, <em class="sig-param">quiet=None</em>, <em class="sig-param">out=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tabulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints tabulated data, with the given headings.</p>
 <p>This function is not resilient -- the headings and data must have
 the same count of rows, nothing will inject empty values.</p>

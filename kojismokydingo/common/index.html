@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="kojismokydingo.hosts" href="../hosts/" />
+    <link rel="prev" title="kojismokydingo.clients" href="../clients/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../hosts/" title="kojismokydingo.hosts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../clients/" title="kojismokydingo.clients"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo Contents</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kojismokydingo.common">
+<span id="kojismokydingo-common"></span><h1>kojismokydingo.common<a class="headerlink" href="#module-kojismokydingo.common" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo - Common Utils</p>
+<p>Some simple functions used by the other modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="kojismokydingo.common.chunkseq">
+<code class="sig-name descname">chunkseq</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">chunksize</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#chunkseq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.chunkseq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chop up a sequence into sub-sequences, each up to chunksize in
+length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) -- a sequence to chunk up</p></li>
+<li><p><strong>chunksize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- max length for chunks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Iterator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.fnmatches">
+<code class="sig-name descname">fnmatches</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">patterns</em>, <em class="sig-param">ignore_case=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#fnmatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.fnmatches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks value against multiple glob patterns. Returns True if any
+match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- string to be matched</p></li>
+<li><p><strong>patterns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) -- list of glob-style pattern strings</p></li>
+<li><p><strong>ignore_case</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- if True case is normalized, Default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.globfilter">
+<code class="sig-name descname">globfilter</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">patterns</em>, <em class="sig-param">key=None</em>, <em class="sig-param">invert=False</em>, <em class="sig-param">ignore_case=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#globfilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.globfilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator yielding members of sequence seq which match any of the
+glob patterns specified.</p>
+<p>Patterns must be a list of glob-style pattern strings.</p>
+<p>If key is specified, it must be a unary callable which translates a
+given sequence item into a string for comparison with the patterns.</p>
+<p>If invert is True, yields the non-matches rather than the matches.</p>
+<p>If ignore_case is True, the pattern comparison is case normalized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) -- series of objects to be filtered. Normally strings,
+but may be any type provided the key parameter is specified to
+provide a string for matching based on the given object.</p></li>
+<li><p><strong>patterns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) -- list of glob-style pattern strings. Members of
+seq which match any of these patterns are yielded.</p></li>
+<li><p><strong>key</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- A unary callable which translates individual items on
+seq into the value to be matched against the patterns. Default,
+match against values in seq directly.</p></li>
+<li><p><strong>invert</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Invert the logic, yielding the non-matches rather
+than the matches. Default, yields matches</p></li>
+<li><p><strong>ignore_case</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- pattern comparison is case normalized if
+True. Default, False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.rpm_evr_compare">
+<code class="sig-name descname">rpm_evr_compare</code><span class="sig-paren">(</span><em class="sig-param">left_evr</em>, <em class="sig-param">right_evr</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#rpm_evr_compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.rpm_evr_compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare two (Epoch, Version, Release) tuples.</p>
+<p>This is an alternative implementation of the rpm lib's
+labelCompare function.</p>
+<p>Return values:</p>
+<ul class="simple">
+<li><p>1 if left_evr is greater-than right_evr</p></li>
+<li><p>0 if left_evr is equal-to right_evr</p></li>
+<li><p>-1 if left_evr is less-than right_evr</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left_evr</strong> (<em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>)</em>) -- The left Epoch, Version, Release for comparison</p></li>
+<li><p><strong>right_evr</strong> (<em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>)</em>) -- The right Epoch, Version, Release for comparison</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.unique">
+<code class="sig-name descname">unique</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#unique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence, de-duplicate it into a new list, preserving order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) -- series of hashable objects</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../clients/"
+                        title="previous chapter">kojismokydingo.clients</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../hosts/"
+                        title="next chapter">kojismokydingo.hosts</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/kojismokydingo/common.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../hosts/" title="kojismokydingo.hosts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../clients/" title="kojismokydingo.clients"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo Contents</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

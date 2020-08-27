@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.common</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Common Utils</span>
+
+<span class="sd">Some simple functions used by the other modules.</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># Note: features implemented in this module should not be specific to</span>
+<span class="c1"># working with koji. ie: nothing should require a session object or</span>
+<span class="c1"># work with the koji-specific dict types (build info, tag info, etc)</span>
+
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">fnmatch</span> <span class="k">import</span> <span class="n">fnmatchcase</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">filterfalse</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="n">zip_longest</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;chunkseq&quot;</span><span class="p">,</span> <span class="s2">&quot;fnmatches&quot;</span><span class="p">,</span> <span class="s2">&quot;globfilter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rpm_evr_compare&quot;</span><span class="p">,</span> <span class="s2">&quot;unique&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="chunkseq"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.chunkseq">[docs]</a><span class="k">def</span> <span class="nf">chunkseq</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Chop up a sequence into sub-sequences, each up to chunksize in</span>
+<span class="sd">    length.</span>
+
+<span class="sd">    :param seq: a sequence to chunk up</span>
+<span class="sd">    :type seq: list</span>
+
+<span class="sd">    :param chunksize: max length for chunks</span>
+<span class="sd">    :type chunksize: int</span>
+
+<span class="sd">    :rtype: Iterator[list]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+        <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span> <span class="o">+</span> <span class="n">chunksize</span><span class="p">]</span> <span class="k">for</span>
+            <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">seqlen</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="fnmatches"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.fnmatches">[docs]</a><span class="k">def</span> <span class="nf">fnmatches</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks value against multiple glob patterns. Returns True if any</span>
+<span class="sd">    match.</span>
+
+<span class="sd">    :param value: string to be matched</span>
+<span class="sd">    :type value: str</span>
+
+<span class="sd">    :param patterns: list of glob-style pattern strings</span>
+<span class="sd">    :type patterns: list[str]</span>
+
+<span class="sd">    :param ignore_case: if True case is normalized, Default False</span>
+<span class="sd">    :type ignore_case: bool, optional</span>
+
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">ignore_case</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fnmatchcase</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="globfilter"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.globfilter">[docs]</a><span class="k">def</span> <span class="nf">globfilter</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">patterns</span><span class="p">,</span>
+               <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generator yielding members of sequence seq which match any of the</span>
+<span class="sd">    glob patterns specified.</span>
+
+<span class="sd">    Patterns must be a list of glob-style pattern strings.</span>
+
+<span class="sd">    If key is specified, it must be a unary callable which translates a</span>
+<span class="sd">    given sequence item into a string for comparison with the patterns.</span>
+
+<span class="sd">    If invert is True, yields the non-matches rather than the matches.</span>
+
+<span class="sd">    If ignore_case is True, the pattern comparison is case normalized.</span>
+
+<span class="sd">    :param seq: series of objects to be filtered. Normally strings,</span>
+<span class="sd">      but may be any type provided the key parameter is specified to</span>
+<span class="sd">      provide a string for matching based on the given object.</span>
+
+<span class="sd">    :type seq: list</span>
+
+<span class="sd">    :param patterns: list of glob-style pattern strings. Members of</span>
+<span class="sd">      seq which match any of these patterns are yielded.</span>
+
+<span class="sd">    :type patterns: list[str]</span>
+
+<span class="sd">    :param key: A unary callable which translates individual items on</span>
+<span class="sd">      seq into the value to be matched against the patterns. Default,</span>
+<span class="sd">      match against values in seq directly.</span>
+
+<span class="sd">    :type key: Callable[[object], str], optional</span>
+
+<span class="sd">    :param invert: Invert the logic, yielding the non-matches rather</span>
+<span class="sd">      than the matches. Default, yields matches</span>
+
+<span class="sd">    :type invert: bool, optional</span>
+
+<span class="sd">    :param ignore_case: pattern comparison is case normalized if</span>
+<span class="sd">      True. Default, False</span>
+
+<span class="sd">    :type ignore_case: bool, optional</span>
+
+<span class="sd">    :rtype: Iterable[object]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">ignore_case</span><span class="p">:</span>
+        <span class="c1"># rather than passing ignore_case directly on to fnmatches,</span>
+        <span class="c1"># we&#39;ll do the case normalization ourselves. This way it only</span>
+        <span class="c1"># needs to happen one time for the patterns</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">key</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ignore_case</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">fnmatches</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">patterns</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">filterfalse</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span> <span class="k">if</span> <span class="n">invert</span> <span class="k">else</span> <span class="nb">filter</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_rpm_str_split</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">_split</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(~?(?:\d+|[a-zA-Z]+))&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split an E, V, or R string for comparison by its segments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_split</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="ow">or</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)))</span>
+
+
+<span class="k">def</span> <span class="nf">_rpm_str_compare</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comparison of left and right by RPM version comparison rules.</span>
+
+<span class="sd">    Either string should be *one* element of the EVR tuple (ie. either the</span>
+<span class="sd">    epoch, version, or release). Comparison will split the element on RPM&#39;s</span>
+<span class="sd">    special delimeters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">left</span> <span class="o">=</span> <span class="n">_rpm_str_split</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">_rpm_str_split</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">lp</span><span class="p">,</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">fillvalue</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+
+        <span class="c1"># Special comparison for tilde segments</span>
+        <span class="k">if</span> <span class="n">lp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+            <span class="c1"># left is tilde</span>
+
+            <span class="k">if</span> <span class="n">rp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+                <span class="c1"># right also is tilde, let&#39;s just chop off the tilde</span>
+                <span class="c1"># and fall through to non-tilde comparisons below</span>
+
+                <span class="n">lp</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">rp</span> <span class="o">=</span> <span class="n">rp</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># right is not tilde, therefore right is greater</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">rp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+            <span class="c1"># left is not tilde, but right is, therefore left is greater</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+        <span class="c1"># Special comparison for digits vs. alphabetical</span>
+        <span class="k">if</span> <span class="n">lp</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="c1"># left is numeric</span>
+
+            <span class="k">if</span> <span class="n">rp</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="c1"># left and right are both numeric, convert and fall</span>
+                <span class="c1"># through</span>
+                <span class="n">lp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lp</span><span class="p">)</span>
+                <span class="n">rp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># right is alphabetical or absent, left is greater</span>
+                <span class="k">return</span> <span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">rp</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="c1"># left is alphabetical but right is not, right is greater</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># Final comparison for segment</span>
+        <span class="k">if</span> <span class="n">lp</span> <span class="o">==</span> <span class="n">rp</span><span class="p">:</span>
+            <span class="c1"># left and right are equivalent, check next segment</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># left and right are not equivalent</span>
+            <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">lp</span> <span class="o">&gt;</span> <span class="n">rp</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># ran out of segments to check, must be equivalent</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+
+<div class="viewcode-block" id="rpm_evr_compare"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.rpm_evr_compare">[docs]</a><span class="k">def</span> <span class="nf">rpm_evr_compare</span><span class="p">(</span><span class="n">left_evr</span><span class="p">,</span> <span class="n">right_evr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare two (Epoch, Version, Release) tuples.</span>
+
+<span class="sd">    This is an alternative implementation of the rpm lib&#39;s</span>
+<span class="sd">    labelCompare function.</span>
+
+<span class="sd">    Return values:</span>
+
+<span class="sd">    * 1 if left_evr is greater-than right_evr</span>
+<span class="sd">    * 0 if left_evr is equal-to right_evr</span>
+<span class="sd">    * -1 if left_evr is less-than right_evr</span>
+
+<span class="sd">    :param left_evr: The left Epoch, Version, Release for comparison</span>
+<span class="sd">    :type left_evr: (str, str, str)</span>
+
+<span class="sd">    :param right_evr: The right Epoch, Version, Release for comparison</span>
+<span class="sd">    :type right_evr: (str, str, str)</span>
+
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">lp</span><span class="p">,</span> <span class="n">rp</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="n">left_evr</span><span class="p">,</span> <span class="n">right_evr</span><span class="p">,</span> <span class="n">fillvalue</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">lp</span> <span class="o">==</span> <span class="n">rp</span><span class="p">:</span>
+            <span class="c1"># fast check to potentially skip all the matching</span>
+            <span class="k">continue</span>
+
+        <span class="n">compared</span> <span class="o">=</span> <span class="n">_rpm_str_compare</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="n">rp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">compared</span><span class="p">:</span>
+            <span class="c1"># non zero comparison for segment, done checking</span>
+            <span class="k">return</span> <span class="n">compared</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># ran out of segments to check, must be equivalent</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="unique"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.unique">[docs]</a><span class="k">def</span> <span class="nf">unique</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a sequence, de-duplicate it into a new list, preserving order.</span>
+
+<span class="sd">    :param sequence: series of hashable objects</span>
+<span class="sd">    :type sequence: list</span>
+
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># in python 3.6+ OrderedDict is not necessary here, but we&#39;re</span>
+    <span class="c1"># supporting 2.6, 2.7 as well. At some point Python will likely do</span>
+    <span class="c1"># something bad and deprecate OrderedDict, at that point we&#39;ll</span>
+    <span class="c1"># have to begin detecting the version and using just plain dict</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">OrderedDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">sequence</span><span class="p">))</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

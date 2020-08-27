@@ -63,7 +63,7 @@
 </dl>
 <dl class="class">
 <dt id="kojismokydingo.builds.BuildNEVRCompare">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">BuildNEVRCompare</code><span class="sig-paren">(</span><em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildNEVRCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildNEVRCompare" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">BuildNEVRCompare</code><span class="sig-paren">(</span><em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildNEVRCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildNEVRCompare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>An adapter for Name, Epoch, Version, Release comparisons of a
 build info dictionary. Used by the nevr_sort_builds function.</p>
@@ -71,7 +71,7 @@ build info dictionary. Used by the nevr_sort_builds function.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.build_dedup">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">build_dedup</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_dedup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_dedup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build_dedup</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_dedup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_dedup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dictionaries, return a de-duplicated
 list of same, with order preserved.</p>
 <dl class="field-list simple">
@@ -86,7 +86,7 @@ list of same, with order preserved.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.build_id_sort">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">build_id_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_id_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_id_sort" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build_id_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_id_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_id_sort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dictionaries, return a de-duplicated
 list of same, sorted by the build ID</p>
 <dl class="field-list simple">
@@ -101,7 +101,7 @@ list of same, sorted by the build ID</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.build_nvr_sort">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">build_nvr_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_nvr_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_nvr_sort" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build_nvr_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_nvr_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_nvr_sort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dictionaries, deduplicate and then
 sort them by Name, Epoch, Version, and Release using RPM's
 variation of comparison</p>
@@ -117,7 +117,7 @@ variation of comparison</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.bulk_tag_builds">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -140,7 +140,7 @@ first error. Default, False</p></li>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.bulk_tag_nvrs">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">bulk_tag_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_nvrs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_tag_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_nvrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tags a large number of builds using multicall invocations of
 tagBuildBypass.</p>
 <p>The entire list of NVRs is validated first, checking that such
@@ -155,7 +155,7 @@ a tagBuildBypass call for that build.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.decorate_build_archive_data">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">decorate_build_archive_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#decorate_build_archive_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.decorate_build_archive_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">decorate_build_archive_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#decorate_build_archive_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.decorate_build_archive_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Augments a list of build_info dicts with four new keys:</p>
 <ul class="simple">
 <li><p>archive_cg_ids is a set of content generator IDs for each
@@ -179,7 +179,7 @@ the build</p></li>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.filter_imported">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">by_cg=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">by_cg=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dicts, return those which are
 imports.</p>
 <p>if negate is True, then behavior is flipped and only non-imports
@@ -211,7 +211,7 @@ build ahead of time.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.iter_bulk_tag_builds">
-<code class="sig-prename descclassname">kojismokydingo.builds.</code><code class="sig-name descname">iter_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagid</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">iter_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagid</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tags a large number of builds using multicall invocations of
 tagBuildBypass. Builds are specified by build info dicts.</p>
 <p>yields lists of tuples containing a build info dict and the result

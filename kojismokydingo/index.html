@@ -62,7 +62,7 @@ Koji users</p>
 </dl>
 <dl class="class">
 <dt id="kojismokydingo.AnonClientSession">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">AnonClientSession</code><span class="sig-paren">(</span><em class="sig-param">profile='koji'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#AnonClientSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.AnonClientSession" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">AnonClientSession</code><span class="sig-paren">(</span><em class="sig-param">profile='koji'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#AnonClientSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.AnonClientSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.ManagedClientSession" title="kojismokydingo.ManagedClientSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.ManagedClientSession</span></code></a></p>
 <p>A koji.ClientSession that can be used as via the 'with' keyword to
 provide a managed session. Suitable for working with anonymous
@@ -71,7 +71,7 @@ commands which do not require authentication.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.BadDingo">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">BadDingo</code><a class="reference internal" href="../_modules/kojismokydingo/#BadDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.BadDingo" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">BadDingo</code><a class="reference internal" href="../_modules/kojismokydingo/#BadDingo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.BadDingo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.BadDingo.complaint">
@@ -82,7 +82,7 @@ commands which do not require authentication.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.ManagedClientSession">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">ManagedClientSession</code><span class="sig-paren">(</span><em class="sig-param">profile='koji'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#ManagedClientSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.ManagedClientSession" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ManagedClientSession</code><span class="sig-paren">(</span><em class="sig-param">profile='koji'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#ManagedClientSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.ManagedClientSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">koji.ClientSession</span></code></p>
 <p>A koji.ClientSession that can be used as via the 'with' keyword to
 provide a managed session that will handle login and logout. Also
@@ -91,7 +91,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchBuild">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchBuild</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchBuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchBuild" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchBuild</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchBuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchBuild" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchBuild.complaint">
@@ -102,7 +102,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchChannel">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchChannel</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchChannel" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchChannel</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchChannel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchChannel.complaint">
@@ -113,7 +113,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchContentGenerator">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchContentGenerator</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchContentGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchContentGenerator" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchContentGenerator</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchContentGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchContentGenerator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchContentGenerator.complaint">
@@ -124,7 +124,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchPermission">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchPermission</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchPermission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchPermission" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchPermission</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchPermission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchPermission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchPermission.complaint">
@@ -135,7 +135,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchTag">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchTag</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTag" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchTag</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchTag.complaint">
@@ -146,7 +146,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchTarget">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchTarget</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTarget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTarget" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchTarget</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTarget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTarget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchTarget.complaint">
@@ -157,7 +157,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchTask">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchTask</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchTask</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchTask.complaint">
@@ -168,7 +168,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NoSuchUser">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NoSuchUser</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchUser" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NoSuchUser</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchUser.complaint">
@@ -179,7 +179,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="exception">
 <dt id="kojismokydingo.NotPermitted">
-<em class="property">exception </em><code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">NotPermitted</code><a class="reference internal" href="../_modules/kojismokydingo/#NotPermitted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NotPermitted" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">NotPermitted</code><a class="reference internal" href="../_modules/kojismokydingo/#NotPermitted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NotPermitted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.NotPermitted.complaint">
@@ -190,7 +190,7 @@ takes care of loading the relevant profile configuration.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_build_archives">
-<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a chunking multicall to fetch the the archives of builds
 via session.listArchives for each build ID in build_ids.</p>
 <p>Returns an OrderedDict associating the individual build IDs with
@@ -202,7 +202,7 @@ return the results.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_buildroots">
-<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_buildroots</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">broot_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroots" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_buildroots</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">broot_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a chunking multicall to fetch the buildroot data via
 session.getBuildroot for each ID in broot_ids.</p>
 <p>Returns an OrderedDict associating the individual buildroot IDs
@@ -214,7 +214,7 @@ return the results.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_builds">
-<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_builds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_builds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load many buildinfo dicts from a koji client session and a
 sequence of NVRs.</p>
 <p>Returns an OrderedDict associating the individual NVRs with their
@@ -229,7 +229,7 @@ return the results.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_rpm_sigs">
-<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_rpm_sigs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">rpm_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_rpm_sigs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_rpm_sigs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_rpm_sigs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">rpm_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_rpm_sigs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_rpm_sigs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a chunking multicall to fetch the signatures for a list of
 RPM via session.queryRPMSigs for each ID in rpm_ids.</p>
 <p>Returns an OrderedDict associating the individual RPM IDs with their
@@ -241,12 +241,12 @@ return the results.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_tags">
-<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tags</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tags" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tags</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tags" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_tasks">
-<code class="sig-prename descclassname">kojismokydingo.</code><code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tasks</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tasks</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="section" id="submodules">
@@ -256,6 +256,7 @@ return the results.</p>
 <li class="toctree-l1"><a class="reference internal" href="archives/">kojismokydingo.archives</a></li>
 <li class="toctree-l1"><a class="reference internal" href="builds/">kojismokydingo.builds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clients/">kojismokydingo.clients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="common/">kojismokydingo.common</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hosts/">kojismokydingo.hosts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tags/">kojismokydingo.tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users/">kojismokydingo.users</a></li>

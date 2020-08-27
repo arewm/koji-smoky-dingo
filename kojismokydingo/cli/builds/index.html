@@ -64,7 +64,7 @@ to tagBuildBypass</p>
 </dl>
 <dl class="class">
 <dt id="kojismokydingo.cli.builds.BulkTagBuilds">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">BulkTagBuilds</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#BulkTagBuilds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">BulkTagBuilds</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#BulkTagBuilds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.BulkTagBuilds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.cli.builds.BulkTagBuilds.description">
@@ -93,7 +93,7 @@ relevant positional arguments and options added.</p>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.builds.ListImported">
-<em class="property">class </em><code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">ListImported</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#ListImported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ListImported</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#ListImported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.ListImported" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
 <dl class="attribute">
 <dt id="kojismokydingo.cli.builds.ListImported.description">
@@ -124,18 +124,18 @@ ignored, use parser.error if needed.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.builds.cli_bulk_tag_builds">
-<code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">cli_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">sorting=None</em>, <em class="sig-param">owner=None</em>, <em class="sig-param">inherit=False</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#cli_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.cli_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cli_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">sorting=None</em>, <em class="sig-param">owner=None</em>, <em class="sig-param">inherit=False</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#cli_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.cli_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.builds.cli_list_imported">
-<code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">cli_list_imported</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname=None</em>, <em class="sig-param">nvr_list=None</em>, <em class="sig-param">inherit=False</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">cg_list=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#cli_list_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.cli_list_imported" title="Permalink to this definition">¶</a></dt>
-<dd><p>CLI handler for <cite>koji list-imported</cite></p>
+<code class="sig-name descname">cli_list_imported</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname=None</em>, <em class="sig-param">nvr_list=None</em>, <em class="sig-param">inherit=False</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">cg_list=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/builds/#cli_list_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.builds.cli_list_imported" title="Permalink to this definition">¶</a></dt>
+<dd><p>CLI handler for <code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-imported</span></code></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.builds.printerr">
-<code class="sig-prename descclassname">kojismokydingo.cli.builds.</code><code class="sig-name descname">printerr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kojismokydingo.cli.builds.printerr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">printerr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kojismokydingo.cli.builds.printerr" title="Permalink to this definition">¶</a></dt>
 <dd><p>print(value, ..., sep=' ', end='n', file=sys.stdout, flush=False)</p>
 <p>Prints the values to a stream, or to sys.stdout by default.
 Optional keyword arguments:

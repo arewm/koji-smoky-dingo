@@ -63,7 +63,7 @@ representing RPMs and build archives</p>
 </dl>
 <dl class="function">
 <dt id="kojismokydingo.archives.as_pathinfo">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">as_pathinfo</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#as_pathinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.as_pathinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">as_pathinfo</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#as_pathinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.as_pathinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts path into a PathInfo if it is not one already</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -74,7 +74,7 @@ representing RPMs and build archives</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.filter_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">filter_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archives</em>, <em class="sig-param">archive_types</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#filter_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.filter_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archives</em>, <em class="sig-param">archive_types</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#filter_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.filter_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a list of archives (or RPMs dressed up like archives),
 return a new list of those archives which are of the given archive
 types.</p>
@@ -93,7 +93,7 @@ types.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_build_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a list of archive dicts associated with a build info,
 optionally filtered by build-type and signing keys (for RPMs). The
 archives will be decorated with an additional &quot;filepath&quot; entry,
@@ -121,7 +121,7 @@ preference. An empty string matches the unsigned copy. Default
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_build_image_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_image_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_image_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_image_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_build_image_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_image_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_image_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers a list of image archives for a given build_info. The
 archive records are augmented with an additional &quot;filepath&quot; entry,
 the value of which is an expanded path to the file itself.</p>
@@ -140,7 +140,7 @@ the value of which is an expanded path to the file itself.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_build_maven_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_maven_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_maven_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_maven_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_build_maven_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_maven_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_maven_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers a list of maven archives for a given build_info. The
 archive records are augmented with an additional &quot;filepath&quot; entry,
 the value of which is an expanded path to the file itself.</p>
@@ -159,12 +159,12 @@ the value of which is an expanded path to the file itself.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_build_rpms">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_rpms" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_build_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_rpms" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_build_win_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_build_win_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_win_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_win_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_build_win_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_build_win_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_build_win_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers a list of Windows archives for a given build_info. The
 archive records are augmented with an additional &quot;filepath&quot; entry,
 the value of which is an expanded path to the file itself.</p>
@@ -183,7 +183,7 @@ the value of which is an expanded path to the file itself.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_latest_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_latest_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather the latest archives from a tag heirarchy. Rules for what
 constitutes &quot;latest&quot; may change slightly depending on the archive
 types -- specifically maven.</p>
@@ -206,7 +206,7 @@ fetching type of rpm or None (all).</p></li>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_latest_image_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_image_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_image_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_image_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_latest_image_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_image_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_image_archives" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>inherit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Follow tag inheritance, default True</p>
@@ -216,7 +216,7 @@ fetching type of rpm or None (all).</p></li>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_latest_maven_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_maven_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_maven_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_maven_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_latest_maven_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_maven_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_maven_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Similar to session.getLatestMavenArchives(tagname) but augments
 the results to include a new &quot;filepath&quot; entry which will point to
 the matching maven artifact's file location.</p>
@@ -235,7 +235,7 @@ the matching maven artifact's file location.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_latest_rpms">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">iherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_rpms" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_latest_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">rpmkeys=()</em>, <em class="sig-param">iherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_rpms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Similar to session.getLatestRPMS(tagname) but will filter by
 available signatures, and augments the results to include a new
 &quot;filepath&quot; entry which will point to the matching RPM file
@@ -259,7 +259,7 @@ preference. An empty string matches the unsigned copy. Default
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_latest_win_archives">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_latest_win_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_win_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_win_archives" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_latest_win_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">inherit=True</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_latest_win_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_latest_win_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Similar to session.listTaggedArchives(tagname, type=&quot;win&quot;) but
 augments the results to include a new &quot;filepath&quot; entry which will
 point to the matching maven artifact's file location.</p>
@@ -278,7 +278,7 @@ point to the matching maven artifact's file location.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.archives.gather_signed_rpms">
-<code class="sig-prename descclassname">kojismokydingo.archives.</code><code class="sig-name descname">gather_signed_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archives</em>, <em class="sig-param">sigkeys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_signed_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_signed_rpms" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gather_signed_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archives</em>, <em class="sig-param">sigkeys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/archives/#gather_signed_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.archives.gather_signed_rpms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a list of RPM archive dicts, query the session for all the
 pertinent signature headers, then try and find the best matching
 signed copy of each RPM. An empty string at the end of sigkeys
