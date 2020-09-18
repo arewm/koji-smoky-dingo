@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo Contents</a> &#187;</li> 
       </ul>
     </div>  
@@ -61,6 +61,27 @@
 <dd class="field-even"><p>GPL v3</p>
 </dd>
 </dl>
+<dl class="class">
+<dt id="kojismokydingo.builds.BuildFilter">
+<em class="property">class </em><code class="sig-name descname">BuildFilter</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">limit_tag_ids=None</em>, <em class="sig-param">lookaside_tag_ids=None</em>, <em class="sig-param">imported=None</em>, <em class="sig-param">cg_list=None</em>, <em class="sig-param">btypes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.builds.BuildFilter.filter_by_btype">
+<code class="sig-name descname">filter_by_btype</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter.filter_by_btype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter.filter_by_btype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.builds.BuildFilter.filter_by_tags">
+<code class="sig-name descname">filter_by_tags</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter.filter_by_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter.filter_by_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.builds.BuildFilter.filter_imported">
+<code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter.filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter.filter_imported" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="kojismokydingo.builds.BuildNEVRCompare">
 <em class="property">class </em><code class="sig-name descname">BuildNEVRCompare</code><span class="sig-paren">(</span><em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildNEVRCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildNEVRCompare" title="Permalink to this definition">¶</a></dt>
@@ -86,12 +107,15 @@ list of same, with order preserved.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.build_id_sort">
-<code class="sig-name descname">build_id_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_id_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_id_sort" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build_id_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">dedup=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_id_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_id_sort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dictionaries, return a de-duplicated
 list of same, sorted by the build ID</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be sorted and de-duplicated</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be sorted and de-duplicated</p></li>
+<li><p><strong>dedup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- remove duplicate entries. Default, True</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
@@ -101,13 +125,17 @@ list of same, sorted by the build ID</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.build_nvr_sort">
-<code class="sig-name descname">build_nvr_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_nvr_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_nvr_sort" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a sequence of build info dictionaries, deduplicate and then
-sort them by Name, Epoch, Version, and Release using RPM's
-variation of comparison</p>
+<code class="sig-name descname">build_nvr_sort</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">dedup=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#build_nvr_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.build_nvr_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dictionaries, sort them by Name,
+Epoch, Version, and Release using RPM's variation of comparison</p>
+<p>If dedup is True (the default), then duplicate NVRs will be
+omitted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be sorted and de-duplicated</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to be sorted and de-duplicated</p></li>
+<li><p><strong>dedup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- remove duplicate entries. Default, True</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
@@ -117,11 +145,12 @@ variation of comparison</p>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.bulk_tag_builds">
-<code class="sig-name descname">bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tagid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's ID</p></li>
+<li><p><strong>session</strong> (<em>koji.ClientSession</em>) -- an active koji session</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's name or ID</p></li>
 <li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- Build infos to be tagged</p></li>
 <li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Force tagging. Re-tags if necessary, bypasses
 policy. Default, False</p></li>
@@ -135,83 +164,195 @@ first error. Default, False</p></li>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>]</p>
 </dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.bulk_tag_nvrs">
-<code class="sig-name descname">bulk_tag_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_nvrs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_tag_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_nvrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tags a large number of builds using multicall invocations of
 tagBuildBypass.</p>
-<p>The entire list of NVRs is validated first, checking that such
-a build exists. If strict is True then a missing build will cause a
-NoSuchBuild exception to be raised. If strict is False, then missing
-builds will be omitted from the tagging operation.</p>
+<p>The entire list of NVRs is validated first, checking that such a
+build exists. If strict is True then a missing build will cause a
+NoSuchBuild exception to be raised. If strict is False, then
+missing builds will be omitted from the tagging operation.</p>
 <p>The list of builds is de-duplicated, preserving order of the first
 instance found in the list of NVRs.</p>
-<p>Returns a list of tuples, pairing build info dicts with the result of
-a tagBuildBypass call for that build.</p>
+<p>Returns a list of tuples, pairing build info dicts with the result
+of a tagBuildBypass call for that build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>koji.ClientSession</em>) -- an active koji session</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's name or ID</p></li>
+<li><p><strong>nvrs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) -- list of NVRs</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Bypass policy, retag if necessary. Default, follow
+policy and do not re-tag.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Start tagNotification tasks to send a notification
+email for every tagging event. Default, do not send
+notifications.  Warning, sending hundreds or thousands of
+tagNotification tasks can be overwhelming for the hub and may
+impact the system.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of tagging calls to make per multicall
+chunk. Default is 100</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Stop at the first failure. Default, continue after
+any failures. Errors will be available in the return results.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../#kojismokydingo.NoSuchBuild" title="kojismokydingo.NoSuchBuild"><strong>kojismokydingo.NoSuchBuild</strong></a> -- If strict and an NVR does not
+exist</p></li>
+<li><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p></li>
+<li><p><strong>koji.GenericError</strong> -- If strict and a tag policy prevents
+tagging</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.decorate_build_archive_data">
-<code class="sig-name descname">decorate_build_archive_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#decorate_build_archive_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.decorate_build_archive_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Augments a list of build_info dicts with four new keys:</p>
+<code class="sig-name descname">decorate_build_archive_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">with_cg=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#decorate_build_archive_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.decorate_build_archive_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Augments a list of build_info dicts with two or four new keys:</p>
 <ul class="simple">
-<li><p>archive_cg_ids is a set of content generator IDs for each
-archive of the build</p></li>
-<li><p>archive_cg_names is a set of content generator names for each
-archive of the build</p></li>
 <li><p>archive_btype_ids is a set of btype IDs for each archive of the
 build</p></li>
 <li><p>archive_btype_names is a set of btype names for each archive of
 the build</p></li>
+<li><p>archive_cg_ids is a set of content generator IDs for each
+archive of the build if with_cg is True, absent if with_cg is
+False</p></li>
+<li><p>archive_cg_names is a set of content generator names for each
+archive of the build if with_cg is True, absent if with_cg is
+False</p></li>
 </ul>
+<p>Returns a de-duplicated sequence of the build_infos. Any
+build_infos which had not been previously decorated will be
+mutated with their new keys.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- list of build infos to decorate and return</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>koji.ClientSession</em>) -- an active koji session</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>] or </em><em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- list of build infos to decorate and return</p></li>
+<li><p><strong>with_cg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- load buildroot data for each archive of each build
+to determine the CG names and IDs. Default, does not load
+buildroot data.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+<dd class="field-even"><p>Iterator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.filter_by_tags">
+<code class="sig-name descname">filter_by_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">limit_tag_ids=()</em>, <em class="sig-param">lookaside_tag_ids=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_by_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_by_tags" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>] or </em><em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to filter through</p></li>
+<li><p><strong>limit_tag_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- tag IDs that builds must be tagged with to
+pass. Default, do not limit to any tag membership.</p></li>
+<li><p><strong>lookaside_tag_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- tag IDs that builds must not be tagged
+with to pass. Default, do not filter against any tag membership.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>] or Iterator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.filter_imported">
-<code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">negate=False</em>, <em class="sig-param">by_cg=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a sequence of build info dicts, return those which are
+<code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">by_cg=()</em>, <em class="sig-param">negate=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dicts, yield those which are
 imports.</p>
-<p>if negate is True, then behavior is flipped and only non-imports
-are emitted (and the by_cg parameter is ignored)</p>
-<p>If by_cg is not specified, then only non CG imports are emitted.
-If by_cg is specified, then emit only those imports which are from
-a content generator in that set (or any content generators if
-'any' is in the by_cg list).</p>
-<p>build_infos may have been decorated by the decorate_build_cg_list
-function. This provides an accurate listing of the content
-generators which have been used to import the build (if any). In
-the event that they have not been thus decorated, the cg filtering
-will rely on the cg_name setting on the build itself, which will
-only have been provided if the content generator reserved the
-build ahead of time.</p>
+<p>build_infos may have been decorated by the
+<a class="reference internal" href="#kojismokydingo.builds.decorate_build_archive_data" title="kojismokydingo.builds.decorate_build_archive_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decorate_build_archive_data</span></code></a> function. This provides an accurate
+listing of the content generators which have been used to import
+the build (if any). In the event that they have not been thus
+decorated, the cg filtering will rely on the cg_name setting on
+the build itself, which will only have been provided if the
+content generator reserved the build ahead of time.</p>
+<p>If by_cg is empty and negate is False, then only builds which are
+non-CG imports will be emitted.</p>
+<p>If by_cg is empty and negate is True, then only builds which are
+non-imports will be emitted (ie. those with a task).</p>
+<p>If by_cg is not empty and negate is False, then only builds which
+are CG imports from the listed CGs will be emitted.</p>
+<p>If by_cg is not empty and negate is True, then only builds which
+are CG imports but not from the listed CGs will be emitted.</p>
+<p>by_cg may contain the string &quot;any&quot; to indicate that it matches all
+content generators. &quot;any&quot; should not be used with negate=True,
+as this will always result in no matches.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to filter through</p></li>
-<li><p><strong>negate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- whether to negate the imported test, Default False</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>] or </em><em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to filter through</p></li>
 <li><p><strong>by_cg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- Content generator names to filter for</p></li>
+<li><p><strong>negate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- whether to negate the test, Default False</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+<dd class="field-even"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.gather_buildroots">
+<code class="sig-name descname">gather_buildroots</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#gather_buildroots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.gather_buildroots" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.gather_component_build_ids">
+<code class="sig-name descname">gather_component_build_ids</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">btypes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#gather_component_build_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.gather_component_build_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build IDs, identify the IDs of the component
+builds used to produce them (installed in the buildroots of the
+archives of the original build IDs)</p>
+<p>Returns a dict mapping the original build IDs to a list of the
+discovered component build IDs.</p>
+<p>If btypes is None, then all component archive types will be
+considered. Otherwise, btypes may be a sequence of btype names and
+only component archives of those types will be considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>build_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- Build IDs to collect components for</p></li>
+<li><p><strong>btypes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- Component archive btype filter. Default, all types</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.gather_wrapped_builds">
+<code class="sig-name descname">gather_wrapped_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">task_ids</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#gather_wrapped_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.gather_wrapped_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of task IDs, identify any which are wrapperRPM
+tasks. For each which is a wrapperRPM task, associate the task ID
+with the underlying wrapped build info from the request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>task_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>] or </em><em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- task IDs to check</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.builds.iter_bulk_tag_builds">
-<code class="sig-name descname">iter_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagid</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">iter_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tags a large number of builds using multicall invocations of
 tagBuildBypass. Builds are specified by build info dicts.</p>
 <p>yields lists of tuples containing a build info dict and the result
@@ -221,7 +362,7 @@ feedback to a user to indicate that the operations are continuing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tagid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's ID</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Destination tag's name or ID</p></li>
 <li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- Build infos to be tagged</p></li>
 <li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Force tagging. Re-tags if necessary, bypasses
 policy. Default, False</p></li>
@@ -234,6 +375,9 @@ first error. Default, False</p></li>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>]]</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p>
 </dd>
 </dl>
 </dd></dl>
@@ -288,7 +432,7 @@ first error. Default, False</p></li>
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo Contents</a> &#187;</li> 
       </ul>
     </div>

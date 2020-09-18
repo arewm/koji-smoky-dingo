@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Overview &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>Overview &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -146,38 +146,42 @@ checking in lately</p></td>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">client-config</span></code></p></td>
 <td><p>Show settings for client profiles</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">latest-archives</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter-builds</span></code></p></td>
+<td><p>Filter a list of NVRs by various
+criteria</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">latest-archives</span></code></p></td>
 <td><p>Show selected latest archives from a
 tag</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-build-archives</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-build-archives</span></code></p></td>
 <td><p>Show selected archives attached to a
 build</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-cgs</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-cgs</span></code></p></td>
 <td><p>Show content generators and their
 permitted users</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-component-builds</span></code></p></td>
+<td><p>Show builds which were used to produce
+others</p></td>
+</tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-env-vars</span></code></p></td>
-<td><p>Shows all inherited mock environment
+<td><p>Show all inherited mock environment
 variables for a tag</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list—imported</span></code></p></td>
-<td><p>Show builds which were imported into
-koji</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-rpm-macros</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-rpm-macros</span></code></p></td>
 <td><p>Show all inherited mock RPM macros for
 a tag</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-tag-extras</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-tag-extras</span></code></p></td>
 <td><p>Show all inherited extra fields for a
 tag</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">perminfo</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">perminfo</span></code></p></td>
 <td><p>Show information about a permission</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">userinfo</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">userinfo</span></code></p></td>
 <td><p>Show information about a user account</p></td>
 </tr>
 </tbody>
@@ -185,45 +189,54 @@ tag</p></td>
 </div>
 <div class="section" id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="the-meta-plugin">
-<h3>The Meta Plugin<a class="headerlink" href="#the-meta-plugin" title="Permalink to this headline">¶</a></h3>
-<p>Because of how koji loads client plugins, the meta plugin needs to be
-installed with either the <code class="docutils literal notranslate"><span class="pre">--old-and-unmanageable</span></code> flag or with
-<code class="docutils literal notranslate"><span class="pre">--root=/</span></code> specified.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># system install</span>
-sudo python setup-meta.py clean build install --root<span class="o">=</span>/
+<p>The kojismokydingo package utilizes setuptools and can be built and
+installed as an egg or wheel.</p>
+<p>Because of how koji loads client plugins, if you want the meta plugin
+available by default system-wide, then the package needs to be installed
+into the default site-packages for the python installation.</p>
+<p>If using an RPM-based distribution, this is easily achieved using the
+included spec to produce an RPM and install that.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make clean rpm
+dnf install dist/noarch/python3-kojismokydingo-0.9.1-1.fc32.noarch.rpm
+</pre></div>
+</div>
+<p>Using traditional setuptools or pip installation methods can also
+achieve this by specifying the specific root or prefix parameter</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python 2.6 global install</span>
+sudo python setup.py clean build install --root<span class="o">=</span>/
+
+<span class="c1"># Python 2.7 global install</span>
+python3 setup.py bdist_wheel
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.1-py2-none-any.whl
+
+<span class="c1"># Python 3 global install</span>
+python3 setup.py bdist_wheel
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.1-py3-none-any.whl
+</pre></div>
+</div>
+<p>However, if you only want the plugin available for yourself, you can
+install it anywhere and tell koji to look in that particular
+<code class="docutils literal notranslate"><span class="pre">site-package/koji_cli_plugins</span></code> instance</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python 3 user install</span>
+python3 setup.py bdist_wheel
+pip3 install --user -I dist/kojismokydingo-0.9.1-py3-none-any.whl
+</pre></div>
+</div>
+<p>And the following setting in ~/.koji/config assuming Python version 3.7
+– read the output of the install command above to verify your install
+path. Note that the section title needs to match your koji profile, and
+that you need to configure this setting for each profile you’ll want to
+use the meta plugin with.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">koji</span><span class="p">]</span>
+<span class="n">plugin_paths</span> <span class="o">=</span> <span class="o">~/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">koji_cli_plugins</span><span class="o">/</span>
 </pre></div>
 </div>
 <p>With koji &gt;=
 <a class="reference external" href="https://docs.pagure.org/koji/release_notes_1.18/">1.18</a>, the meta
-plugin can also be installed into <code class="docutils literal notranslate"><span class="pre">~/.koji/plugins</span></code></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># user only</span>
-mkdir -p ~/.koji/plugins
-cp koji_cli_plugins/kojismokydingometa.py ~/.koji/plugins
+plugin can also be symlinked into <code class="docutils literal notranslate"><span class="pre">~/.koji/plugins</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p ~/.koji/plugins
+ln -s ~/.local/lib/python3.7/site-packages/koji_cli_plugins/kojismokydingometa.py ~/.koji/plugins
 </pre></div>
-</div>
-</div>
-<div class="section" id="the-kojismokydingo-package">
-<h3>The kojismokydingo Package<a class="headerlink" href="#the-kojismokydingo-package" title="Permalink to this headline">¶</a></h3>
-<p>However the rest of koji-smoky-dingo can be installed normally, either
-as a system-level or user-level package.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># system install</span>
-sudo python setup.py install
-
-<span class="c1"># user only</span>
-python setup.py install --user
-</pre></div>
-</div>
-<p>If deploying on a Python 3 environment, it’s best to install via pip</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># system insall</span>
-python3 ./setup.py bdist_wheel
-pip3 install --I dist/*.whl
-
-<span class="c1"># user only</span>
-python3 ./setup.py bdist_wheel
-pip3 install --user --I dist/*.whl
-</pre></div>
-</div>
 </div>
 </div>
 <div class="section" id="contact">
@@ -259,11 +272,7 @@ with this library; if not, see <a class="reference external" href="http://www.gn
 <li><a class="reference internal" href="#meta-plugin">Meta Plugin</a></li>
 <li><a class="reference internal" href="#tag-commands">Tag Commands</a></li>
 <li><a class="reference internal" href="#information-commands">Information Commands</a></li>
-<li><a class="reference internal" href="#install">Install</a><ul>
-<li><a class="reference internal" href="#the-meta-plugin">The Meta Plugin</a></li>
-<li><a class="reference internal" href="#the-kojismokydingo-package">The kojismokydingo Package</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#install">Install</a></li>
 <li><a class="reference internal" href="#contact">Contact</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
 </ul>
@@ -312,7 +321,7 @@ with this library; if not, see <a class="reference external" href="http://www.gn
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

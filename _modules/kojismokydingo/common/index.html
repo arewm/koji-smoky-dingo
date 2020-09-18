@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -76,12 +76,13 @@
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">fnmatch</span> <span class="k">import</span> <span class="n">fnmatchcase</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">filterfalse</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="n">zip_longest</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;chunkseq&quot;</span><span class="p">,</span> <span class="s2">&quot;fnmatches&quot;</span><span class="p">,</span> <span class="s2">&quot;globfilter&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;rpm_evr_compare&quot;</span><span class="p">,</span> <span class="s2">&quot;unique&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chunkseq&quot;</span><span class="p">,</span> <span class="s2">&quot;fnmatches&quot;</span><span class="p">,</span> <span class="s2">&quot;globfilter&quot;</span><span class="p">,</span> <span class="s2">&quot;merge_extend&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rpm_evr_compare&quot;</span><span class="p">,</span> <span class="s2">&quot;unique&quot;</span><span class="p">,</span> <span class="s2">&quot;update_extend&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -96,14 +97,12 @@
 <span class="sd">    :param chunksize: max length for chunks</span>
 <span class="sd">    :type chunksize: int</span>
 
-<span class="sd">    :rtype: Iterator[list]</span>
+<span class="sd">    :rtype: Generator[list]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
         <span class="n">seq</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
-        <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span> <span class="o">+</span> <span class="n">chunksize</span><span class="p">]</span> <span class="k">for</span>
             <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">seqlen</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">))</span></div>
@@ -135,6 +134,63 @@
             <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="update_extend"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.update_extend">[docs]</a><span class="k">def</span> <span class="nf">update_extend</span><span class="p">(</span><span class="n">dict_orig</span><span class="p">,</span> <span class="o">*</span><span class="n">dict_additions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extend the list values of the original dict with the list values of</span>
+<span class="sd">    the additions dict.</span>
+
+<span class="sd">    eg.</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        A = {&#39;a&#39;: [1, 2], &#39;b&#39;: [7], &#39;c&#39;: [10]}</span>
+<span class="sd">        B = {&#39;a&#39;: [3], &#39;b&#39;: [8, 9], &#39;d&#39;: [11]}</span>
+<span class="sd">        update_extend(A, B)</span>
+
+<span class="sd">        A</span>
+<span class="sd">        &gt;&gt; {&#39;a&#39;: [1, 2, 3], &#39;b&#39;: [7, 8, 9], &#39;c&#39;: [10], &#39;d&#39;: [11]}</span>
+
+<span class="sd">    The values of dict_orig must support an extend method.</span>
+
+<span class="sd">    :param dict_orig: The original dict, which may be mutated and whose</span>
+<span class="sd">      values may be extended</span>
+
+<span class="sd">    :type dict_orig: dict[object, list]</span>
+
+<span class="sd">    :param dict_additions: The additions dict. Will not be altered.</span>
+
+<span class="sd">    :type dict_additions: dict[object, list]</span>
+
+<span class="sd">    :returns: The original dict instance</span>
+
+<span class="sd">    :rtype: dict[object, list]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">additions</span> <span class="ow">in</span> <span class="n">dict_additions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">additions</span><span class="p">):</span>
+            <span class="n">orig</span> <span class="o">=</span> <span class="n">dict_orig</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">orig</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dict_orig</span></div>
+
+
+<div class="viewcode-block" id="merge_extend"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.merge_extend">[docs]</a><span class="k">def</span> <span class="nf">merge_extend</span><span class="p">(</span><span class="o">*</span><span class="n">dict_additions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Similar to `update_extend` but creates a new dict to hold results,</span>
+<span class="sd">    and new initial lists to be extended, leaving all the arguments</span>
+<span class="sd">    unaltered.</span>
+
+<span class="sd">    :param dict_additions: The additions dict. Will not be altered.</span>
+
+<span class="sd">    :type dict_additions: dict[object, list]</span>
+
+<span class="sd">    :returns: A new dict, whose values are new lists</span>
+
+<span class="sd">    :rtype: dict[object, list]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">update_extend</span><span class="p">({},</span> <span class="o">*</span><span class="n">dict_additions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="globfilter"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.globfilter">[docs]</a><span class="k">def</span> <span class="nf">globfilter</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">patterns</span><span class="p">,</span>
@@ -356,7 +412,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>

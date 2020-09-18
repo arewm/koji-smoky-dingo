@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -175,12 +175,9 @@
         <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">key_chunk</span><span class="p">:</span>
-            <span class="c1"># print(key, file=sys.stderr)</span>
             <span class="n">loadfn</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">key_chunk</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()):</span>
-            <span class="c1"># print(key, info, file=sys.stderr)</span>
-
             <span class="k">if</span> <span class="n">info</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;faultCode&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">convertFault</span><span class="p">(</span><span class="n">Fault</span><span class="p">(</span><span class="o">**</span><span class="n">info</span><span class="p">))</span>
@@ -188,6 +185,28 @@
                     <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="bulk_load"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load">[docs]</a><span class="k">def</span> <span class="nf">bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic bulk loading function, invokes the given loadfn on each</span>
+<span class="sd">    key in keys using chunking multicalls limited to the specified</span>
+<span class="sd">    size.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual keys with the</span>
+<span class="sd">    returned value of loadfn.</span>
+
+<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
+<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
+<span class="sd">    return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
 
 
 <div class="viewcode-block" id="bulk_load_builds"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_builds">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -218,10 +237,14 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-<div class="viewcode-block" id="bulk_load_tasks"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tasks">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tasks</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="bulk_load_tasks"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tasks">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tasks</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getTask</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getTaskInfo</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -264,6 +287,32 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
+<div class="viewcode-block" id="bulk_load_buildroot_archives"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_buildroot_archives">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_buildroot_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_buildroot_rpms"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_buildroot_rpms">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_buildroot_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span>
+                             <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
 <div class="viewcode-block" id="bulk_load_build_archives"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_build_archives">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -280,12 +329,31 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">if</span> <span class="n">btype</span><span class="p">:</span>
-        <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">fn</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_build_rpms"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_build_rpms">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a chunking multicall to fetch the the archives of builds</span>
+<span class="sd">    via session.listArchives for each build ID in build_ids.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual build IDs with</span>
+<span class="sd">    their resulting archive lists.</span>
+
+<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
+<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
+<span class="sd">    return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">,</span>
+                                <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -311,6 +379,48 @@
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="as_buildinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_buildinfo">[docs]</a><span class="k">def</span> <span class="nf">as_buildinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">(</span><span class="n">build</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">build</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">build</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="as_taginfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_taginfo">[docs]</a><span class="k">def</span> <span class="nf">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">tag</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="as_targetinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_targetinfo">[docs]</a><span class="k">def</span> <span class="nf">as_targetinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">target</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
 
 
 <span class="c1">#</span>
@@ -345,7 +455,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>

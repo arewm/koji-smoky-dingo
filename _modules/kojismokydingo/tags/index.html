@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -69,7 +69,7 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">NoSuchTarget</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">as_taginfo</span><span class="p">,</span> <span class="n">as_targetinfo</span><span class="p">,</span> <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_tags</span>
 
 
 <div class="viewcode-block" id="resolve_tag"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.resolve_tag">[docs]</a><span class="k">def</span> <span class="nf">resolve_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -103,36 +103,6 @@
         <span class="n">name</span> <span class="o">=</span> <span class="n">tinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;build_tag_name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="as_taginfo"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.as_taginfo">[docs]</a><span class="k">def</span> <span class="nf">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">tag</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">info</span></div>
-
-
-<div class="viewcode-block" id="as_targetinfo"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.as_targetinfo">[docs]</a><span class="k">def</span> <span class="nf">as_targetinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">target</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">NoSuchTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">info</span></div>
 
 
 <div class="viewcode-block" id="get_affected_targets"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.get_affected_targets">[docs]</a><span class="k">def</span> <span class="nf">get_affected_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagnames</span><span class="p">):</span>
@@ -272,6 +242,50 @@
     <span class="k">return</span> <span class="n">found</span></div>
 
 
+<div class="viewcode-block" id="gather_tag_ids"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.gather_tag_ids">[docs]</a><span class="k">def</span> <span class="nf">gather_tag_ids</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">shallow</span><span class="o">=</span><span class="p">(),</span> <span class="n">deep</span><span class="o">=</span><span class="p">(),</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load IDs from shallow tags, and load IDs from deep tags and all</span>
+<span class="sd">    their parents. Returns a set of all IDs found.</span>
+
+<span class="sd">    If results is specified, it must be a set instance into which the</span>
+<span class="sd">    disovered tag IDs will be added. Otherwise a new set will be</span>
+<span class="sd">    allocated and returned.</span>
+
+<span class="sd">    :param shallow: list of tag names to resolve IDs for</span>
+<span class="sd">    :type shallow: list[str], optional</span>
+
+<span class="sd">    :param deep: list of tag names to resolve IDs and parent IDs for</span>
+<span class="sd">    :type deep: list[str], optional</span>
+
+<span class="sd">    :param results: storage for resolved IDs. Default, create a new set</span>
+<span class="sd">    :type results: set[int], optional</span>
+
+<span class="sd">    :rtype: set[int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">shallow</span> <span class="ow">or</span> <span class="n">deep</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="n">seek</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">shallow</span><span class="p">)</span> <span class="k">if</span> <span class="n">shallow</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="n">deep</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span> <span class="k">if</span> <span class="n">deep</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">seek</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>
+
+    <span class="c1"># first dig up the IDs for all the tags. If any are invalid, this will</span>
+    <span class="c1"># raise a NoSuchTag exception</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">seek</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">found</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">deep</span><span class="p">:</span>
+        <span class="n">inh</span> <span class="o">=</span> <span class="n">bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">,</span> <span class="n">deep</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">parents</span> <span class="ow">in</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">inh</span><span class="p">):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;parent_id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
 <span class="c1">#</span>
 <span class="c1"># The end.</span>
 </pre></div>
@@ -304,7 +318,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>

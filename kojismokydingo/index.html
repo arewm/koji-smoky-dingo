@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Package kojismokydingo Contents &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>Package kojismokydingo Contents &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../overview/" title="Overview"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -189,6 +189,34 @@ takes care of loading the relevant profile configuration.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.as_buildinfo">
+<code class="sig-name descname">as_buildinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_buildinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_buildinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.as_taginfo">
+<code class="sig-name descname">as_taginfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_taginfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_taginfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.as_targetinfo">
+<code class="sig-name descname">as_targetinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_targetinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_targetinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load">
+<code class="sig-name descname">bulk_load</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">loadfn</em>, <em class="sig-param">keys</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic bulk loading function, invokes the given loadfn on each
+key in keys using chunking multicalls limited to the specified
+size.</p>
+<p>Returns an OrderedDict associating the individual keys with the
+returned value of loadfn.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.bulk_load_build_archives">
 <code class="sig-name descname">bulk_load_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_archives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a chunking multicall to fetch the the archives of builds
@@ -199,6 +227,28 @@ their resulting archive lists.</p>
 be used in place of a newly allocated OrderedDict to store and
 return the results.</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_build_rpms">
+<code class="sig-name descname">bulk_load_build_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_rpms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a chunking multicall to fetch the the archives of builds
+via session.listArchives for each build ID in build_ids.</p>
+<p>Returns an OrderedDict associating the individual build IDs with
+their resulting archive lists.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_buildroot_archives">
+<code class="sig-name descname">bulk_load_buildroot_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">buildroot_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroot_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroot_archives" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.bulk_load_buildroot_rpms">
+<code class="sig-name descname">bulk_load_buildroot_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">buildroot_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroot_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroot_rpms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_buildroots">
@@ -246,7 +296,7 @@ return the results.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_tasks">
-<code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tasks</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">task_ids</em>, <em class="sig-param">request=False</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="section" id="submodules">
@@ -321,7 +371,7 @@ return the results.</p>
         <li class="right" >
           <a href="../overview/" title="Overview"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.hosts"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo Contents</a> &#187;</li> 
       </ul>
     </div>  
@@ -60,16 +60,6 @@
 <dd class="field-even"><p>GPL version 3</p>
 </dd>
 </dl>
-<dl class="function">
-<dt id="kojismokydingo.tags.as_taginfo">
-<code class="sig-name descname">as_taginfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#as_taginfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.as_taginfo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kojismokydingo.tags.as_targetinfo">
-<code class="sig-name descname">as_targetinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#as_targetinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.as_targetinfo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="function">
 <dt id="kojismokydingo.tags.collect_tag_extras">
 <code class="sig-name descname">collect_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em>, <em class="sig-param">prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#collect_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.collect_tag_extras" title="Permalink to this definition">¶</a></dt>
@@ -134,6 +124,28 @@ found with the given parent_id</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.gather_tag_ids">
+<code class="sig-name descname">gather_tag_ids</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">shallow=()</em>, <em class="sig-param">deep=()</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#gather_tag_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.gather_tag_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load IDs from shallow tags, and load IDs from deep tags and all
+their parents. Returns a set of all IDs found.</p>
+<p>If results is specified, it must be a set instance into which the
+disovered tag IDs will be added. Otherwise a new set will be
+allocated and returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shallow</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of tag names to resolve IDs for</p></li>
+<li><p><strong>deep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of tag names to resolve IDs and parent IDs for</p></li>
+<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) -- storage for resolved IDs. Default, create a new set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -227,7 +239,7 @@ name specifies a tag.</p></li>
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.hosts"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo Contents</a> &#187;</li> 
       </ul>
     </div>

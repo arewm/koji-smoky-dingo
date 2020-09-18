@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.0 documentation</title>
+    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../clients/" title="kojismokydingo.clients"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo Contents</a> &#187;</li> 
       </ul>
     </div>  
@@ -74,7 +74,7 @@ length.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Iterator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>]</p>
+<dd class="field-even"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -132,6 +132,25 @@ True. Default, False</p></li>
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.common.merge_extend">
+<code class="sig-name descname">merge_extend</code><span class="sig-paren">(</span><em class="sig-param">*dict_additions</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#merge_extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.merge_extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to <a class="reference internal" href="#kojismokydingo.common.update_extend" title="kojismokydingo.common.update_extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_extend</span></code></a> but creates a new dict to hold results,
+and new initial lists to be extended, leaving all the arguments
+unaltered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dict_additions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>]</em>) -- The additions dict. Will not be altered.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new dict, whose values are new lists</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.common.rpm_evr_compare">
 <code class="sig-name descname">rpm_evr_compare</code><span class="sig-paren">(</span><em class="sig-param">left_evr</em>, <em class="sig-param">right_evr</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#rpm_evr_compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.rpm_evr_compare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare two (Epoch, Version, Release) tuples.</p>
@@ -166,6 +185,38 @@ labelCompare function.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.update_extend">
+<code class="sig-name descname">update_extend</code><span class="sig-paren">(</span><em class="sig-param">dict_orig</em>, <em class="sig-param">*dict_additions</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#update_extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.update_extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the list values of the original dict with the list values of
+the additions dict.</p>
+<p>eg.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">]}</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">]}</span>
+<span class="n">update_extend</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+
+<span class="n">A</span>
+<span class="o">&gt;&gt;</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>The values of dict_orig must support an extend method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict_orig</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>]</em>) -- The original dict, which may be mutated and whose
+values may be extended</p></li>
+<li><p><strong>dict_additions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>]</em>) -- The additions dict. Will not be altered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The original dict instance</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -220,7 +271,7 @@ labelCompare function.</p>
         <li class="right" >
           <a href="../clients/" title="kojismokydingo.clients"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo Contents</a> &#187;</li> 
       </ul>
     </div>
