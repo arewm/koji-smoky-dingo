@@ -91,7 +91,10 @@ many information-only endpoints.</p>
 <dl class="method">
 <dt id="kojismokydingo.cli.AnonSmokyDingo.activate">
 <code class="sig-name descname">activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#AnonSmokyDingo.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.AnonSmokyDingo.activate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Activate the session</p>
+<dd><p>Activate our session. This is triggered after validate, before
+pre_handle and handle</p>
+<p>The session and goptions attributes will have been set just
+prior.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -162,7 +165,19 @@ sub-command</p></li>
 <dl class="method">
 <dt id="kojismokydingo.cli.SmokyDingo.activate">
 <code class="sig-name descname">activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#SmokyDingo.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.SmokyDingo.activate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Activate the session</p>
+<dd><p>Activate our session. This is triggered after validate, before
+pre_handle and handle</p>
+<p>The session and goptions attributes will have been set just
+prior.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.SmokyDingo.deactivate">
+<code class="sig-name descname">deactivate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/cli/#SmokyDingo.deactivate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.SmokyDingo.deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deactivate our session. This is triggered after handle has
+completed, either normally or by raising an exception.</p>
+<p>The session and goptions attributes will be cleared just
+after.</p>
 </dd></dl>
 
 <dl class="attribute">

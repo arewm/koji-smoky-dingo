@@ -68,7 +68,10 @@
 <dl class="method">
 <dt id="kojismokydingo.cli.clients.ClientConfig.activate">
 <code class="sig-name descname">activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/clients/#ClientConfig.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.clients.ClientConfig.activate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Activate the session</p>
+<dd><p>Activate our session. This is triggered after validate, before
+pre_handle and handle</p>
+<p>The session and goptions attributes will have been set just
+prior.</p>
 </dd></dl>
 
 <dl class="attribute">
