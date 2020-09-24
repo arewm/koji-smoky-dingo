@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>koji list-build-archives &#8212; kojismokydingo 0.9.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="koji list-cgs" href="../list-cgs/" />
+    <link rel="prev" title="koji list-btypes" href="../list-btypes/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../list-cgs/" title="koji list-cgs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../list-btypes/" title="koji list-btypes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-list-build-archives">
+<h1>koji list-build-archives<a class="headerlink" href="#koji-list-build-archives" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji list-build-archives [-h] [--json] [--urls]
+                                [--build-type TYPE | --rpm | --maven | --image | --win]
+                                [--archive-type EXT] [--key KEY] [--unsigned]
+                                NVR
+
+List archives from a build
+
+positional arguments:
+  NVR                   The NVR containing the archives
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --json                Output archive information as JSON
+  --urls, -U            Present archives as URLs using the configured topurl.
+                        Default: use the configured topdir
+
+Build Filtering Options:
+  --build-type TYPE     Only show archives for the given build type. Example
+                        types are rpm, maven, image, win. Default: show all
+                        archives.
+  --rpm                 --build-type=rpm
+  --maven               --build-type=maven
+  --image               --build-type=image
+  --win                 --build-type=win
+
+Archive Filtering Options:
+  --archive-type EXT, -a EXT
+                        Only show archives with the given archive type. Can be
+                        specified multiple times. Default: show all
+
+RPM Options:
+  --key KEY, -k KEY     Only show RPMs signed with the given key. Can be
+                        specified multiple times to indicate any of the keys
+                        is valid. Preferrence is in order defined. Default:
+                        show unsigned RPMs
+  --unsigned            Allow unsigned copies if no signed copies are found
+                        when --key=KEY is specified. Otherwise if keys are
+                        specified, then only RPMs signed with one of those
+                        keys are shown.
+</pre></div>
+</div>
+<p>Print paths for archives and RPMs attached to a build</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives" title="kojismokydingo.cli.archives.ListBuildArchives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.archives.ListBuildArchives</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.cli_list_build_archives" title="kojismokydingo.cli.archives.cli_list_build_archives"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.archives.cli_list_build_archives()</span></code></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">koji list-build-archives</a><ul>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../list-btypes/"
+                        title="previous chapter">koji list-btypes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../list-cgs/"
+                        title="next chapter">koji list-cgs</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/commands/list-build-archives.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../list-cgs/" title="koji list-cgs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../list-btypes/" title="koji list-btypes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-09-24.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

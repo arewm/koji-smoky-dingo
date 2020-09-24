@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>koji renum-tag-inheritance &#8212; kojismokydingo 0.9.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="koji set-env-var" href="../set-env-var/" />
+    <link rel="prev" title="koji bulk-tag-builds" href="../bulk-tag-builds/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../set-env-var/" title="koji set-env-var"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../bulk-tag-builds/" title="koji bulk-tag-builds"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-renum-tag-inheritance">
+<h1>koji renum-tag-inheritance<a class="headerlink" href="#koji-renum-tag-inheritance" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji renum-tag-inheritance [-h] [--verbose] [--test] [--begin BEGIN]
+                                  [--step STEP]
+                                  TAGNAME
+
+Renumbers inheritance priorities of a tag, preserving order
+
+positional arguments:
+  TAGNAME               Tag to renumber
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --verbose, -v         Print information about what&#39;s changing
+  --test, -t            Calculate the new priorities, but don&#39;t commit the
+                        changes
+  --begin BEGIN, -b BEGIN
+                        New priority for first inheritance link (default: 10)
+  --step STEP, -s STEP  Priority increment for each subsequent inheritance
+                        link after the first (default: 10)
+</pre></div>
+</div>
+<p>When you've been modifying a tag inheritance after repeated edits over
+time, you may find that there's an insufficient gap between two
+inherited parent priority values to fit another parent.</p>
+<p>This command will adjust the priority values of a tag's immediate
+parents such that they are in the same order, but are evenly spaced
+out. Those familiar with Basic may recall the <code class="docutils literal notranslate"><span class="pre">RENUM</span></code> command.</p>
+<p>This command requires either the <code class="docutils literal notranslate"><span class="pre">admin</span></code> or <code class="docutils literal notranslate"><span class="pre">tag</span></code> permission,
+as it modifies tag configuration data.</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RenumTagInheritance" title="kojismokydingo.cli.tags.RenumTagInheritance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.RenumTagInheritance</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_renum_tag" title="kojismokydingo.cli.tags.cli_renum_tag"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_renum_tag()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/tags/#kojismokydingo.tags.renum_inheritance" title="kojismokydingo.tags.renum_inheritance"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.tags.renum_inheritance()</span></code></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">koji renum-tag-inheritance</a><ul>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../bulk-tag-builds/"
+                        title="previous chapter">koji bulk-tag-builds</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../set-env-var/"
+                        title="next chapter">koji set-env-var</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/commands/renum-tag-inheritance.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../set-env-var/" title="koji set-env-var"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../bulk-tag-builds/" title="koji bulk-tag-builds"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-09-24.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

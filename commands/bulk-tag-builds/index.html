@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>koji bulk-tag-builds &#8212; kojismokydingo 0.9.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="koji renum-tag-inheritance" href="../renum-tag-inheritance/" />
+    <link rel="prev" title="koji userinfo" href="../userinfo/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../userinfo/" title="koji userinfo"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-bulk-tag-builds">
+<h1>koji bulk-tag-builds<a class="headerlink" href="#koji-bulk-tag-builds" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji bulk-tag-builds [-h] [-f NVR_FILE] [--strict] [--owner OWNER]
+                            [--no-inherit] [--force] [--notify] [-v]
+                            [--nvr-sort | --id-sort]
+                            TAGNAME [NVR [NVR ...]]
+
+Quickly tag a large number of builds
+
+positional arguments:
+  TAGNAME               Tag to associate builds with
+  NVR                   Build NVRs to tag
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f NVR_FILE, --file NVR_FILE
+                        Read list of builds from file, one NVR per line.
+                        Specify - to read from stdin.
+  --strict              Stop processing at the first failure
+  --owner OWNER         Force missing package listings to be created with the
+                        specified owner
+  --no-inherit          Do not use parent tags to determine existing package
+                        listing.
+  --force               Force tagging operations. Requires admin permission
+  --notify              Send tagging notifications. This can be expensive for
+                        koji hub, avoid unless absolutely necessary.
+  -v, --verbose         Print tagging status
+
+Tagging order of builds:
+  --nvr-sort            pre-sort build list by NVR, so highest NVR is tagged
+                        last
+  --id-sort             pre-sort build list by build ID, so most recently
+                        completed build is tagged last
+</pre></div>
+</div>
+<p>This command is used to facilitate the tagging of larger amounts of
+builds, without the overhead of creating a tagBuild task for each NVR.</p>
+<p>This will also intelligently add package listings to the destination
+tag in the event that a build's package isn't listed already. The
+owner for such a package listing can be specified via the <code class="docutils literal notranslate"><span class="pre">--owner</span></code>
+option. If left unspecified, the owner for the first build of that
+package is used.</p>
+<p>By default, this command will not trigger tagNotification tasks (which
+cause an email to be sent to the package listing owner and the build
+owner to let them know their build has been tagged). Sending such
+notifications can easily bog down a koji hub, so this setting should
+be left off unless it is absolutely necessary that such notifications
+be triggered.</p>
+<p>The set of NVRs to tag can be fed to this command in multiple
+ways. They can be specified as arguments, or they can be specified
+using the <code class="docutils literal notranslate"><span class="pre">--file</span></code> option to reference either a file containing a
+list of NVRs (one per line) or <code class="docutils literal notranslate"><span class="pre">-</span></code> to indicate stdin. If NVRs are
+specified on the command line and also via <code class="docutils literal notranslate"><span class="pre">--file</span></code> then the two
+lists will be concatenated in that order.</p>
+<p>If no NVRs are given as arguments, and the <code class="docutils literal notranslate"><span class="pre">--file</span></code> option isn't
+specified, and stdin is detected to not be a TTY, then the list of
+NVRs will be read from stdin.</p>
+<p>By default the builds will be tagged in the order they are
+specified. If there is not already some meaningful ordering to the
+builds, it may be best to sort them by either NVR or ID, to ensure
+&quot;higher&quot; builds will be considered latest according to normal koji tag
+rules.</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.BulkTagBuilds" title="kojismokydingo.cli.builds.BulkTagBuilds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.builds.BulkTagBuilds</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.cli_bulk_tag_builds" title="kojismokydingo.cli.builds.cli_bulk_tag_builds"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.builds.cli_bulk_tag_builds()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/builds/#kojismokydingo.builds.bulk_tag_builds" title="kojismokydingo.builds.bulk_tag_builds"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.builds.bulk_tag_builds()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/builds/#kojismokydingo.builds.iter_bulk_tag_builds" title="kojismokydingo.builds.iter_bulk_tag_builds"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.builds.iter_bulk_tag_builds()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/builds/#kojismokydingo.builds.bulk_tag_nvrs" title="kojismokydingo.builds.bulk_tag_nvrs"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.builds.bulk_tag_nvrs()</span></code></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">koji bulk-tag-builds</a><ul>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../userinfo/"
+                        title="previous chapter">koji userinfo</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../renum-tag-inheritance/"
+                        title="next chapter">koji renum-tag-inheritance</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/commands/bulk-tag-builds.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../userinfo/" title="koji userinfo"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-09-24.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

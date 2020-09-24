@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>Plugin Commands &#8212; kojismokydingo 0.9.2 documentation</title>
+    <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="koji affected-targets" href="affected-targets/" />
+    <link rel="prev" title="Overview" href="../overview/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="affected-targets/" title="koji affected-targets"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../overview/" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="plugin-commands">
+<h1>Plugin Commands<a class="headerlink" href="#plugin-commands" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo provides a number of additional commands to the
+koji CLI.</p>
+<div class="section" id="informational">
+<h2>Informational<a class="headerlink" href="#informational" title="Permalink to this headline">¶</a></h2>
+<p>These read-only commands gather and display information from Koji, and
+do not require any special permissions to run.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="affected-targets/">koji affected-targets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cginfo/">koji cginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="check-hosts/">koji check-hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client-config/">koji client-config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filter-builds/">koji filter-builds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="latest-archives/">koji latest-archives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-btypes/">koji list-btypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-build-archives/">koji list-build-archives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-cgs/">koji list-cgs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-component-builds/">koji list-component-builds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-env-vars/">koji list-env-vars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-rpm-macros/">koji list-rpm-macros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list-tag-extras/">koji list-tag-extras</a></li>
+<li class="toctree-l1"><a class="reference internal" href="perminfo/">koji perminfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userinfo/">koji userinfo</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="administrative">
+<h2>Administrative<a class="headerlink" href="#administrative" title="Permalink to this headline">¶</a></h2>
+<p>These commands modify aspects of Koji and are subsequently gated
+behind some level of administrative permission.</p>
+<p>See <a class="reference external" href="https://docs.pagure.org/koji/permissions/#administration">Koji's Permission System - Administration</a></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bulk-tag-builds/">koji bulk-tag-builds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="renum-tag-inheritance/">koji renum-tag-inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set-env-var/">koji set-env-var</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set-rpm-macro/">koji set-rpm-macro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="swap-tag-inheritance/">koji swap-tag-inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unset-env-var/">koji unset-env-var</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unset-rpm-macro/">koji unset-rpm-macro</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Plugin Commands</a><ul>
+<li><a class="reference internal" href="#informational">Informational</a></li>
+<li><a class="reference internal" href="#administrative">Administrative</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../overview/"
+                        title="previous chapter">Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="affected-targets/"
+                        title="next chapter">koji affected-targets</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/commands.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="affected-targets/" title="koji affected-targets"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../overview/" title="Overview"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-09-24.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

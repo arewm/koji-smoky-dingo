@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>koji set-env-var &#8212; kojismokydingo 0.9.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="koji set-rpm-macro" href="../set-rpm-macro/" />
+    <link rel="prev" title="koji renum-tag-inheritance" href="../renum-tag-inheritance/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../set-rpm-macro/" title="koji set-rpm-macro"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-set-env-var">
+<h1>koji set-env-var<a class="headerlink" href="#koji-set-env-var" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji set-env-var [-h] [--target] TAGNAME var [value]
+
+Set a mock environment variable on a tag
+
+positional arguments:
+  TAGNAME     Name of tag
+  var         Name of the environment variable
+  value       Value of the environment var. Default: &#39;&#39;
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --target    Specify by target rather than a tag
+</pre></div>
+</div>
+<p>This command requires either the <code class="docutils literal notranslate"><span class="pre">admin</span></code> or <code class="docutils literal notranslate"><span class="pre">tag</span></code> permission,
+as it modifies tag configuration data.</p>
+<p>See also <a class="reference internal" href="../list-env-vars/#koji-list-env-vars"><span class="std std-ref">koji list-env-vars</span></a>, <a class="reference internal" href="../unset-env-var/#koji-unset-env-var"><span class="std std-ref">koji unset-env-var</span></a></p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SetEnvVar" title="kojismokydingo.cli.tags.SetEnvVar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.SetEnvVar</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_set_env_var" title="kojismokydingo.cli.tags.cli_set_env_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_set_env_var()</span></code></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">koji set-env-var</a><ul>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../renum-tag-inheritance/"
+                        title="previous chapter">koji renum-tag-inheritance</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../set-rpm-macro/"
+                        title="next chapter">koji set-rpm-macro</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/commands/set-env-var.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../set-rpm-macro/" title="koji set-rpm-macro"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-09-24.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

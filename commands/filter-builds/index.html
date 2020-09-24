@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>koji filter-builds &#8212; kojismokydingo 0.9.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="koji latest-archives" href="../latest-archives/" />
+    <link rel="prev" title="koji client-config" href="../client-config/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../latest-archives/" title="koji latest-archives"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../client-config/" title="koji client-config"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-filter-builds">
+<h1>koji filter-builds<a class="headerlink" href="#koji-filter-builds" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji filter-builds [-h] [-f NVR_FILE] [--strict] [--tag TAG]
+                          [--inherit] [--latest] [--nvr-sort | --id-sort]
+                          [--lookaside LOOKASIDE]
+                          [--shallow-lookaside SHALLOW_LOOKASIDE]
+                          [--limit LIMIT] [--shallow-limit SHALLOW_LIMIT]
+                          [--type BTYPES] [-c CG_NAME]
+                          [--imports | --no-imports] [--completed | --deleted]
+                          [NVR [NVR ...]]
+
+Filter a list of NVRs by various criteria
+
+positional arguments:
+  NVR
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f NVR_FILE, --file NVR_FILE
+                        Read list of builds from file, one NVR per line.
+                        Specify - to read from stdin.
+  --strict              Error if any of the NVRs do not resolve into a real
+                        build. Otherwise, bad NVRs are ignored.
+
+Working from tagged builds:
+  --tag TAG             Filter using the builds in this tag
+  --inherit             Follow inheritance
+  --latest              Limit to latest builds
+
+Sorting of output builds:
+  --nvr-sort            Sort output by NVR in ascending order
+  --id-sort             Sort output by Build ID in ascending order
+
+Filtering by tag:
+  --lookaside LOOKASIDE
+                        Omit builds found in this tag or its parent tags
+  --shallow-lookaside SHALLOW_LOOKASIDE
+                        Omit builds found directly in this tag
+  --limit LIMIT         Limit results to builds found in this tag or its
+                        parent tags
+  --shallow-limit SHALLOW_LIMIT
+                        Limit results to builds found directly in this tag
+
+Filtering by type:
+  --type BTYPES         Limit to builds of this BType
+  -c CG_NAME, --content-generator CG_NAME
+                        show content generator imports by build system name.
+                        Default: display no CG builds. Specify &#39;any&#39; to see CG
+                        imports from any system. May be specified more than
+                        once.
+  --imports             Limit to imported builds
+  --no-imports          Invert the imports checking
+
+Filtering by state:
+  --completed           Limit to completed builds
+  --deleted             Limit to deleted builds
+</pre></div>
+</div>
+<p>Given a list of NVRs, output only those which match a set of filtering
+parameters.</p>
+<p>The set of NVRs to tag can be fed to this command in multiple
+ways. They can be specified as arguments, or they can be specified
+using the <code class="docutils literal notranslate"><span class="pre">--file</span></code> option to reference either a file containing a
+list of NVRs (one per line) or <code class="docutils literal notranslate"><span class="pre">-</span></code> to indicate stdin. The NVR list
+can also come from the contents of a tag via the <code class="docutils literal notranslate"><span class="pre">--tag</span></code> option.</p>
+<p>If NVRs are specified multiple ways, then they will be concatenated
+into a single list. The order will be arguments, then <code class="docutils literal notranslate"><span class="pre">--file</span></code>, and
+then <code class="docutils literal notranslate"><span class="pre">--tag</span></code>.</p>
+<p>If no NVRs are given as arguments, and the <code class="docutils literal notranslate"><span class="pre">--file</span></code> option isn't
+specified, and the <code class="docutils literal notranslate"><span class="pre">--tag</span></code> option isn't specified, and stdin is
+detected to not be a TTY, then the list of NVRs will be read from
+stdin.</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.FilterBuilds" title="kojismokydingo.cli.builds.FilterBuilds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.builds.FilterBuilds</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.cli_filter_builds" title="kojismokydingo.cli.builds.cli_filter_builds"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.builds.cli_filter_builds()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter" title="kojismokydingo.builds.BuildFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.builds.BuildFilter</span></code></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">koji filter-builds</a><ul>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../client-config/"
+                        title="previous chapter">koji client-config</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../latest-archives/"
+                        title="next chapter">koji latest-archives</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/commands/filter-builds.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../latest-archives/" title="koji latest-archives"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../client-config/" title="koji client-config"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-09-24.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>
