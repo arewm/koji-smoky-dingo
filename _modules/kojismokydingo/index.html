@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -76,15 +76,10 @@
 
 <div class="viewcode-block" id="ManagedClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.ManagedClientSession">[docs]</a><span class="k">class</span> <span class="nc">ManagedClientSession</span><span class="p">(</span><span class="n">ClientSession</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A koji.ClientSession that can be used as via the &#39;with&#39; keyword to</span>
-<span class="sd">    provide a managed session that will handle login and logout. Also</span>
-<span class="sd">    takes care of loading the relevant profile configuration.</span>
+<span class="sd">    A `koji.ClientSession` that can be used as via the ``with``</span>
+<span class="sd">    keyword to provide a managed session that will handle</span>
+<span class="sd">    authenticated login and logout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;koji&quot;</span><span class="p">):</span>
-        <span class="n">conf</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-        <span class="n">server</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;server&quot;</span><span class="p">]</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ManagedClientSession</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">activate_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">)</span>
@@ -98,11 +93,26 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">exc_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="AnonClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.AnonClientSession">[docs]</a><span class="k">class</span> <span class="nc">AnonClientSession</span><span class="p">(</span><span class="n">ManagedClientSession</span><span class="p">):</span>
+<div class="viewcode-block" id="ProfileClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.ProfileClientSession">[docs]</a><span class="k">class</span> <span class="nc">ProfileClientSession</span><span class="p">(</span><span class="n">ManagedClientSession</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A koji.ClientSession that can be used as via the &#39;with&#39; keyword to</span>
-<span class="sd">    provide a managed session. Suitable for working with anonymous</span>
-<span class="sd">    commands which do not require authentication.</span>
+<span class="sd">    A `koji.ClientSession` which loads profile config information and</span>
+<span class="sd">    which can be used via tha ``with`` keyword.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;koji&quot;</span><span class="p">,</span> <span class="n">anon</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;server&quot;</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ProfileClientSession</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnonClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.AnonClientSession">[docs]</a><span class="k">class</span> <span class="nc">AnonClientSession</span><span class="p">(</span><span class="n">ProfileClientSession</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A `koji.ClientSession` which loads profile config information and</span>
+<span class="sd">    which can be used via the ``with`` keyword.</span>
+
+<span class="sd">    Suitable for working with anonymous commands which do not require</span>
+<span class="sd">    authentication. Does not authenticate, and will only connect</span>
+<span class="sd">    lazily.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -115,6 +125,16 @@
 
 
 <div class="viewcode-block" id="BadDingo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.BadDingo">[docs]</a><span class="k">class</span> <span class="nc">BadDingo</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generalized base class for exceptions raised from kojismokydingo.</span>
+<span class="sd">    This class and its subclasses are used to combine a fixed</span>
+<span class="sd">    complaint string with some specific information. This is a</span>
+<span class="sd">    convenience primarily for the CLI, but can also be used to track</span>
+<span class="sd">    more detailed situations where a requested data type wasn&#39;t</span>
+<span class="sd">    present on the koji hub, rather than just working with</span>
+<span class="sd">    `koji.GenericError`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;Something bad happened&quot;</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -123,42 +143,79 @@
 
 
 <div class="viewcode-block" id="NoSuchBuild"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchBuild">[docs]</a><span class="k">class</span> <span class="nc">NoSuchBuild</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A build was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such build&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchChannel"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchChannel">[docs]</a><span class="k">class</span> <span class="nc">NoSuchChannel</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A channel was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such builder channel&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchContentGenerator"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchContentGenerator">[docs]</a><span class="k">class</span> <span class="nc">NoSuchContentGenerator</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A content generator was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such content generator&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchTag"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchTag">[docs]</a><span class="k">class</span> <span class="nc">NoSuchTag</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A tag was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such tag&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchTarget"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchTarget">[docs]</a><span class="k">class</span> <span class="nc">NoSuchTarget</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A target was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such target&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchTask"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchTask">[docs]</a><span class="k">class</span> <span class="nc">NoSuchTask</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A task was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such task&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchUser"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchUser">[docs]</a><span class="k">class</span> <span class="nc">NoSuchUser</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A user was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such user&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoSuchPermission"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchPermission">[docs]</a><span class="k">class</span> <span class="nc">NoSuchPermission</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A permission was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such permission&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotPermitted"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NotPermitted">[docs]</a><span class="k">class</span> <span class="nc">NotPermitted</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A required permission was not associated with the currently logged</span>
+<span class="sd">    in user account.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;Insufficient permissions&quot;</span></div>
 
 
-<span class="k">def</span> <span class="nf">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generator utility for multicall loading data from a koji client</span>
 <span class="sd">    session.</span>
@@ -168,7 +225,9 @@
 
 <span class="sd">    Yields key, result pairs.</span>
 
-<span class="sd">    Will convert any koji faults to exceptions and raise them.</span>
+<span class="sd">    If err is True (default) then this will convert any koji faults to</span>
+<span class="sd">    exceptions and raise them. Otherwise faults will be omitted from</span>
+<span class="sd">    the output results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">key_chunk</span> <span class="ow">in</span> <span class="n">chunkseq</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
@@ -177,33 +236,69 @@
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">key_chunk</span><span class="p">:</span>
             <span class="n">loadfn</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">key_chunk</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">key_chunk</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="n">err</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">info</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;faultCode&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">convertFault</span><span class="p">(</span><span class="n">Fault</span><span class="p">(</span><span class="o">**</span><span class="n">info</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">convertFault</span><span class="p">(</span><span class="n">Fault</span><span class="p">(</span><span class="o">**</span><span class="n">info</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="bulk_load"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load">[docs]</a><span class="k">def</span> <span class="nf">bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="bulk_load"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load">[docs]</a><span class="k">def</span> <span class="nf">bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generic bulk loading function, invokes the given loadfn on each</span>
-<span class="sd">    key in keys using chunking multicalls limited to the specified</span>
+<span class="sd">    Generic bulk loading function. Invokes the given `loadfn` on each</span>
+<span class="sd">    key in `keys` using chunking multicalls limited to the specified</span>
 <span class="sd">    size.</span>
 
-<span class="sd">    Returns an OrderedDict associating the individual keys with the</span>
-<span class="sd">    returned value of loadfn.</span>
+<span class="sd">    Returns an `OrderedDict` associating the individual keys with the</span>
+<span class="sd">    returned value of loadfn. If `results` is specified, it must</span>
+<span class="sd">    support dict assignment, and will be used in place of a newly</span>
+<span class="sd">    allocated `OrderedDict` to store and return the results.</span>
 
-<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
-<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
-<span class="sd">    return the results.</span>
+<span class="sd">    :param session: The koji session</span>
+
+<span class="sd">    :type session: `koji.ClientSession`</span>
+
+<span class="sd">    :param loadfn: The loading function, to be invoked in a multicall</span>
+<span class="sd">      arrangement. Will be called once with each given key from `keys`</span>
+
+<span class="sd">    :type loadfn: Callable[[object], object]</span>
+
+<span class="sd">    :param keys: The sequence of keys to be used to invoke `loadfn`</span>
+
+<span class="sd">    :type keys: list[object]</span>
+
+<span class="sd">    :param err: Whether to raise any underlying fault returns as</span>
+<span class="sd">      exceptions. Default, True</span>
+
+<span class="sd">    :type err: bool, optional</span>
+
+<span class="sd">    :param size: How many calls to `loadfn` to chunk up for each</span>
+<span class="sd">      multicall. Default, 100</span>
+
+<span class="sd">    :type size: int, optional</span>
+
+<span class="sd">    :param results: storage for `loadfn` results. If specified, must</span>
+<span class="sd">      support item assignment (like a dict), and it will be populated</span>
+<span class="sd">      and then used as the return value for this function. Default, a</span>
+<span class="sd">      new `OrderedDict` will be allocated.</span>
+
+<span class="sd">    :type results: dict, optional</span>
+
+<span class="sd">    :raises koji.GenericError: if `err` is `True` and an issue</span>
+<span class="sd">      occurrs while invoking the `loadfn`</span>
+
+<span class="sd">    :rtype: dict[object, object]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -228,9 +323,10 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
@@ -244,9 +340,10 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getTaskInfo</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
@@ -254,11 +351,13 @@
 
 
 <div class="viewcode-block" id="bulk_load_tags"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tags">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
@@ -281,7 +380,7 @@
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">queryRPMSigs</span><span class="p">,</span>
-                                <span class="n">rpm_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+                                <span class="n">rpm_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -294,7 +393,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -307,7 +406,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -331,7 +430,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -353,7 +452,7 @@
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">,</span>
-                                <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+                                <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -375,13 +474,31 @@
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildroot</span><span class="p">,</span>
-                                <span class="n">broot_ids</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+                                <span class="n">broot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
 
 
 <div class="viewcode-block" id="as_buildinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_buildinfo">[docs]</a><span class="k">def</span> <span class="nf">as_buildinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces a build value into a koji build info dict.</span>
+
+<span class="sd">    If build is an</span>
+<span class="sd">     * int, will attempt to load as a build ID</span>
+<span class="sd">     * str, will attempt to load as an NVR</span>
+<span class="sd">     * dict, will presume already a build info</span>
+
+<span class="sd">    :param build: value to lookup</span>
+
+<span class="sd">    :type build: int or str or dict</span>
+
+<span class="sd">    :raises NoSuchBuild: if the build value could not be resolved</span>
+<span class="sd">      into a build info dict</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">(</span><span class="n">build</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -396,6 +513,24 @@
 
 
 <div class="viewcode-block" id="as_taginfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_taginfo">[docs]</a><span class="k">def</span> <span class="nf">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces a tag value into a koji tag info dict.</span>
+
+<span class="sd">    If tag is an</span>
+<span class="sd">     * int, will attempt to load as a tag ID</span>
+<span class="sd">     * str, will attempt to load as a tag name</span>
+<span class="sd">     * dict, will presume already a tag info</span>
+
+<span class="sd">    :param tag: value to lookup</span>
+
+<span class="sd">    :type tag: int or str or dict</span>
+
+<span class="sd">    :raises NoSuchTag: if the tag value could not be resolved into a</span>
+<span class="sd">      tag info dict</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -410,6 +545,24 @@
 
 
 <div class="viewcode-block" id="as_targetinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_targetinfo">[docs]</a><span class="k">def</span> <span class="nf">as_targetinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces a target value into a koji target info dict.</span>
+
+<span class="sd">    If target is an</span>
+<span class="sd">     * int, will attempt to load as a target ID</span>
+<span class="sd">     * str, will attempt to load as a target name</span>
+<span class="sd">     * dict, will presume already a target info</span>
+
+<span class="sd">    :param target: value to lookup</span>
+
+<span class="sd">    :type target: int or str or dict</span>
+
+<span class="sd">    :raises NoSuchTarget: if the target value could not be resolved</span>
+<span class="sd">      into a target info dict</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -455,13 +608,13 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

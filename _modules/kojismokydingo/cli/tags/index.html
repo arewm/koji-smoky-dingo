@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -148,9 +148,8 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show targets impacted by changes to the given tag(s)&quot;</span>
 
 
-<div class="viewcode-block" id="AffectedTargets.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.AffectedTargets.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AffectedTargets</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
-        <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
+<div class="viewcode-block" id="AffectedTargets.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.AffectedTargets.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tag to check&quot;</span><span class="p">)</span>
@@ -158,7 +157,7 @@
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="s2">&quot;--quiet&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Don&#39;t print summary information&quot;</span><span class="p">)</span>
 
-        <span class="n">group</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--info&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -167,7 +166,7 @@
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--build-tags&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print build tag names rather than target names&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">argp</span></div>
+        <span class="k">return</span> <span class="n">parser</span></div>
 
 
 <div class="viewcode-block" id="AffectedTargets.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.AffectedTargets.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -208,9 +207,8 @@
                   <span class="s2">&quot; preserving order&quot;</span>
 
 
-<div class="viewcode-block" id="RenumTagInheritance.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RenumTagInheritance.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RenumTagInheritance</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
-        <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
+<div class="viewcode-block" id="RenumTagInheritance.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RenumTagInheritance.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tag to renumber&quot;</span><span class="p">)</span>
@@ -230,7 +228,7 @@
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Priority increment for each subsequent&quot;</span>
                <span class="s2">&quot; inheritance link after the first (default: 10)&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">argp</span></div>
+        <span class="k">return</span> <span class="n">parser</span></div>
 
 
 <div class="viewcode-block" id="RenumTagInheritance.validate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RenumTagInheritance.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -339,15 +337,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Swap a tag&#39;s inheritance&quot;</span>
 
 
-<div class="viewcode-block" id="SwapTagInheritance.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SwapTagInheritance.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Swaps TAG&#39;s inheritance from OLD_PARENT to NEW_PARENT, preserving</span>
-<span class="sd">        priority. If NEW_PARENT was already in the inheritance of TAG,</span>
-<span class="sd">        OLD_PARENT will be put in its place, effectively exchanging</span>
-<span class="sd">        the two parent priorities.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SwapTagInheritance</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="SwapTagInheritance.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SwapTagInheritance.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -408,8 +398,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show RPM Macros for a tag&quot;</span>
 
 
-<div class="viewcode-block" id="ListRPMMacros.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.ListRPMMacros.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListRPMMacros</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="ListRPMMacros.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.ListRPMMacros.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -468,8 +457,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Unset an RPM Macro on a tag&quot;</span>
 
 
-<div class="viewcode-block" id="UnsetRPMMacro.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.UnsetRPMMacro.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UnsetRPMMacro</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="UnsetRPMMacro.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.UnsetRPMMacro.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -520,8 +508,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Set an RPM Macro on a tag&quot;</span>
 
 
-<div class="viewcode-block" id="SetRPMMacro.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SetRPMMacro.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SetRPMMacro</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="SetRPMMacro.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SetRPMMacro.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -531,7 +518,7 @@
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the macro&quot;</span><span class="p">)</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;%nil&quot;</span><span class="p">,</span>
-               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Value of the macro. Default: %nil&quot;</span><span class="p">)</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Value of the macro. Default: </span><span class="si">%%</span><span class="s2">nil&quot;</span><span class="p">)</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--target&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specify by target rather than a tag&quot;</span><span class="p">)</span>
@@ -568,8 +555,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Unset a mock environment variable on a tag&quot;</span>
 
 
-<div class="viewcode-block" id="UnsetEnvVar.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.UnsetEnvVar.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UnsetEnvVar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="UnsetEnvVar.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.UnsetEnvVar.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -608,8 +594,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Set a mock environment variable on a tag&quot;</span>
 
 
-<div class="viewcode-block" id="SetEnvVar.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SetEnvVar.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SetEnvVar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="SetEnvVar.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SetEnvVar.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -672,8 +657,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show mock environment variables for a tag&quot;</span>
 
 
-<div class="viewcode-block" id="ListEnvVars.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.ListEnvVars.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListEnvVars</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="ListEnvVars.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.ListEnvVars.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -728,8 +712,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show extra settings for a tag&quot;</span>
 
 
-<div class="viewcode-block" id="ListTagExtras.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.ListTagExtras.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListTagExtras</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="ListTagExtras.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.ListTagExtras.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -789,7 +772,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -797,7 +780,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

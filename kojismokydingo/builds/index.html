@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,8 +39,8 @@
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo Contents</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Core API Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -63,11 +63,16 @@
 </dl>
 <dl class="class">
 <dt id="kojismokydingo.builds.BuildFilter">
-<em class="property">class </em><code class="sig-name descname">BuildFilter</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">limit_tag_ids=None</em>, <em class="sig-param">lookaside_tag_ids=None</em>, <em class="sig-param">imported=None</em>, <em class="sig-param">cg_list=None</em>, <em class="sig-param">btypes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">BuildFilter</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">limit_tag_ids=None</em>, <em class="sig-param">lookaside_tag_ids=None</em>, <em class="sig-param">imported=None</em>, <em class="sig-param">cg_list=None</em>, <em class="sig-param">btypes=None</em>, <em class="sig-param">state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="kojismokydingo.builds.BuildFilter.filter_by_btype">
 <code class="sig-name descname">filter_by_btype</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter.filter_by_btype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter.filter_by_btype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.builds.BuildFilter.filter_by_state">
+<code class="sig-name descname">filter_by_state</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#BuildFilter.filter_by_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.BuildFilter.filter_by_state" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -241,6 +246,36 @@ mutated with their new keys.</p>
 <li><p><strong>with_cg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- load buildroot data for each archive of each build
 to determine the CG names and IDs. Default, does not load
 buildroot data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Iterator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.filter_by_state">
+<code class="sig-name descname">filter_by_state</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">state=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_by_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_by_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence of build info dicts, return a generator of those
+matching the given state.</p>
+<ul class="simple">
+<li><p>BUILDING = 0</p></li>
+<li><p>COMPLETE = 1</p></li>
+<li><p>DELETED = 2</p></li>
+<li><p>FAILED = 3</p></li>
+<li><p>CANCELED = 4</p></li>
+</ul>
+<p>See <code class="xref py py-obj docutils literal notranslate"><span class="pre">koji.BUILD_STATES</span></code></p>
+<p>Typically only COMPLETE and DELETED will be encountered here, the
+rest will rarely result in a build info dict existing.</p>
+<p>If state is None then no filtering takes place</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>] or </em><em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) -- build infos to filter through</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) -- state value to filter for. Default: only builds in
+the COMPLETE state are returned</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -432,13 +467,13 @@ first error. Default, False</p></li>
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo Contents</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Core API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

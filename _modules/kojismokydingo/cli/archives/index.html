@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -122,10 +122,8 @@
     <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
 
 
-<div class="viewcode-block" id="ArchiveDingo.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveDingo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ArchiveDingo.archive_arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveDingo.archive_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">archive_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">goptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span>
-
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ArchiveDingo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
 
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -203,13 +201,13 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;List archives from a build&quot;</span>
 
 
-<div class="viewcode-block" id="ListBuildArchives.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ListBuildArchives</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="ListBuildArchives.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;nvr&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NVR&quot;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The NVR containing the archives&quot;</span><span class="p">)</span>
 
+        <span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">archive_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -227,8 +225,7 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;List latest archives from a tag&quot;</span>
 
 
-<div class="viewcode-block" id="LatestArchives.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.LatestArchives.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">LatestArchives</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+<div class="viewcode-block" id="LatestArchives.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.LatestArchives.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNAME&quot;</span><span class="p">,</span>
@@ -238,6 +235,7 @@
                <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;inherit&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Do not follow inheritance&quot;</span><span class="p">)</span>
 
+        <span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">archive_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -283,7 +281,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -291,7 +289,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

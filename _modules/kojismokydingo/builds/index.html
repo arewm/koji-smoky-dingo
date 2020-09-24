@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -68,6 +68,7 @@
 
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">filter</span>
 
@@ -166,7 +167,7 @@
         <span class="n">builds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="n">b</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">_bid</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iteritems</span><span class="p">(</span><span class="n">builds</span><span class="p">))]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">builds</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="build_dedup"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.build_dedup">[docs]</a><span class="k">def</span> <span class="nf">build_dedup</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
@@ -588,6 +589,42 @@
     <span class="k">return</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_by_state">[docs]</a><span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a sequence of build info dicts, return a generator of those</span>
+<span class="sd">    matching the given state.</span>
+
+<span class="sd">    * BUILDING = 0</span>
+<span class="sd">    * COMPLETE = 1</span>
+<span class="sd">    * DELETED = 2</span>
+<span class="sd">    * FAILED = 3</span>
+<span class="sd">    * CANCELED = 4</span>
+
+<span class="sd">    See `koji.BUILD_STATES`</span>
+
+<span class="sd">    Typically only COMPLETE and DELETED will be encountered here, the</span>
+<span class="sd">    rest will rarely result in a build info dict existing.</span>
+
+<span class="sd">    If state is None then no filtering takes place</span>
+
+<span class="sd">    :param build_infos: build infos to filter through</span>
+
+<span class="sd">    :type build_infos: list[dict] or Iterator[dict]</span>
+
+<span class="sd">    :param state: state value to filter for. Default: only builds in</span>
+<span class="sd">      the COMPLETE state are returned</span>
+
+<span class="sd">    :type state: int, optional</span>
+
+<span class="sd">    :rtype: Iterator[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">build_infos</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">state</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="filter_imported"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_imported">[docs]</a><span class="k">def</span> <span class="nf">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">by_cg</span><span class="o">=</span><span class="p">(),</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dicts, yield those which are</span>
@@ -792,7 +829,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span>
                  <span class="n">limit_tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lookaside_tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">imported</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cg_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">btypes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">btypes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param limit_tag_ids: if specified, builds must be tagged with one</span>
@@ -812,9 +849,15 @@
 <span class="sd">          the named content generators will be returned.</span>
 <span class="sd">        :type cg_list: list[str], optional</span>
 
-<span class="sd">        :param btypes: Filter for the given build types, by name</span>
+<span class="sd">        :param btypes: Filter for the given build types, by name. Default,</span>
+<span class="sd">          any build type is allowed.</span>
+
 <span class="sd">        :type btypes: list[str], optional</span>
 
+<span class="sd">        :param state: Filter by the given build state. Default, no</span>
+<span class="sd">          filtering by state.</span>
+
+<span class="sd">        :type state: int, optional</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
@@ -829,6 +872,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cg_list</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_btypes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">btypes</span> <span class="ow">or</span> <span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
 
 
 <div class="viewcode-block" id="BuildFilter.filter_by_tags"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter.filter_by_tags">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
@@ -862,6 +906,13 @@
         <span class="k">return</span> <span class="n">build_infos</span></div>
 
 
+<div class="viewcode-block" id="BuildFilter.filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter.filter_by_state">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">filter_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">build_infos</span></div>
+
+
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
         <span class="c1"># TODO: could we add some caching to this, such that we</span>
         <span class="c1"># associate the build ID with a bool indicating whether it&#39;s</span>
@@ -872,6 +923,8 @@
 
         <span class="c1"># ensure this is a real list and not a generator of some sort</span>
         <span class="n">work</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">build_infos</span><span class="p">)</span>
+
+        <span class="n">work</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_by_state</span><span class="p">(</span><span class="n">work</span><span class="p">)</span>
 
         <span class="c1"># first stage filtering, based on tag membership</span>
         <span class="n">work</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_by_tags</span><span class="p">(</span><span class="n">work</span><span class="p">)</span>
@@ -923,14 +976,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

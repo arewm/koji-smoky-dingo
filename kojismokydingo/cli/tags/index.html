@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -39,8 +39,8 @@
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.cli.hosts"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Package kojismokydingo.cli Contents</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">CLI API Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -64,6 +64,13 @@
 <dt id="kojismokydingo.cli.tags.AffectedTargets">
 <em class="property">class </em><code class="sig-name descname">AffectedTargets</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#AffectedTargets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.AffectedTargets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.AffectedTargets.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#AffectedTargets.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.AffectedTargets.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.AffectedTargets.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Show targets impacted by changes to the given tag(s)'</em><a class="headerlink" href="#kojismokydingo.cli.tags.AffectedTargets.description" title="Permalink to this definition">¶</a></dt>
@@ -73,13 +80,6 @@
 <dt id="kojismokydingo.cli.tags.AffectedTargets.handle">
 <code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#AffectedTargets.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.AffectedTargets.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the full set of actions for this command.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.AffectedTargets.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#AffectedTargets.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.AffectedTargets.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
 </dd></dl>
 
 </dd></dl>
@@ -99,6 +99,13 @@ relevant positional arguments and options added.</p>
 <dt id="kojismokydingo.cli.tags.ListEnvVars">
 <em class="property">class </em><code class="sig-name descname">ListEnvVars</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListEnvVars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListEnvVars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.ListEnvVars.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListEnvVars.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListEnvVars.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.ListEnvVars.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Show mock environment variables for a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.ListEnvVars.description" title="Permalink to this definition">¶</a></dt>
@@ -110,19 +117,19 @@ relevant positional arguments and options added.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.ListEnvVars.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListEnvVars.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListEnvVars.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.tags.ListRPMMacros">
 <em class="property">class </em><code class="sig-name descname">ListRPMMacros</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListRPMMacros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListRPMMacros" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.ListRPMMacros.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListRPMMacros.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListRPMMacros.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.ListRPMMacros.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Show RPM Macros for a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.ListRPMMacros.description" title="Permalink to this definition">¶</a></dt>
@@ -134,19 +141,19 @@ relevant positional arguments and options added.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.ListRPMMacros.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListRPMMacros.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListRPMMacros.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.tags.ListTagExtras">
 <em class="property">class </em><code class="sig-name descname">ListTagExtras</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListTagExtras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListTagExtras" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.ListTagExtras.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListTagExtras.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListTagExtras.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.ListTagExtras.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Show extra settings for a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.ListTagExtras.description" title="Permalink to this definition">¶</a></dt>
@@ -156,13 +163,6 @@ relevant positional arguments and options added.</p>
 <dt id="kojismokydingo.cli.tags.ListTagExtras.handle">
 <code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListTagExtras.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListTagExtras.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the full set of actions for this command.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.ListTagExtras.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#ListTagExtras.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.ListTagExtras.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
 </dd></dl>
 
 </dd></dl>
@@ -215,6 +215,13 @@ relevant positional arguments and options added.</p>
 <dt id="kojismokydingo.cli.tags.RenumTagInheritance">
 <em class="property">class </em><code class="sig-name descname">RenumTagInheritance</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RenumTagInheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RenumTagInheritance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.RenumTagInheritance.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RenumTagInheritance.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RenumTagInheritance.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.RenumTagInheritance.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Renumbers inheritance priorities of a tag, preserving order'</em><a class="headerlink" href="#kojismokydingo.cli.tags.RenumTagInheritance.description" title="Permalink to this definition">¶</a></dt>
@@ -224,13 +231,6 @@ relevant positional arguments and options added.</p>
 <dt id="kojismokydingo.cli.tags.RenumTagInheritance.handle">
 <code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RenumTagInheritance.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RenumTagInheritance.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the full set of actions for this command.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.RenumTagInheritance.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RenumTagInheritance.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RenumTagInheritance.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
 </dd></dl>
 
 <dl class="method">
@@ -246,6 +246,13 @@ ignored, use parser.error if needed.</p>
 <dt id="kojismokydingo.cli.tags.SetEnvVar">
 <em class="property">class </em><code class="sig-name descname">SetEnvVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetEnvVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetEnvVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.SetEnvVar.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetEnvVar.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetEnvVar.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.SetEnvVar.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Set a mock environment variable on a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.SetEnvVar.description" title="Permalink to this definition">¶</a></dt>
@@ -257,19 +264,19 @@ ignored, use parser.error if needed.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.SetEnvVar.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetEnvVar.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetEnvVar.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.tags.SetRPMMacro">
 <em class="property">class </em><code class="sig-name descname">SetRPMMacro</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetRPMMacro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetRPMMacro" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.SetRPMMacro.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetRPMMacro.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetRPMMacro.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.SetRPMMacro.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Set an RPM Macro on a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.SetRPMMacro.description" title="Permalink to this definition">¶</a></dt>
@@ -281,19 +288,19 @@ relevant positional arguments and options added.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.SetRPMMacro.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetRPMMacro.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetRPMMacro.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.tags.SwapTagInheritance">
 <em class="property">class </em><code class="sig-name descname">SwapTagInheritance</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SwapTagInheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SwapTagInheritance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.SwapTagInheritance.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SwapTagInheritance.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SwapTagInheritance.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.SwapTagInheritance.description">
 <code class="sig-name descname">description</code><em class="property"> = &quot;Swap a tag's inheritance&quot;</em><a class="headerlink" href="#kojismokydingo.cli.tags.SwapTagInheritance.description" title="Permalink to this definition">¶</a></dt>
@@ -305,21 +312,19 @@ relevant positional arguments and options added.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.SwapTagInheritance.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SwapTagInheritance.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SwapTagInheritance.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Swaps TAG's inheritance from OLD_PARENT to NEW_PARENT, preserving
-priority. If NEW_PARENT was already in the inheritance of TAG,
-OLD_PARENT will be put in its place, effectively exchanging
-the two parent priorities.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.tags.UnsetEnvVar">
 <em class="property">class </em><code class="sig-name descname">UnsetEnvVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetEnvVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.UnsetEnvVar.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetEnvVar.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.UnsetEnvVar.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Unset a mock environment variable on a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar.description" title="Permalink to this definition">¶</a></dt>
@@ -331,19 +336,19 @@ the two parent priorities.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.UnsetEnvVar.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetEnvVar.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kojismokydingo.cli.tags.UnsetRPMMacro">
 <em class="property">class </em><code class="sig-name descname">UnsetRPMMacro</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.UnsetRPMMacro.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="kojismokydingo.cli.tags.UnsetRPMMacro.description">
 <code class="sig-name descname">description</code><em class="property"> = 'Unset an RPM Macro on a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.description" title="Permalink to this definition">¶</a></dt>
@@ -353,13 +358,6 @@ relevant positional arguments and options added.</p>
 <dt id="kojismokydingo.cli.tags.UnsetRPMMacro.handle">
 <code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the full set of actions for this command.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.UnsetRPMMacro.parser">
-<code class="sig-name descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro.parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to provide an ArgumentParser instance with all the
-relevant positional arguments and options added.</p>
 </dd></dl>
 
 </dd></dl>
@@ -476,13 +474,13 @@ flush: whether to forcibly flush the stream.</p>
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.cli.hosts"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../" >Package kojismokydingo.cli Contents</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >CLI API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

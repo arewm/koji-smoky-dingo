@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.hosts &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.cli.hosts &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -92,6 +92,8 @@
 
     <span class="k">for</span> <span class="n">bldr</span> <span class="ow">in</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">bldr_data</span><span class="p">):</span>
         <span class="n">lup</span> <span class="o">=</span> <span class="n">bldr</span><span class="p">[</span><span class="s2">&quot;last_update&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">lup</span> <span class="ow">and</span> <span class="n">lup</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lup</span> <span class="o">=</span> <span class="n">lup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">lup</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">lup</span> <span class="o">&lt;</span> <span class="n">timeout</span><span class="p">:</span>
@@ -123,9 +125,8 @@
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Show enabled builders which aren&#39;t checking in&quot;</span>
 
 
-<div class="viewcode-block" id="CheckHosts.parser"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.CheckHosts.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">argp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CheckHosts</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
-        <span class="n">addarg</span> <span class="o">=</span> <span class="n">argp</span><span class="o">.</span><span class="n">add_argument</span>
+<div class="viewcode-block" id="CheckHosts.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.CheckHosts.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--timeout&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Timeout in minutes before builder is considered&quot;</span>
@@ -154,7 +155,7 @@
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only print summary when 1 or more builders are failing&quot;</span>
                <span class="s2">&quot; to check in (cron-job friendly)&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">argp</span></div>
+        <span class="k">return</span> <span class="n">parser</span></div>
 
 
 <div class="viewcode-block" id="CheckHosts.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/hosts/#kojismokydingo.cli.hosts.CheckHosts.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -205,7 +206,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -213,7 +214,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

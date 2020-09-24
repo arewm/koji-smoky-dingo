@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.1 documentation</title>
+    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.2 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -328,8 +328,9 @@
 <span class="sd">    * if the sub-command is invoked, then the `SmokyDingo` instance is</span>
 <span class="sd">      called, this triggers the following:</span>
 
-<span class="sd">      * the `SmokyDingo.parser` method provides additional argument</span>
-<span class="sd">        parsing</span>
+<span class="sd">      * the `SmokyDingo.parser` method provides an ArgumentParser</span>
+<span class="sd">        instance which it then decorates with arguments by passing it</span>
+<span class="sd">        to `SmokyDingo.arguments`</span>
 
 <span class="sd">      * the `SmokyDingo.validate` method provides a chance to validate</span>
 <span class="sd">        and/or manipulate the parsed arguments</span>
@@ -379,13 +380,18 @@
 
 
 <div class="viewcode-block" id="SmokyDingo.parser"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">invoke</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">argp</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="n">invoke</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">(</span><span class="n">argp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">argp</span></div>
+
+
+<div class="viewcode-block" id="SmokyDingo.arguments"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Override to provide an ArgumentParser instance with all the</span>
-<span class="sd">        relevant positional arguments and options added.</span>
+<span class="sd">        Override to add relevant arguments to the given parser instance.</span>
+<span class="sd">        May return an alternative parser instance or None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">invoke</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="n">invoke</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div>
+        <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="SmokyDingo.validate"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -403,7 +409,7 @@
 <span class="sd">        further calls.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">permission</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">permission</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
             <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
             <span class="n">userinfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getLoggedInUser</span><span class="p">()</span>
             <span class="n">userperms</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUserPerms</span><span class="p">(</span><span class="n">userinfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="p">()</span>
@@ -431,7 +437,8 @@
 <span class="sd">        prior.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">activate_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">activate_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmokyDingo.deactivate"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo.deactivate">[docs]</a>    <span class="k">def</span> <span class="nf">deactivate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -443,10 +450,11 @@
 <span class="sd">        after.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">session</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">pass</span></div>
 
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
@@ -517,7 +525,8 @@
 
 <div class="viewcode-block" id="AnonSmokyDingo.activate"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.AnonSmokyDingo.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># rather than logging on, we only open a connection</span>
-        <span class="n">ensure_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
+            <span class="n">ensure_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AnonSmokyDingo.pre_handle"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.AnonSmokyDingo.pre_handle">[docs]</a>    <span class="k">def</span> <span class="nf">pre_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -597,14 +606,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-20.
+      Last updated on 2020-09-24.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>
