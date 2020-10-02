@@ -515,18 +515,16 @@ provided, a simple one is constructed based on the minimum value.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>minimum</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- Minimum version required. Default, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">23)</span></code></p></li>
-<li><p><strong>message</strong> -- Message to use in exception if version check</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- Message to use in exception if version check
+fails. Default, with a minimum of <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">23)</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;requires</span> <span class="pre">&gt;=</span>
+<span class="pre">1.23&quot;</span></code></p></li>
 </ul>
 </dd>
-</dl>
-<p>fails. Default, with a minimum of <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">23)</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;requires</span> <span class="pre">&gt;=</span>
-<span class="pre">1.23&quot;</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#kojismokydingo.FeatureUnavailable" title="kojismokydingo.FeatureUnavailable"><strong>FeatureUnavailable</strong></a> -- If the minimum version is not met</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#kojismokydingo.FeatureUnavailable" title="kojismokydingo.FeatureUnavailable"><strong>FeatureUnavailable</strong></a> -- If the minimum version is not met</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
