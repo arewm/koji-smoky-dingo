@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji set-env-var &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>koji set-env-var &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,7 +51,8 @@
             
   <div class="section" id="koji-set-env-var">
 <h1>koji set-env-var<a class="headerlink" href="#koji-set-env-var" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji set-env-var [-h] [--target] TAGNAME var [value]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji set-env-var [-h] [--remove] [--block] [--target]
+                        TAGNAME var [value]
 
 Set a mock environment variable on a tag
 
@@ -62,12 +63,67 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
+  --remove    Remove the environment var from the tag
+  --block     Block the environment var from the tag
   --target    Specify by target rather than a tag
 </pre></div>
 </div>
-<p>This command requires either the <code class="docutils literal notranslate"><span class="pre">admin</span></code> or <code class="docutils literal notranslate"><span class="pre">tag</span></code> permission,
-as it modifies tag configuration data.</p>
-<p>See also <a class="reference internal" href="../list-env-vars/#koji-list-env-vars"><span class="std std-ref">koji list-env-vars</span></a>, <a class="reference internal" href="../unset-env-var/#koji-unset-env-var"><span class="std std-ref">koji unset-env-var</span></a></p>
+<p>This command is a user-friendly alternative to using the <code class="docutils literal notranslate"><span class="pre">koji</span>
+<span class="pre">edit-tag</span></code> to define extra settings prefixed with <code class="docutils literal notranslate"><span class="pre">rpm.mock.</span></code> Use of
+this command requires either the <code class="docutils literal notranslate"><span class="pre">admin</span></code> or <code class="docutils literal notranslate"><span class="pre">tag</span></code> permission, as
+it is mutating tag configuration data.</p>
+<p>These settings are inheritable, so care must be taken not to
+unintentionally pollute child build tags with settings they should not
+have. When in doubt, use <a class="reference internal" href="../affected-targets/#koji-affected-targets"><span class="std std-ref">koji affected-targets</span></a> to see what
+build configurations may be impacted by any macro definitions.</p>
+<p>When removing a defined environment variable, it must have been
+defined directly on the given tag (ie. not inherited from a parent
+tag).</p>
+<p>The command <a class="reference internal" href="../remove-env-var/#koji-remove-env-var"><span class="std std-ref">koji remove-env-var</span></a> is equivalent to <code class="docutils literal notranslate"><span class="pre">koji</span>
+<span class="pre">set-env-var</span> <span class="pre">--remove</span></code></p>
+<p>Blocking an environment variable prevents it from being defined
+directly in the mock configuration. This is very different from
+defining it as an empty string, as this allows system-level
+definitions to be used instead. However, the ability to block tag
+extra settings (including these environment variables) requires Koji
+version 1.23 or later on the hub.</p>
+<p>The command <a class="reference internal" href="../block-env-var/#koji-block-env-var"><span class="std std-ref">koji block-env-var</span></a> is equivalent to <code class="docutils literal notranslate"><span class="pre">koji</span>
+<span class="pre">set-env-var</span> <span class="pre">--block</span></code></p>
+<p>See also <a class="reference internal" href="../list-env-vars/#koji-list-env-vars"><span class="std std-ref">koji list-env-vars</span></a></p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following are equivalent for setting a value for the CFLAGS</span>
+<span class="c1"># environment variable</span>
+
+koji set-env-var my-tag-1.0-build <span class="nv">CFLAGS</span><span class="o">=</span>-Wno-shadow
+
+koji set-env-var my-tag-1.0-build CFLAGS <span class="s1">&#39;\-Wno-shadow&#39;</span>
+
+koji edit-tag my-tag-1.0-build --extra rpm.mock.CFLAGS<span class="o">=</span>-Wno-shadow
+
+
+<span class="c1"># The following are equivalent for removing the above defined CFLAGS</span>
+<span class="c1"># environment variable</span>
+
+koji remove-env-var my-tag-1.0-build CFLAGS
+
+koji set-env-var my-tag-1.0-build CFLAGS --remove
+
+koji edit-tag my-tag-1.0-build --remove-extra rpm.mock.CFLAGS
+
+
+<span class="c1"># The following are equivalent for blocking an inherited CFLAGS</span>
+<span class="c1"># environment variable without giving it some alternative value. This</span>
+<span class="c1"># feature requires koji 1.23 or greater.</span>
+
+koji block-env-var my-tag-1.0-build CFLAGS
+
+koji set-env-var my-tag-1.0-build CFLAGS --block
+
+koji edit-tag my-tag-1.0-build --block-extra rpm.mock.CFLAGS
+</pre></div>
+</div>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -86,6 +142,7 @@ as it modifies tag configuration data.</p>
   <h3><a href="../../">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">koji set-env-var</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -133,13 +190,13 @@ as it modifies tag configuration data.</p>
         <li class="right" >
           <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

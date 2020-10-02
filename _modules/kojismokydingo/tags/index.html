@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -66,10 +66,40 @@
 
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">as_taginfo</span><span class="p">,</span> <span class="n">as_targetinfo</span><span class="p">,</span> <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_tags</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">NoSuchTag</span><span class="p">,</span>
+    <span class="n">as_taginfo</span><span class="p">,</span> <span class="n">as_targetinfo</span><span class="p">,</span>
+    <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_tags</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ensure_tag"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.ensure_tag">[docs]</a><span class="k">def</span> <span class="nf">ensure_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a name, resolve it to a tag info dict. If there is no such</span>
+<span class="sd">    tag, then create it first.</span>
+
+<span class="sd">    :param name: tag name</span>
+
+<span class="sd">    :type name: str</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">NoSuchTag</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># we do it this way so we don&#39;t get a nested exception if</span>
+    <span class="c1"># createTag fails</span>
+    <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tag_id</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">createTag</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
 
 
 <div class="viewcode-block" id="resolve_tag"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.resolve_tag">[docs]</a><span class="k">def</span> <span class="nf">resolve_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -179,6 +209,15 @@
     <span class="n">found</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">into</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">into</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;extra&quot;</span><span class="p">]):</span>
+
+        <span class="c1"># check whether the taginfo was gathered with blocks included.</span>
+        <span class="c1"># See https://pagure.io/koji/pull-request/2495#_4__40</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="n">blocked</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">blocked</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">if</span> <span class="n">prefix</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
             <span class="k">continue</span>
 
@@ -186,6 +225,7 @@
             <span class="n">found</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">val</span><span class="p">,</span>
+                <span class="s2">&quot;blocked&quot;</span><span class="p">:</span> <span class="n">blocked</span><span class="p">,</span>
                 <span class="s2">&quot;tag_name&quot;</span><span class="p">:</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;tag_id&quot;</span><span class="p">:</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
             <span class="p">}</span>
@@ -204,6 +244,7 @@
 
 <span class="sd">    * name - the extra setting key</span>
 <span class="sd">    * value - the extra setting value</span>
+<span class="sd">    * blocked - whether the setting represents a block</span>
 <span class="sd">    * tag_name - the name of the tag this setting came from</span>
 <span class="sd">    * tag_id - the ID of the tag this setting came from</span>
 
@@ -220,23 +261,22 @@
 <span class="sd">    :rtype: collections.OrderedDict[str, dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">)</span>
-
     <span class="c1"># this borrows heavily from the hub implementation of</span>
     <span class="c1"># getBuildConfig, but gives us a chance to record what tag in the</span>
     <span class="c1"># inheritance that the setting is coming from</span>
 
+    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="n">convert_tag_extras</span><span class="p">(</span><span class="n">taginfo</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
 
     <span class="n">inher</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+    <span class="n">tids</span> <span class="o">=</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">inher</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">tag</span><span class="p">[</span><span class="s2">&quot;noconfig&quot;</span><span class="p">])</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="n">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tids</span><span class="p">)</span>
 
-    <span class="n">session</span><span class="o">.</span><span class="n">multicall</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">inher</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">link</span><span class="p">[</span><span class="s2">&quot;noconfig&quot;</span><span class="p">]:</span>
-            <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">])</span>
-    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">())</span>
-
-    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">parents</span><span class="p">):</span>
+        <span class="c1"># mix the extras into existing found results. note: we&#39;re not</span>
+        <span class="c1"># checking for faults, because we got this list of tag IDs</span>
+        <span class="c1"># straight from koji itself, but there could be some kind of</span>
+        <span class="c1"># race condition from this.</span>
         <span class="n">convert_tag_extras</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="n">found</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">found</span></div>
@@ -318,14 +358,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

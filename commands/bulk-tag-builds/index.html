@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji bulk-tag-builds &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>koji bulk-tag-builds &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="koji renum-tag-inheritance" href="../renum-tag-inheritance/" />
-    <link rel="prev" title="koji userinfo" href="../userinfo/" />
+    <link rel="next" title="koji remove-env-var" href="../remove-env-var/" />
+    <link rel="prev" title="koji block-rpm-macro" href="../block-rpm-macro/" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <!--[if lte IE 6]>
@@ -34,12 +34,12 @@
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
+          <a href="../remove-env-var/" title="koji remove-env-var"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../userinfo/" title="koji userinfo"
+          <a href="../block-rpm-macro/" title="koji block-rpm-macro"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,9 +51,9 @@
             
   <div class="section" id="koji-bulk-tag-builds">
 <h1>koji bulk-tag-builds<a class="headerlink" href="#koji-bulk-tag-builds" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji bulk-tag-builds [-h] [-f NVR_FILE] [--strict] [--owner OWNER]
-                            [--no-inherit] [--force] [--notify] [-v]
-                            [--nvr-sort | --id-sort]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji bulk-tag-builds [-h] [-f NVR_FILE] [--create] [--strict]
+                            [--owner OWNER] [--no-inherit] [--force]
+                            [--notify] [-v] [--nvr-sort | --id-sort]
                             TAGNAME [NVR [NVR ...]]
 
 Quickly tag a large number of builds
@@ -67,6 +67,7 @@ optional arguments:
   -f NVR_FILE, --file NVR_FILE
                         Read list of builds from file, one NVR per line.
                         Specify - to read from stdin.
+  --create              Create the tag if it doesn&#39;t exist already
   --strict              Stop processing at the first failure
   --owner OWNER         Force missing package listings to be created with the
                         specified owner
@@ -138,11 +139,11 @@ rules.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../userinfo/"
-                        title="previous chapter">koji userinfo</a></p>
+  <p class="topless"><a href="../block-rpm-macro/"
+                        title="previous chapter">koji block-rpm-macro</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../renum-tag-inheritance/"
-                        title="next chapter">koji renum-tag-inheritance</a></p>
+  <p class="topless"><a href="../remove-env-var/"
+                        title="next chapter">koji remove-env-var</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -174,18 +175,18 @@ rules.</p>
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
+          <a href="../remove-env-var/" title="koji remove-env-var"
              >next</a> |</li>
         <li class="right" >
-          <a href="../userinfo/" title="koji userinfo"
+          <a href="../block-rpm-macro/" title="koji block-rpm-macro"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

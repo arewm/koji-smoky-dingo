@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji unset-rpm-macro &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>koji unset-rpm-macro &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../unset-env-var/" title="koji unset-env-var"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,33 +51,13 @@
             
   <div class="section" id="koji-unset-rpm-macro">
 <h1>koji unset-rpm-macro<a class="headerlink" href="#koji-unset-rpm-macro" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji unset-rpm-macro [-h] [--target] TAGNAME macro
-
-Unset an RPM Macro on a tag
-
-positional arguments:
-  TAGNAME     Name of tag
-  macro       Name of the macro
-
-optional arguments:
-  -h, --help  show this help message and exit
-  --target    Specify by target rather than a tag
-</pre></div>
-</div>
-<p>Removes an RPM macro definition from a tag.</p>
-<p>Note that the definition must have been set directly on the given tag,
-and not inherited from a parent tag. There is currently no way to
-block or undefine an inherited RPM macro definition -- the closest is
-setting it to <code class="docutils literal notranslate"><span class="pre">%nil</span></code> which may have undesireable side-effects as
-well.</p>
-<p>This command requires either the <code class="docutils literal notranslate"><span class="pre">admin</span></code> or <code class="docutils literal notranslate"><span class="pre">tag</span></code> permission,
-as it modifies tag configuration data.</p>
-<p>See also <a class="reference internal" href="../list-rpm-macros/#koji-list-rpm-macros"><span class="std std-ref">koji list-rpm-macros</span></a>, <a class="reference internal" href="../set-rpm-macro/#koji-set-rpm-macro"><span class="std std-ref">koji set-rpm-macro</span></a></p>
+<p>This command has been removed in version 0.9.3 and replaced with
+<a class="reference internal" href="../remove-rpm-macro/#koji-remove-rpm-macro"><span class="std std-ref">koji remove-rpm-macro</span></a></p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.UnsetRPMMacro" title="kojismokydingo.cli.tags.UnsetRPMMacro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.UnsetRPMMacro</span></code></a></p></li>
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_unset_rpm_macro" title="kojismokydingo.cli.tags.cli_unset_rpm_macro"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_unset_rpm_macro()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RemoveRPMMacro" title="kojismokydingo.cli.tags.RemoveRPMMacro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.RemoveRPMMacro</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_set_rpm_macro" title="kojismokydingo.cli.tags.cli_set_rpm_macro"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_set_rpm_macro()</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -138,13 +118,13 @@ as it modifies tag configuration data.</p>
         <li class="right" >
           <a href="../unset-env-var/" title="koji unset-env-var"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

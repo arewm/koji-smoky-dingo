@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji list-build-archives &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>koji remove-env-var &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="koji list-cgs" href="../list-cgs/" />
-    <link rel="prev" title="koji list-btypes" href="../list-btypes/" />
+    <link rel="next" title="koji remove-rpm-macro" href="../remove-rpm-macro/" />
+    <link rel="prev" title="koji bulk-tag-builds" href="../bulk-tag-builds/" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <!--[if lte IE 6]>
@@ -34,10 +34,10 @@
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../list-cgs/" title="koji list-cgs"
+          <a href="../remove-rpm-macro/" title="koji remove-rpm-macro"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../list-btypes/" title="koji list-btypes"
+          <a href="../bulk-tag-builds/" title="koji bulk-tag-builds"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
@@ -49,55 +49,28 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="koji-list-build-archives">
-<h1>koji list-build-archives<a class="headerlink" href="#koji-list-build-archives" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji list-build-archives [-h] [--json] [--urls]
-                                [--build-type TYPE | --rpm | --maven | --image | --win]
-                                [--archive-type EXT] [--key KEY] [--unsigned]
-                                NVR
+  <div class="section" id="koji-remove-env-var">
+<h1>koji remove-env-var<a class="headerlink" href="#koji-remove-env-var" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji remove-env-var [-h] [--target] TAGNAME var
 
-List archives from a build
+Remove a mock environment variable from a tag
 
 positional arguments:
-  NVR                   The NVR containing the archives
+  TAGNAME     Name of tag
+  var         Name of the environment variable
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --json                Output archive information as JSON
-  --urls, -U            Present archives as URLs using the configured topurl.
-                        Default: use the configured topdir
-
-Build Filtering Options:
-  --build-type TYPE     Only show archives for the given build type. Example
-                        types are rpm, maven, image, win. Default: show all
-                        archives.
-  --rpm                 --build-type=rpm
-  --maven               --build-type=maven
-  --image               --build-type=image
-  --win                 --build-type=win
-
-Archive Filtering Options:
-  --archive-type EXT, -a EXT
-                        Only show archives with the given archive type. Can be
-                        specified multiple times. Default: show all
-
-RPM Options:
-  --key KEY, -k KEY     Only show RPMs signed with the given key. Can be
-                        specified multiple times to indicate any of the keys
-                        is valid. Preferrence is in order defined. Default:
-                        show unsigned RPMs
-  --unsigned            Allow unsigned copies if no signed copies are found
-                        when --key=KEY is specified. Otherwise if keys are
-                        specified, then only RPMs signed with one of those
-                        keys are shown.
+  -h, --help  show this help message and exit
+  --target    Specify by target rather than a tag
 </pre></div>
 </div>
-<p>Print paths for archives and RPMs attached to a build</p>
+<p>This command is a convenience equivalent to <code class="docutils literal notranslate"><span class="pre">koji</span> <span class="pre">set-env-var</span> <span class="pre">--remove</span></code></p>
+<p>See also <a class="reference internal" href="../list-env-vars/#koji-list-env-vars"><span class="std std-ref">koji list-env-vars</span></a>, <a class="reference internal" href="../set-env-var/#koji-set-env-var"><span class="std std-ref">koji set-env-var</span></a>, <a class="reference internal" href="../block-env-var/#koji-block-env-var"><span class="std std-ref">koji block-env-var</span></a></p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives" title="kojismokydingo.cli.archives.ListBuildArchives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.archives.ListBuildArchives</span></code></a></p></li>
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.cli_list_build_archives" title="kojismokydingo.cli.archives.cli_list_build_archives"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.archives.cli_list_build_archives()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RemoveEnvVar" title="kojismokydingo.cli.tags.RemoveEnvVar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.RemoveEnvVar</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_set_env_var" title="kojismokydingo.cli.tags.cli_set_env_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_set_env_var()</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -110,22 +83,22 @@ RPM Options:
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">koji list-build-archives</a><ul>
+<li><a class="reference internal" href="#">koji remove-env-var</a><ul>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../list-btypes/"
-                        title="previous chapter">koji list-btypes</a></p>
+  <p class="topless"><a href="../bulk-tag-builds/"
+                        title="previous chapter">koji bulk-tag-builds</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../list-cgs/"
-                        title="next chapter">koji list-cgs</a></p>
+  <p class="topless"><a href="../remove-rpm-macro/"
+                        title="next chapter">koji remove-rpm-macro</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/commands/list-build-archives.rst.txt"
+      <li><a href="../../_sources/commands/remove-env-var.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -153,10 +126,10 @@ RPM Options:
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../list-cgs/" title="koji list-cgs"
+          <a href="../remove-rpm-macro/" title="koji remove-rpm-macro"
              >next</a> |</li>
         <li class="right" >
-          <a href="../list-btypes/" title="koji list-btypes"
+          <a href="../bulk-tag-builds/" title="koji bulk-tag-builds"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Core API Reference &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>Core API Reference &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../commands/unset-rpm-macro/" title="koji unset-rpm-macro"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,8 +50,8 @@
             
   <div class="section" id="module-kojismokydingo">
 <span id="core-api-reference"></span><h1>Core API Reference<a class="headerlink" href="#module-kojismokydingo" title="Permalink to this headline">¶</a></h1>
-<p>Koji Smoky Dingo - Utility functions and command line plugins for
-Koji users</p>
+<p>Koji Smoky Dingo - Client utilities for working with the Koji
+build system</p>
 <dl class="field-list simple">
 <dt class="field-odd">author</dt>
 <dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
@@ -85,6 +85,18 @@ present on the koji hub, rather than just working with
 <dl class="attribute">
 <dt id="kojismokydingo.BadDingo.complaint">
 <code class="sig-name descname">complaint</code><em class="property"> = 'Something bad happened'</em><a class="headerlink" href="#kojismokydingo.BadDingo.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.FeatureUnavailable">
+<em class="property">exception </em><code class="sig-name descname">FeatureUnavailable</code><a class="reference internal" href="../_modules/kojismokydingo/#FeatureUnavailable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.FeatureUnavailable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<p>A given feature isn't available due to the version on the koji hub</p>
+<dl class="attribute">
+<dt id="kojismokydingo.FeatureUnavailable.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = &quot;The koji hub version doesn't support this feature&quot;</em><a class="headerlink" href="#kojismokydingo.FeatureUnavailable.complaint" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -255,7 +267,11 @@ into a build info dict</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- value to lookup</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- value to lookup</p></li>
+<li><p><strong>blocked</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- attempts to load blocked tag extra values. Default,
+only loads</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>NoSuchTag</strong></a> -- if the tag value could not be resolved into a
@@ -309,7 +325,10 @@ allocated <code class="xref py py-obj docutils literal notranslate"><span class=
 <li><p><strong>session</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">koji.ClientSession</span></code>) -- The koji session</p></li>
 <li><p><strong>loadfn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em>) -- The loading function, to be invoked in a multicall
 arrangement. Will be called once with each given key from <code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code></p></li>
-<li><p><strong>keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em>) -- The sequence of keys to be used to invoke <code class="xref py py-obj docutils literal notranslate"><span class="pre">loadfn</span></code></p></li>
+<li><p><strong>keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em>) -- The sequence of keys to be used to invoke <code class="xref py py-obj docutils literal notranslate"><span class="pre">loadfn</span></code>.
+These keys need to be individually hashable, or the <code class="xref py py-obj docutils literal notranslate"><span class="pre">results</span></code>
+value needs to be specified with an instance that accepts
+assignmnet using these values as the key.</p></li>
 <li><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Whether to raise any underlying fault returns as
 exceptions. Default, True</p></li>
 <li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) -- How many calls to <code class="xref py py-obj docutils literal notranslate"><span class="pre">loadfn</span></code> to chunk up for each
@@ -355,6 +374,32 @@ return the results.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.bulk_load_builds">
+<code class="sig-name descname">bulk_load_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load many buildinfo dicts from a koji client session and a
+sequence of NVRs.</p>
+<p>Returns an OrderedDict associating the individual NVRs with their
+resulting buildinfo.</p>
+<p>If err is True (default) then any missing build info will raise a
+NoSuchBuild exception. If err is False, then a None will be
+substituted into the ordered dict for the result.</p>
+<p>If results is non-None, it must support dict assignment, and will
+be used in place of a newly allocated OrderedDict to store and
+return the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nvrs</strong> (<em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>] or </em><em>Iterator</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- Sequence of build NVRs or build IDs to load</p></li>
+<li><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Raise an exception if an NVR fails to load. Default,
+bad or missing NVRs will be absent from the results mapping.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of NVRs to load in a single multicall. Default,
+100</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.bulk_load_buildroot_archives">
 <code class="sig-name descname">bulk_load_buildroot_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">buildroot_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroot_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroot_archives" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -371,21 +416,6 @@ return the results.</p>
 session.getBuildroot for each ID in broot_ids.</p>
 <p>Returns an OrderedDict associating the individual buildroot IDs
 with their resulting buildroot info dicts.</p>
-<p>If results is non-None, it must support dict assignment, and will
-be used in place of a newly allocated OrderedDict to store and
-return the results.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="kojismokydingo.bulk_load_builds">
-<code class="sig-name descname">bulk_load_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_builds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load many buildinfo dicts from a koji client session and a
-sequence of NVRs.</p>
-<p>Returns an OrderedDict associating the individual NVRs with their
-resulting buildinfo.</p>
-<p>If err is True (default) then any missing build info will raise a
-NoSuchBuild exception. If err is False, then a None will be
-substituted into the ordered dict for the result.</p>
 <p>If results is non-None, it must support dict assignment, and will
 be used in place of a newly allocated OrderedDict to store and
 return the results.</p>
@@ -412,6 +442,94 @@ return the results.</p>
 <dt id="kojismokydingo.bulk_load_tasks">
 <code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">task_ids</em>, <em class="sig-param">request=False</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.iter_bulk_load">
+<code class="sig-name descname">iter_bulk_load</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">loadfn</em>, <em class="sig-param">keys</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#iter_bulk_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.iter_bulk_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic bulk loading generator. Invokes the given loadfn on each
+key in keys using chunking multicalls limited to the specified
+size.</p>
+<p>Yields (key, result) pairs in order.</p>
+<p>If err is True (default) then any faults will raise an exception.
+If err is False, then a None will be substituted as the result for
+the failing key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">koji.ClientSession</span></code>) -- The koji session</p></li>
+<li><p><strong>loadfn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em>) -- The loading function, to be invoked in a multicall
+arrangement. Will be called once with each given key from keys</p></li>
+<li><p><strong>keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em>]</em>) -- The sequence of keys to be used to invoke loadfn.</p></li>
+<li><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- Whether to raise any underlying fault returns as
+exceptions. Default, True</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) -- How many calls to loadfn to chunk up for each
+multicall. Default, 100</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>koji.GenericError</strong> -- if err is True and an issue
+occurrs while invoking the loadfn</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)">object</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.version_check">
+<code class="sig-name descname">version_check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">minimum=(1</em>, <em class="sig-param">23)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#version_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.version_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that the requested minimum version is met compared
+against session.getKojiVersion.</p>
+<p>If the getKojiVersion method isn't implemented on the hub, we
+presume that we're version 1.22 (the last version before
+getKojiVersion was added). Because of this, checking for minimum
+versions lower than 1.23 will always return True.</p>
+<p>Version is specified as a tuple of integers, eg. 1.23 is <code class="docutils literal notranslate"><span class="pre">(1,</span>
+<span class="pre">23)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>minimum</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- Minimum version required. Default, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">23)</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.version_require">
+<code class="sig-name descname">version_require</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">minimum=(1</em>, <em class="sig-param">23)</em>, <em class="sig-param">message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#version_require"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.version_require" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that the requested minimum version is met compared
+against <code class="docutils literal notranslate"><span class="pre">session.getKojiVersion()</span></code></p>
+<p>If the getKojiVersion method isn't implemented on the hub, we
+presume that we're version 1.22 (the last version before
+getKojiVersion was added). Because of this, checking for minimum
+versions lower than 1.23 will always return True.</p>
+<p>Version is specified as a tuple of integers, eg. 1.23 is <code class="docutils literal notranslate"><span class="pre">(1,</span>
+<span class="pre">23)</span></code></p>
+<p>If the version requirement is not met, a <a class="reference internal" href="#kojismokydingo.FeatureUnavailable" title="kojismokydingo.FeatureUnavailable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureUnavailable</span></code></a>
+exception is raised, with the given message. If message is not
+provided, a simple one is constructed based on the minimum value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minimum</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) -- Minimum version required. Default, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">23)</span></code></p></li>
+<li><p><strong>message</strong> -- Message to use in exception if version check</p></li>
+</ul>
+</dd>
+</dl>
+<p>fails. Default, with a minimum of <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">23)</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;requires</span> <span class="pre">&gt;=</span>
+<span class="pre">1.23&quot;</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kojismokydingo.FeatureUnavailable" title="kojismokydingo.FeatureUnavailable"><strong>FeatureUnavailable</strong></a> -- If the minimum version is not met</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <div class="section" id="core-modules">
 <h2>Core Modules<a class="headerlink" href="#core-modules" title="Permalink to this headline">¶</a></h2>
@@ -485,12 +603,12 @@ return the results.</p>
         <li class="right" >
           <a href="../commands/unset-rpm-macro/" title="koji unset-rpm-macro"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

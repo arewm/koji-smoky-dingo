@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.builds &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>kojismokydingo.cli.builds &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -91,7 +91,7 @@
     <span class="n">decorate_build_archive_data</span><span class="p">,</span> <span class="n">filter_imported</span><span class="p">,</span>
     <span class="n">gather_component_build_ids</span><span class="p">,</span> <span class="n">gather_wrapped_builds</span><span class="p">,</span>
     <span class="n">iter_bulk_tag_builds</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..tags</span> <span class="k">import</span> <span class="n">gather_tag_ids</span>
+<span class="kn">from</span> <span class="nn">..tags</span> <span class="k">import</span> <span class="n">ensure_tag</span><span class="p">,</span> <span class="n">gather_tag_ids</span>
 <span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">chunkseq</span><span class="p">,</span> <span class="n">unique</span>
 
 
@@ -103,6 +103,7 @@
                         <span class="n">sorting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -119,7 +120,9 @@
 
     <span class="c1"># fetch the destination tag info (and make sure it actually</span>
     <span class="c1"># exists)</span>
-    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">)</span>
+    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">ensure_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">)</span> <span class="k">if</span> <span class="n">create</span> \
+        <span class="k">else</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">)</span>
+
     <span class="n">tagid</span> <span class="o">=</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
 
     <span class="c1"># figure out how we&#39;re going to be dealing with builds that don&#39;t</span>
@@ -234,6 +237,9 @@
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Read list of builds from file, one NVR per line.&quot;</span>
                <span class="s2">&quot; Specify - to read from stdin.&quot;</span><span class="p">)</span>
 
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--create&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Create the tag if it doesn&#39;t exist already&quot;</span><span class="p">)</span>
+
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--strict&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Stop processing at the first failure&quot;</span><span class="p">)</span>
 
@@ -290,6 +296,7 @@
                                    <span class="n">inherit</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">inherit</span><span class="p">,</span>
                                    <span class="n">force</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">force</span><span class="p">,</span>
                                    <span class="n">notify</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">notify</span><span class="p">,</span>
+                                   <span class="n">create</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">create</span><span class="p">,</span>
                                    <span class="n">verbose</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
                                    <span class="n">strict</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">strict</span><span class="p">)</span></div></div>
 
@@ -778,7 +785,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -786,7 +793,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

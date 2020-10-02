@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.cli.hosts"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">CLI API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -92,6 +92,54 @@ May return an alternative parser instance or None.</p>
 <dt id="kojismokydingo.cli.tags.BadSwap.complaint">
 <code class="sig-name descname">complaint</code><em class="property"> = 'Wonky inheritance swap requested'</em><a class="headerlink" href="#kojismokydingo.cli.tags.BadSwap.complaint" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.tags.BlockEnvVar">
+<em class="property">class </em><code class="sig-name descname">BlockEnvVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockEnvVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockEnvVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.BlockEnvVar.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockEnvVar.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockEnvVar.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.cli.tags.BlockEnvVar.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Block a mock environment variable from a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.BlockEnvVar.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.BlockEnvVar.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockEnvVar.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockEnvVar.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.tags.BlockRPMMacro">
+<em class="property">class </em><code class="sig-name descname">BlockRPMMacro</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockRPMMacro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockRPMMacro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.BlockRPMMacro.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockRPMMacro.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockRPMMacro.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.cli.tags.BlockRPMMacro.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Block an RPM Macro from a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.BlockRPMMacro.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.BlockRPMMacro.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockRPMMacro.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockRPMMacro.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -212,6 +260,54 @@ May return an alternative parser instance or None.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="kojismokydingo.cli.tags.RemoveEnvVar">
+<em class="property">class </em><code class="sig-name descname">RemoveEnvVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RemoveEnvVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveEnvVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.RemoveEnvVar.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RemoveEnvVar.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveEnvVar.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.cli.tags.RemoveEnvVar.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Remove a mock environment variable from a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveEnvVar.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.RemoveEnvVar.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RemoveEnvVar.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveEnvVar.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.tags.RemoveRPMMacro">
+<em class="property">class </em><code class="sig-name descname">RemoveRPMMacro</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RemoveRPMMacro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveRPMMacro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.RemoveRPMMacro.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RemoveRPMMacro.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveRPMMacro.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.cli.tags.RemoveRPMMacro.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Remove an RPM Macro from a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveRPMMacro.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.RemoveRPMMacro.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RemoveRPMMacro.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RemoveRPMMacro.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="kojismokydingo.cli.tags.RenumTagInheritance">
 <em class="property">class </em><code class="sig-name descname">RenumTagInheritance</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#RenumTagInheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.RenumTagInheritance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
@@ -264,6 +360,13 @@ May return an alternative parser instance or None.</p>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.SetEnvVar.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">parser</em>, <em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#SetEnvVar.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.SetEnvVar.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to perform validation on options values. Return value is
+ignored, use parser.error if needed.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -314,54 +417,6 @@ May return an alternative parser instance or None.</p>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="kojismokydingo.cli.tags.UnsetEnvVar">
-<em class="property">class </em><code class="sig-name descname">UnsetEnvVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetEnvVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.UnsetEnvVar.arguments">
-<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetEnvVar.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar.arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to add relevant arguments to the given parser instance.
-May return an alternative parser instance or None.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="kojismokydingo.cli.tags.UnsetEnvVar.description">
-<code class="sig-name descname">description</code><em class="property"> = 'Unset a mock environment variable on a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar.description" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.UnsetEnvVar.handle">
-<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetEnvVar.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetEnvVar.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform the full set of actions for this command.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="kojismokydingo.cli.tags.UnsetRPMMacro">
-<em class="property">class </em><code class="sig-name descname">UnsetRPMMacro</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.TagSmokyDingo" title="kojismokydingo.cli.TagSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.TagSmokyDingo</span></code></a></p>
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.UnsetRPMMacro.arguments">
-<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override to add relevant arguments to the given parser instance.
-May return an alternative parser instance or None.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="kojismokydingo.cli.tags.UnsetRPMMacro.description">
-<code class="sig-name descname">description</code><em class="property"> = 'Unset an RPM Macro on a tag'</em><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.description" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="kojismokydingo.cli.tags.UnsetRPMMacro.handle">
-<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#UnsetRPMMacro.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.UnsetRPMMacro.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform the full set of actions for this command.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="function">
 <dt id="kojismokydingo.cli.tags.cli_affected_targets">
 <code class="sig-name descname">cli_affected_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag_list</em>, <em class="sig-param">build_tags=False</em>, <em class="sig-param">info=False</em>, <em class="sig-param">quiet=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_affected_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_affected_targets" title="Permalink to this definition">¶</a></dt>
@@ -379,7 +434,7 @@ May return an alternative parser instance or None.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.tags.cli_list_tag_extras">
-<code class="sig-name descname">cli_list_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">target=False</em>, <em class="sig-param">quiet=None</em>, <em class="sig-param">json=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_list_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_list_tag_extras" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cli_list_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">target=False</em>, <em class="sig-param">blocked=False</em>, <em class="sig-param">quiet=None</em>, <em class="sig-param">json=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_list_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_list_tag_extras" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -389,27 +444,35 @@ May return an alternative parser instance or None.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.tags.cli_set_env_var">
-<code class="sig-name descname">cli_set_env_var</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">var</em>, <em class="sig-param">value</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_set_env_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_set_env_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">cli_set_env_var</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">var</em>, <em class="sig-param">value=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">block=False</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_set_env_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_set_env_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>If remove is True, value and block are ignored. The setting will
+be removed from the tag's extra settings.</p>
+<p>If block is True, value is ignored. A block entry will be added to
+the tag's extra settings.</p>
+<p>If remove and block are both False, then the value will be
+assigned to the tag's extra settings.</p>
+<p>If target is True, then tagname is actually the name of a target.
+That target's build tag will be the tag that is therefore
+modified.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.tags.cli_set_rpm_macro">
-<code class="sig-name descname">cli_set_rpm_macro</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">macro</em>, <em class="sig-param">value</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_set_rpm_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_set_rpm_macro" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">cli_set_rpm_macro</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">macro</em>, <em class="sig-param">value=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">block=False</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_set_rpm_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_set_rpm_macro" title="Permalink to this definition">¶</a></dt>
+<dd><p>If remove is True, value and block are ignored. The setting will
+be removed from the tag's extra settings.</p>
+<p>If block is True, value is ignored. A block entry will be added to
+the tag's extra settings.</p>
+<p>If remove and block are both False, then the value will be
+assigned to the tag's extra settings.</p>
+<p>If target is True, then tagname is actually the name of a target.
+That target's build tag will be the tag that is therefore
+modified.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.cli.tags.cli_swap_inheritance">
 <code class="sig-name descname">cli_swap_inheritance</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">old_parent</em>, <em class="sig-param">new_parent</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">test=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_swap_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_swap_inheritance" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kojismokydingo.cli.tags.cli_unset_env_var">
-<code class="sig-name descname">cli_unset_env_var</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">var</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_unset_env_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_unset_env_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="kojismokydingo.cli.tags.cli_unset_rpm_macro">
-<code class="sig-name descname">cli_unset_rpm_macro</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">macro</em>, <em class="sig-param">target=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_unset_rpm_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_unset_rpm_macro" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -474,13 +537,13 @@ flush: whether to forcibly flush the stream.</p>
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.cli.hosts"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >CLI API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji set-rpm-macro &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>koji remove-rpm-macro &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="koji swap-tag-inheritance" href="../swap-tag-inheritance/" />
-    <link rel="prev" title="koji set-env-var" href="../set-env-var/" />
+    <link rel="next" title="koji renum-tag-inheritance" href="../renum-tag-inheritance/" />
+    <link rel="prev" title="koji remove-env-var" href="../remove-env-var/" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <!--[if lte IE 6]>
@@ -34,10 +34,10 @@
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../swap-tag-inheritance/" title="koji swap-tag-inheritance"
+          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../set-env-var/" title="koji set-env-var"
+          <a href="../remove-env-var/" title="koji remove-env-var"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
@@ -49,81 +49,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="koji-set-rpm-macro">
-<h1>koji set-rpm-macro<a class="headerlink" href="#koji-set-rpm-macro" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji set-rpm-macro [-h] [--remove] [--block] [--target]
-                          TAGNAME macro [value]
+  <div class="section" id="koji-remove-rpm-macro">
+<h1>koji remove-rpm-macro<a class="headerlink" href="#koji-remove-rpm-macro" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji remove-rpm-macro [-h] [--target] TAGNAME macro
 
-Set an RPM Macro on a tag
+Remove an RPM Macro from a tag
 
 positional arguments:
   TAGNAME     Name of tag
-  macro       Name of the macro
-  value       Value of the macro. Default: %nil
+  macro       Name of the macro to remove
 
 optional arguments:
   -h, --help  show this help message and exit
-  --remove    Remove the macro definition from the tag
-  --block     Block the macro definition from the tag
   --target    Specify by target rather than a tag
 </pre></div>
 </div>
-<p>Defines an RPM macro on a tag.</p>
-<p>This command is a user-friendly alternative to using the <code class="docutils literal notranslate"><span class="pre">koji</span>
-<span class="pre">edit-tag</span></code> command as defined in <a class="reference external" href="https://docs.pagure.org/koji/setting_rpm_macros/#setting-rpm-macro-values">Setting RPM Macros for Builds -
-Setting rpm.macro values</a>.
-Use of this command requires either the <code class="docutils literal notranslate"><span class="pre">admin</span></code> or <code class="docutils literal notranslate"><span class="pre">tag</span></code>
-permission, as it is mutating tag configuration data.</p>
-<p>The underlying tag extra setting will be constructed with the prefix
-<code class="docutils literal notranslate"><span class="pre">rpm.macro.</span></code> and the macro name (minus any leading <code class="docutils literal notranslate"><span class="pre">%</span></code>)</p>
-<p>Empty RPM macro values are not permitted. The closest is <code class="docutils literal notranslate"><span class="pre">%nil</span></code>
-which is the default if no value is specified.</p>
-<p>Note that RPM macros definitioned in this manner will take precedence
-over any other definitions that may be provided by installed packages
-in the buildroot.</p>
-<p>These settings are inheritable, so care must be taken not to
-unintentionally pollute child build tags with settings they should not
-have. When in doubt, use <a class="reference internal" href="../affected-targets/#koji-affected-targets"><span class="std std-ref">koji affected-targets</span></a> to see what
-build configurations may be impacted by any macro definitions.</p>
-<p>See also <a class="reference internal" href="../list-rpm-macros/#koji-list-rpm-macros"><span class="std std-ref">koji list-rpm-macros</span></a></p>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following are equivalent for setting a value for the %dist</span>
-<span class="c1"># rpm macro</span>
-
-koji set-env-var my-tag-1.0-build dist .el8
-
-koji set-env-var my-tag-1.0-build %dist .el8
-
-koji edit-tag my-tag-1.0-build --extra rpm.macro.dist<span class="o">=</span>.el8
-
-
-<span class="c1"># The following are equivalent for removing the above defined %dist</span>
-<span class="c1"># rpm macro</span>
-
-koji remove-env-var my-tag-1.0-build dist
-
-koji set-env-var my-tag-1.0-build dist --remove
-
-koji edit-tag my-tag-1.0-build --remove-extra rpm.macro.dist
-
-
-<span class="c1"># The following are equivalent for blocking an inherited %dist</span>
-<span class="c1"># macro without giving it some alternative value. This feature</span>
-<span class="c1"># requires koji 1.23 or greater.</span>
-
-koji block-env-var my-tag-1.0-build dist
-
-koji set-env-var my-tag-1.0-build dist --block
-
-koji edit-tag my-tag-1.0-build --block-extra rpm.macro.dist
-</pre></div>
-</div>
-</div>
+<p>This command is a convenience equivalent to <code class="docutils literal notranslate"><span class="pre">koji</span> <span class="pre">set-rpm-macro</span> <span class="pre">--remove</span></code></p>
+<p>See also <a class="reference internal" href="../list-rpm-macros/#koji-list-rpm-macros"><span class="std std-ref">koji list-rpm-macros</span></a>, <a class="reference internal" href="../set-rpm-macro/#koji-set-rpm-macro"><span class="std std-ref">koji set-rpm-macro</span></a>, <a class="reference internal" href="../block-rpm-macro/#koji-block-rpm-macro"><span class="std std-ref">koji block-rpm-macro</span></a></p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.SetRPMMacro" title="kojismokydingo.cli.tags.SetRPMMacro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.SetRPMMacro</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.RemoveRPMMacro" title="kojismokydingo.cli.tags.RemoveRPMMacro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.RemoveRPMMacro</span></code></a></p></li>
 <li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_set_rpm_macro" title="kojismokydingo.cli.tags.cli_set_rpm_macro"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_set_rpm_macro()</span></code></a></p></li>
 </ul>
 </div>
@@ -137,23 +83,22 @@ koji edit-tag my-tag-1.0-build --block-extra rpm.macro.dist
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">koji set-rpm-macro</a><ul>
-<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#">koji remove-rpm-macro</a><ul>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../set-env-var/"
-                        title="previous chapter">koji set-env-var</a></p>
+  <p class="topless"><a href="../remove-env-var/"
+                        title="previous chapter">koji remove-env-var</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../swap-tag-inheritance/"
-                        title="next chapter">koji swap-tag-inheritance</a></p>
+  <p class="topless"><a href="../renum-tag-inheritance/"
+                        title="next chapter">koji renum-tag-inheritance</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/commands/set-rpm-macro.rst.txt"
+      <li><a href="../../_sources/commands/remove-rpm-macro.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -181,10 +126,10 @@ koji edit-tag my-tag-1.0-build --block-extra rpm.macro.dist
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../swap-tag-inheritance/" title="koji swap-tag-inheritance"
+          <a href="../renum-tag-inheritance/" title="koji renum-tag-inheritance"
              >next</a> |</li>
         <li class="right" >
-          <a href="../set-env-var/" title="koji set-env-var"
+          <a href="../remove-env-var/" title="koji remove-env-var"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 

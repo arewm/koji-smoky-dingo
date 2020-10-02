@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.2 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -57,8 +57,8 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Koji Smoky Dingo - Utility functions and command line plugins for</span>
-<span class="sd">Koji users</span>
+<span class="sd">Koji Smoky Dingo - Client utilities for working with the Koji</span>
+<span class="sd">build system</span>
 
 <span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
 <span class="sd">:license: GPL v3</span>
@@ -67,11 +67,48 @@
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">convertFault</span><span class="p">,</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">Fault</span><span class="p">,</span> <span class="n">ClientSession</span>
+<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">ClientSession</span><span class="p">,</span> <span class="n">Fault</span><span class="p">,</span> <span class="n">GenericError</span><span class="p">,</span>
+    <span class="n">convertFault</span><span class="p">,</span> <span class="n">read_config</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">koji_cli.lib</span> <span class="k">import</span> <span class="n">activate_session</span><span class="p">,</span> <span class="n">ensure_connection</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">zip</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">zip</span>
 
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">chunkseq</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;AnonClientSession&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BadDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FeatureUnavailable&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ManagedClientSession&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchBuild&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchChannel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchContentGenerator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchPermission&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchTag&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchTarget&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchTask&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchUser&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NotPermitted&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ProfileClientSession&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;as_buildinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;as_taginfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;as_targetinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_build_archives&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_build_rpms&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_builds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_buildroot_archives&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_buildroot_rpms&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_buildroots&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_rpm_sigs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_tags&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_tasks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;iter_bulk_load&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version_check&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version_require&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="ManagedClientSession"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.ManagedClientSession">[docs]</a><span class="k">class</span> <span class="nc">ManagedClientSession</span><span class="p">(</span><span class="n">ClientSession</span><span class="p">):</span>
@@ -215,19 +252,53 @@
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;Insufficient permissions&quot;</span></div>
 
 
-<span class="k">def</span> <span class="nf">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureUnavailable"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.FeatureUnavailable">[docs]</a><span class="k">class</span> <span class="nc">FeatureUnavailable</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generator utility for multicall loading data from a koji client</span>
-<span class="sd">    session.</span>
+<span class="sd">    A given feature isn&#39;t available due to the version on the koji hub</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="sd">    loadfn is a bound method which will be called with each key in the</span>
-<span class="sd">    keys sequence. Up to size calls will be made at a time.</span>
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;The koji hub version doesn&#39;t support this feature&quot;</span></div>
 
-<span class="sd">    Yields key, result pairs.</span>
 
-<span class="sd">    If err is True (default) then this will convert any koji faults to</span>
-<span class="sd">    exceptions and raise them. Otherwise faults will be omitted from</span>
-<span class="sd">    the output results.</span>
+<div class="viewcode-block" id="iter_bulk_load"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.iter_bulk_load">[docs]</a><span class="k">def</span> <span class="nf">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic bulk loading generator. Invokes the given loadfn on each</span>
+<span class="sd">    key in keys using chunking multicalls limited to the specified</span>
+<span class="sd">    size.</span>
+
+<span class="sd">    Yields (key, result) pairs in order.</span>
+
+<span class="sd">    If err is True (default) then any faults will raise an exception.</span>
+<span class="sd">    If err is False, then a None will be substituted as the result for</span>
+<span class="sd">    the failing key.</span>
+
+<span class="sd">    :param session: The koji session</span>
+
+<span class="sd">    :type session: `koji.ClientSession`</span>
+
+<span class="sd">    :param loadfn: The loading function, to be invoked in a multicall</span>
+<span class="sd">      arrangement. Will be called once with each given key from keys</span>
+
+<span class="sd">    :type loadfn: Callable[[object], object]</span>
+
+<span class="sd">    :param keys: The sequence of keys to be used to invoke loadfn.</span>
+
+<span class="sd">    :type keys: list[object]</span>
+
+<span class="sd">    :param err: Whether to raise any underlying fault returns as</span>
+<span class="sd">      exceptions. Default, True</span>
+
+<span class="sd">    :type err: bool, optional</span>
+
+<span class="sd">    :param size: How many calls to loadfn to chunk up for each</span>
+<span class="sd">      multicall. Default, 100</span>
+
+<span class="sd">    :type size: int, optional</span>
+
+<span class="sd">    :raises koji.GenericError: if err is True and an issue</span>
+<span class="sd">      occurrs while invoking the loadfn</span>
+
+<span class="sd">    :rtype: Generator[tuple[object, object]]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">key_chunk</span> <span class="ow">in</span> <span class="n">chunkseq</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
@@ -246,7 +317,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="bulk_load"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load">[docs]</a><span class="k">def</span> <span class="nf">bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -269,7 +340,10 @@
 
 <span class="sd">    :type loadfn: Callable[[object], object]</span>
 
-<span class="sd">    :param keys: The sequence of keys to be used to invoke `loadfn`</span>
+<span class="sd">    :param keys: The sequence of keys to be used to invoke `loadfn`.</span>
+<span class="sd">      These keys need to be individually hashable, or the `results`</span>
+<span class="sd">      value needs to be specified with an instance that accepts</span>
+<span class="sd">      assignmnet using these values as the key.</span>
 
 <span class="sd">    :type keys: list[object]</span>
 
@@ -298,7 +372,7 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -319,11 +393,26 @@
 <span class="sd">    If results is non-None, it must support dict assignment, and will</span>
 <span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
 <span class="sd">    return the results.</span>
+
+<span class="sd">    :param nvrs: Sequence of build NVRs or build IDs to load</span>
+
+<span class="sd">    :type nvrs: Iterator[str] or Iterator[int]</span>
+
+<span class="sd">    :param err: Raise an exception if an NVR fails to load. Default,</span>
+<span class="sd">      bad or missing NVRs will be absent from the results mapping.</span>
+
+<span class="sd">    :type err: bool, optional</span>
+
+<span class="sd">    :param size: Count of NVRs to load in a single multicall. Default,</span>
+<span class="sd">      100</span>
+
+<span class="sd">    :type size: int, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
+                                    <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -340,7 +429,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getTaskInfo</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -354,7 +443,12 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">version_check</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">)):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">,</span> <span class="n">blocked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -379,8 +473,8 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">queryRPMSigs</span><span class="p">,</span>
-                                <span class="n">rpm_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">queryRPMSigs</span><span class="p">,</span>
+                                    <span class="n">rpm_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -393,7 +487,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -406,7 +500,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -430,7 +524,7 @@
 
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -451,8 +545,8 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">,</span>
-                                <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">,</span>
+                                    <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -473,8 +567,8 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildroot</span><span class="p">,</span>
-                                <span class="n">broot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildroot</span><span class="p">,</span>
+                                    <span class="n">broot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
@@ -525,6 +619,11 @@
 
 <span class="sd">    :type tag: int or str or dict</span>
 
+<span class="sd">    :param blocked: attempts to load blocked tag extra values. Default,</span>
+<span class="sd">      only loads</span>
+
+<span class="sd">    :type blocked: bool, optional</span>
+
 <span class="sd">    :raises NoSuchTag: if the tag value could not be resolved into a</span>
 <span class="sd">      tag info dict</span>
 
@@ -532,9 +631,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version_check</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">)):</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">blocked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">tag</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -576,6 +680,104 @@
     <span class="k">return</span> <span class="n">info</span></div>
 
 
+<span class="k">def</span> <span class="nf">_int</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">val</span>
+
+
+<div class="viewcode-block" id="version_check"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.version_check">[docs]</a><span class="k">def</span> <span class="nf">version_check</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verifies that the requested minimum version is met compared</span>
+<span class="sd">    against session.getKojiVersion.</span>
+
+<span class="sd">    If the getKojiVersion method isn&#39;t implemented on the hub, we</span>
+<span class="sd">    presume that we&#39;re version 1.22 (the last version before</span>
+<span class="sd">    getKojiVersion was added). Because of this, checking for minimum</span>
+<span class="sd">    versions lower than 1.23 will always return True.</span>
+
+<span class="sd">    Version is specified as a tuple of integers, eg. 1.23 is ``(1,</span>
+<span class="sd">    23)``</span>
+
+<span class="sd">    :param minimum: Minimum version required. Default, ``(1, 23)``</span>
+
+<span class="sd">    :type minimum: tuple[int]</span>
+
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">minimum</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">minimum</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_int</span><span class="p">,</span> <span class="n">minimum</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)))</span>
+
+    <span class="c1"># we need to use this instead of getattr as koji sessions will</span>
+    <span class="c1"># automatically create all missing properties as proxies to a</span>
+    <span class="c1"># remote hub method.</span>
+    <span class="n">session_vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+    <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__hub_version&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hub_ver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getKojiVersion</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">GenericError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">hub_ver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hub_ver</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hub_ver</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">hub_ver</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_int</span><span class="p">,</span> <span class="n">hub_ver</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)))</span>
+
+        <span class="n">session_vars</span><span class="p">[</span><span class="s2">&quot;__hub_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hub_ver</span>
+
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">hub_ver</span> <span class="ow">and</span> <span class="n">hub_ver</span> <span class="o">&gt;=</span> <span class="n">minimum</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="version_require"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.version_require">[docs]</a><span class="k">def</span> <span class="nf">version_require</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">),</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verifies that the requested minimum version is met compared</span>
+<span class="sd">    against ``session.getKojiVersion()``</span>
+
+<span class="sd">    If the getKojiVersion method isn&#39;t implemented on the hub, we</span>
+<span class="sd">    presume that we&#39;re version 1.22 (the last version before</span>
+<span class="sd">    getKojiVersion was added). Because of this, checking for minimum</span>
+<span class="sd">    versions lower than 1.23 will always return True.</span>
+
+<span class="sd">    Version is specified as a tuple of integers, eg. 1.23 is ``(1,</span>
+<span class="sd">    23)``</span>
+
+<span class="sd">    If the version requirement is not met, a `FeatureUnavailable`</span>
+<span class="sd">    exception is raised, with the given message. If message is not</span>
+<span class="sd">    provided, a simple one is constructed based on the minimum value.</span>
+
+<span class="sd">    :param minimum: Minimum version required. Default, ``(1, 23)``</span>
+
+<span class="sd">    :type minimum: tuple[int]</span>
+
+<span class="sd">    :param message: Message to use in exception if version check</span>
+<span class="sd">    fails. Default, with a minimum of ``(1, 23)``, ``&quot;requires &gt;=</span>
+<span class="sd">    1.23&quot;``</span>
+
+<span class="sd">    :type message: str, optional</span>
+
+<span class="sd">    :raises FeatureUnavailable: If the minimum version is not met</span>
+
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">version_check</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="n">minimum</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">minimum</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">minimum</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">minimum</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;requires &gt;= </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">minimum</span>
+
+    <span class="k">raise</span> <span class="n">FeatureUnavailable</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
 <span class="c1">#</span>
 <span class="c1"># The end.</span>
 </pre></div>
@@ -608,13 +810,13 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-09-24.
+      Last updated on 2020-10-02.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>
