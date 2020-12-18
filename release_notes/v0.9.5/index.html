@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji block-env-var &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>Koji Smoky Dingo preview 0.9.5 Release Notes &#8212; kojismokydingo 0.9.5 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="koji block-rpm-macro" href="../block-rpm-macro/" />
-    <link rel="prev" title="koji userinfo" href="../userinfo/" />
+    <link rel="next" title="Koji Smoky Dingo preview 0.9.4 Release Notes" href="../v0.9.4/" />
+    <link rel="prev" title="Release Notes" href="../" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <!--[if lte IE 6]>
@@ -34,13 +34,13 @@
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../block-rpm-macro/" title="koji block-rpm-macro"
+          <a href="../v0.9.4/" title="Koji Smoky Dingo preview 0.9.4 Release Notes"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../userinfo/" title="koji userinfo"
+          <a href="../" title="Release Notes"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Release Notes</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -49,30 +49,47 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="koji-block-env-var">
-<h1>koji block-env-var<a class="headerlink" href="#koji-block-env-var" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji block-env-var [-h] [--target] TAGNAME var
-
-Block a mock environment variable from a tag
-
-positional arguments:
-  TAGNAME     Name of tag
-  var         Name of the environment variable
-
-optional arguments:
-  -h, --help  show this help message and exit
-  --target    Specify by target rather than a tag
-</pre></div>
-</div>
-<p>This command is a convenience equivalent to <code class="docutils literal notranslate"><span class="pre">koji</span> <span class="pre">set-env-var</span> <span class="pre">--block</span></code></p>
-<p>See also <a class="reference internal" href="../list-env-vars/#koji-list-env-vars"><span class="std std-ref">koji list-env-vars</span></a>, <a class="reference internal" href="../set-env-var/#koji-set-env-var"><span class="std std-ref">koji set-env-var</span></a>, <a class="reference internal" href="../remove-env-var/#koji-remove-env-var"><span class="std std-ref">koji remove-env-var</span></a></p>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="koji-smoky-dingo-preview-0-9-5-release-notes">
+<h1>Koji Smoky Dingo preview 0.9.5 Release Notes<a class="headerlink" href="#koji-smoky-dingo-preview-0-9-5-release-notes" title="Permalink to this headline">¶</a></h1>
+<p><em>December 18, 2020</em></p>
+<p>0.9.5 is a quick release to fix issues with RPM installations. The
+koji RPM doesn't declare itself as a valid python package, and thus
+some entry_points hooks (like ksd-filter-builds) cannot function.</p>
+<p>Here's the 0.9.4 Release Notes again, since this is really just 0.9.4
+with that fix on top.</p>
+<p>Introducing a new mini language, Sifty Dingo</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.BlockEnvVar" title="kojismokydingo.cli.tags.BlockEnvVar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.BlockEnvVar</span></code></a></p></li>
-<li><p><a class="reference internal" href="../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_set_env_var" title="kojismokydingo.cli.tags.cli_set_env_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.tags.cli_set_env_var()</span></code></a></p></li>
+<li><p>you can now write filtering expressions for the list-components and
+filter-builds commands</p></li>
+<li><p>filter into multiple buckets at a time with a single set of rules</p></li>
+<li><p>implemented under the <a class="reference internal" href="../../kojismokydingo/sift/#module-kojismokydingo.sift" title="kojismokydingo.sift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.sift</span></code></a> package</p></li>
 </ul>
-</div>
+<p>Chugging along and collecting feedback</p>
+<ul class="simple">
+<li><p>list-build-archives now accepts multiple NVRs</p></li>
+<li><p>list-build-archives and latest-archives now accept an '--arch'
+option which allows filtering by architecture</p></li>
+<li><p>rename the '--build-type' option for list-build-archives and
+latest-archives to simply '--type'</p></li>
+<li><p>add the build type option aliases to relevant build filtering
+commands</p></li>
+<li><p>move as_userinfo into the base package</p></li>
+<li><p>add int_or_str function to cli package, for use as the type argument
+to parser arguments. Will safely convert str to int if applicable.
+This allows a number of commands to accept the ID of their relevant
+data type in place of its name</p></li>
+<li><p>unique now accepts a 'key=' parameter to allow deduplication of
+otherwise unhashable values</p></li>
+<li><p>parse_datetime now accepts a 'strict=' parameter to let it return
+None instead of raising an Exception when parsing fails</p></li>
+<li><p>new package for adapting SmokyDingo commands into standalone scripts
+or console_scripts entry points, kojismokydingo.standalone</p></li>
+<li><p>filter-builds and list-component-builds both allow multiple '--tag'
+arguments now, to provide an even larger list of builds upon which
+to operate</p></li>
+</ul>
+<p>Closed Issues:
+&lt;<a class="reference external" href="https://github.com/obriencj/koji-smoky-dingo/milestone/4?closed=1">https://github.com/obriencj/koji-smoky-dingo/milestone/4?closed=1</a>&gt;</p>
 </div>
 
 
@@ -81,24 +98,16 @@ optional arguments:
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">koji block-env-var</a><ul>
-<li><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../userinfo/"
-                        title="previous chapter">koji userinfo</a></p>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Release Notes</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../block-rpm-macro/"
-                        title="next chapter">koji block-rpm-macro</a></p>
+  <p class="topless"><a href="../v0.9.4/"
+                        title="next chapter">Koji Smoky Dingo preview 0.9.4 Release Notes</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../_sources/commands/block-env-var.rst.txt"
+      <li><a href="../../_sources/release_notes/v0.9.5.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -126,13 +135,13 @@ optional arguments:
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../block-rpm-macro/" title="koji block-rpm-macro"
+          <a href="../v0.9.4/" title="Koji Smoky Dingo preview 0.9.4 Release Notes"
              >next</a> |</li>
         <li class="right" >
-          <a href="../userinfo/" title="koji userinfo"
+          <a href="../" title="Release Notes"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../" >Release Notes</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

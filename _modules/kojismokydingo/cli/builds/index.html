@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.builds &#8212; kojismokydingo 0.9.4 documentation</title>
+    <title>kojismokydingo.cli.builds &#8212; kojismokydingo 0.9.5 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -526,15 +526,14 @@
 
 <div class="viewcode-block" id="ListComponents.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.ListComponents.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="n">nvrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr</span><span class="p">)</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">nvrs</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">nvrs</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">:</span>
                 <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
 
         <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">:</span>
             <span class="n">nvrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">))</span>
-
-        <span class="n">tags</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">bf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filter</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
         <span class="n">bs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sifter</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
@@ -664,15 +663,14 @@
 
 <div class="viewcode-block" id="FilterBuilds.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.FilterBuilds.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="n">nvrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr</span><span class="p">)</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">nvrs</span> <span class="ow">or</span> <span class="n">options</span><span class="o">.</span><span class="n">tag</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">nvrs</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">:</span>
                 <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
 
         <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">:</span>
             <span class="n">nvrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">nvr_file</span><span class="p">))</span>
-
-        <span class="n">tags</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">bf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filter</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
         <span class="n">bs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sifter</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
@@ -847,7 +845,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 

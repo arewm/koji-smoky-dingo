@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Overview &#8212; kojismokydingo 0.9.4 documentation</title>
+    <title>Overview &#8212; kojismokydingo 0.9.5 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -208,12 +208,17 @@ installed as an egg or wheel.</p>
 <p>Because of how koji loads client plugins, if you want the meta plugin
 available by default system-wide, then the package needs to be installed
 into the default site-packages for the python installation.</p>
+<div class="section" id="using-rpm">
+<h3>Using RPM<a class="headerlink" href="#using-rpm" title="Permalink to this headline">¶</a></h3>
 <p>If using an RPM-based distribution, this is easily achieved using the
 included spec to produce an RPM and install that.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make clean rpm
-dnf install dist/noarch/python3-kojismokydingo-0.9.4-1.fc32.noarch.rpm
+dnf install dist/noarch/python3-kojismokydingo-0.9.5-1.fc32.noarch.rpm
 </pre></div>
 </div>
+</div>
+<div class="section" id="system-wide-using-python">
+<h3>System-wide Using Python<a class="headerlink" href="#system-wide-using-python" title="Permalink to this headline">¶</a></h3>
 <p>Using traditional setuptools or pip installation methods can also
 achieve this by specifying the specific root or prefix parameter</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python 2.6 global install</span>
@@ -221,19 +226,22 @@ sudo python setup.py clean build install --root<span class="o">=</span>/
 
 <span class="c1"># Python 2.7 global install</span>
 python3 setup.py bdist_wheel
-pip3 install --prefix /usr -I dist/kojismokydingo-0.9.4-py2-none-any.whl
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.5-py2-none-any.whl
 
 <span class="c1"># Python 3 global install</span>
 python3 setup.py bdist_wheel
-pip3 install --prefix /usr -I dist/kojismokydingo-0.9.4-py3-none-any.whl
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.5-py3-none-any.whl
 </pre></div>
 </div>
+</div>
+<div class="section" id="user-only-using-python">
+<h3>User-only Using Python<a class="headerlink" href="#user-only-using-python" title="Permalink to this headline">¶</a></h3>
 <p>However, if you only want the plugin available for yourself, you can
 install it anywhere and tell koji to look in that particular
 <code class="docutils literal notranslate"><span class="pre">site-package/koji_cli_plugins</span></code> instance</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python 3 user install</span>
 python3 setup.py bdist_wheel
-pip3 install --user -I dist/kojismokydingo-0.9.4-py3-none-any.whl
+pip3 install --user -I dist/kojismokydingo-0.9.5-py3-none-any.whl
 </pre></div>
 </div>
 <p>And the following setting in ~/.koji/config assuming Python version 3.7
@@ -251,6 +259,7 @@ the meta plugin can also be symlinked into <code class="docutils literal notrans
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p ~/.koji/plugins
 ln -s ~/.local/lib/python3.7/site-packages/koji_cli_plugins/kojismokydingometa.py ~/.koji/plugins
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="contact">
@@ -286,7 +295,12 @@ with this library; if not, see <a class="reference external" href="http://www.gn
 <li><a class="reference internal" href="#meta-plugin">Meta Plugin</a></li>
 <li><a class="reference internal" href="#tag-commands">Tag Commands</a></li>
 <li><a class="reference internal" href="#information-commands">Information Commands</a></li>
-<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#install">Install</a><ul>
+<li><a class="reference internal" href="#using-rpm">Using RPM</a></li>
+<li><a class="reference internal" href="#system-wide-using-python">System-wide Using Python</a></li>
+<li><a class="reference internal" href="#user-only-using-python">User-only Using Python</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#contact">Contact</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
 </ul>
@@ -335,7 +349,7 @@ with this library; if not, see <a class="reference external" href="http://www.gn
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
