@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.cli.sift &#8212; kojismokydingo 0.9.4 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.cli.sift</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Some CLI adapters for working with Sifty Dingo filtering</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">basename</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">open_output</span><span class="p">,</span> <span class="n">resplit</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">escapable_replace</span>
+<span class="kn">from</span> <span class="nn">..sift</span> <span class="k">import</span> <span class="n">DEFAULT_SIEVES</span><span class="p">,</span> <span class="n">Sifter</span><span class="p">,</span> <span class="n">SifterError</span>
+<span class="kn">from</span> <span class="nn">..sift.builds</span> <span class="k">import</span> <span class="n">build_info_sieves</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;BuildSifting&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sifting&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;output_sifted&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Sifting"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting">[docs]</a><span class="k">class</span> <span class="nc">Sifting</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mixin for SmokyDingo instances that wish to offer a sifter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Sifting.sifter_arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.sifter_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">sifter_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds an argument group for for loading a Sifter from either an</span>
+<span class="sd">        text argument or a filename, and specifying output files for</span>
+<span class="sd">        the expected flags from that Sifter&#39;s results.</span>
+
+<span class="sd">         * ``--output/-o FLAG:FILENAME[,...]``</span>
+<span class="sd">         * ``--filter FILTER``</span>
+<span class="sd">         * ``--filter-file FILTER_FILE``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Filtering with Sifty sieves&quot;</span><span class="p">)</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--param&quot;</span><span class="p">,</span> <span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;KEY=VALUE&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Provide compile-time values to the sifty&quot;</span>
+               <span class="s2">&quot; filter expressions&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--env-params&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;use_env&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use environment vars for params left unassigned&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;FLAG:FILENAME&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Divert results marked with the given FLAG to&quot;</span>
+               <span class="s2">&quot; FILENAME. If FILENAME is &#39;-&#39;, output to stdout.&quot;</span>
+               <span class="s2">&quot; The &#39;default&#39; flag is output to stdout by default,&quot;</span>
+               <span class="s2">&quot; and other flags are discarded&quot;</span><span class="p">)</span>
+
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--filter&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;FILTER&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use the given sifty filter predicates&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--filter-file&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;FILTER_FILE&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Load sifty filter predictes from file&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="Sifting.default_params"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.default_params">[docs]</a>    <span class="k">def</span> <span class="nf">default_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_sifter_params&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sifter_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">params</span></div>
+
+
+<div class="viewcode-block" id="Sifting.get_params"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+
+        <span class="c1"># build up a params dict based on command-line options, param</span>
+        <span class="c1"># definitions from the filter file, and finally the</span>
+        <span class="c1"># environment if the --env flag was set.</span>
+        <span class="n">cli_params</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">params</span>
+        <span class="n">env_params</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">use_env</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_params</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">resplit</span><span class="p">(</span><span class="n">cli_params</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">opt</span><span class="p">:</span>
+                <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">opt</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">env_params</span><span class="p">:</span>
+                    <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;param </span><span class="si">%s</span><span class="s2"> is not defined&quot;</span> <span class="o">%</span> <span class="n">key</span>
+                    <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">params</span></div>
+
+
+<div class="viewcode-block" id="Sifting.get_outputs"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Produces a dict mapping flag names to output files based on the</span>
+<span class="sd">        accumulated results of the ``--output FLAG:FILENAME`` argument.</span>
+
+<span class="sd">        This dict can be used with `output_sifted` to record the results</span>
+<span class="sd">        of a sifter to a collection of files.</span>
+
+<span class="sd">        :rtype: dict[str, str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">outputs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">opt</span><span class="p">:</span>
+                <span class="n">flag</span><span class="p">,</span> <span class="n">dest</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="n">opt</span>
+                <span class="n">dest</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">flag</span><span class="p">]</span> <span class="o">=</span> <span class="n">dest</span> <span class="ow">or</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="s2">&quot;*&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">overall</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+            <span class="n">newresult</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">overall</span><span class="p">)</span>
+            <span class="n">newresult</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">newresult</span>
+
+        <span class="k">elif</span> <span class="s2">&quot;default&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Sifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DEFAULT_SIEVES</span></div>
+
+
+<div class="viewcode-block" id="Sifting.get_sifter"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.get_sifter">[docs]</a>    <span class="k">def</span> <span class="nf">get_sifter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Produces a Sifter instances constructed from values in options.</span>
+<span class="sd">        These options should have been generated from a parser that</span>
+<span class="sd">        has had the `Sifting.sifter_arguments` invoked on it.</span>
+
+<span class="sd">        :rtype: `kojismokydingo.sift.Sifter`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">filter</span><span class="p">:</span>
+            <span class="n">filter_src</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">filter</span>
+        <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">filter_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">filter_file</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+                <span class="n">filter_src</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Sifter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_sieves</span><span class="p">(),</span> <span class="n">filter_src</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BuildSifting"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.BuildSifting">[docs]</a><span class="k">class</span> <span class="nc">BuildSifting</span><span class="p">(</span><span class="n">Sifting</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BuildSifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.BuildSifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">build_info_sieves</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="output_sifted"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.output_sifted">[docs]</a><span class="k">def</span> <span class="nf">output_sifted</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Records the results of a sifter to output. As sifter results are</span>
+<span class="sd">    dicts, the `key` parameter can be either a unary callable or an</span>
+<span class="sd">    index value to be used to fetch a simplified, printable</span>
+<span class="sd">    representaiton from the dicts.</span>
+
+<span class="sd">    `outputs` is a mapping of flag names to filenames using the rules</span>
+<span class="sd">    of the :py:func:`open_output` function.</span>
+
+<span class="sd">    :param results: results of invoking a Sifter on a set of data</span>
+
+<span class="sd">    :type results: dict[str, list[dict]]</span>
+
+<span class="sd">    :param key: transformation to apply to the individual data</span>
+<span class="sd">      elements prior to recording. Default, lookup the ``&quot;id&quot;`` index</span>
+<span class="sd">      from the element.</span>
+
+<span class="sd">    :type key: callable or str</span>
+
+<span class="sd">    :param outputs: mapping of flags to destination filenames. If</span>
+<span class="sd">      unspecified, the default flag will be written to stdout and the</span>
+<span class="sd">      rest will be discarded.</span>
+
+<span class="sd">    :type outputs: dict[str, str]</span>
+
+<span class="sd">    :param sort: sorting to apply to the results in each flag. If</span>
+<span class="sd">      unspecified, order is preserved.</span>
+
+<span class="sd">    :type sort: callable or str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">itemgetter</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sort</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">sort</span><span class="p">):</span>
+        <span class="n">sort</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">sorted</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="n">sort</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">outputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">}</span>
+
+    <span class="c1"># kinda hackish but we need to populate the defaults in this case</span>
+    <span class="c1"># because we really want to iterate over the outputs, not the</span>
+    <span class="c1"># results in order to make sure every output gets written to, even</span>
+    <span class="c1"># if it has no results.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">defaultdict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="n">flag</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">flag</span><span class="p">,</span> <span class="n">dest</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">outputs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;%&quot;</span> <span class="ow">in</span> <span class="n">dest</span><span class="p">:</span>
+            <span class="n">safe_flag</span> <span class="o">=</span> <span class="n">flag</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s2">&quot;/</span><span class="se">\\</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">))</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">escapable_replace</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="n">safe_flag</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">dest</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">):</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="n">dest</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">append</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">append</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">flagged</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="p">())</span>
+        <span class="k">if</span> <span class="n">sort</span><span class="p">:</span>
+            <span class="n">flagged</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">flagged</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">open_output</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">append</span><span class="p">)</span> <span class="k">as</span> <span class="n">dout</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">flagged</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">dout</span><span class="p">)</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-12-18.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

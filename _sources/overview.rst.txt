@@ -1,9 +1,9 @@
 Overview
 ========
 
-Koji Smoky Dingo is a collection of client command-line plugins for
-`koji <https://pagure.io/koji>`__, and a set of utility modules for
-writing your own commands or scripts.
+Koji Smoky Dingo is a collection of client command-line plugins for the
+`Koji <https://pagure.io/koji>`__ build system, and a set of utility
+modules for writing your own commands or scripts.
 
 The phrase “smoky-dingo” was provided by
 `coolname <https://pypi.org/project/coolname/>`__ and has no particular
@@ -28,8 +28,9 @@ Tag Commands
 ------------
 
 These commands modify tag features, requiring either the tag permission
-(koji >= `1.18 <https://docs.pagure.org/koji/release_notes_1.18/>`__) or
-the admin permission.
+(koji >=
+`1.18 <https://docs.pagure.org/koji/release_notes/release_notes_1.18/>`__)
+or the admin permission.
 
 +----------------------------+-----------------------------------------+
 | Command                    | Description                             |
@@ -131,7 +132,7 @@ included spec to produce an RPM and install that.
 .. code:: bash
 
    make clean rpm
-   dnf install dist/noarch/python3-kojismokydingo-0.9.3-1.fc32.noarch.rpm
+   dnf install dist/noarch/python3-kojismokydingo-0.9.4-1.fc32.noarch.rpm
 
 Using traditional setuptools or pip installation methods can also
 achieve this by specifying the specific root or prefix parameter
@@ -143,11 +144,11 @@ achieve this by specifying the specific root or prefix parameter
 
    # Python 2.7 global install
    python3 setup.py bdist_wheel
-   pip3 install --prefix /usr -I dist/kojismokydingo-0.9.3-py2-none-any.whl
+   pip3 install --prefix /usr -I dist/kojismokydingo-0.9.4-py2-none-any.whl
 
    # Python 3 global install
    python3 setup.py bdist_wheel
-   pip3 install --prefix /usr -I dist/kojismokydingo-0.9.3-py3-none-any.whl
+   pip3 install --prefix /usr -I dist/kojismokydingo-0.9.4-py3-none-any.whl
 
 However, if you only want the plugin available for yourself, you can
 install it anywhere and tell koji to look in that particular
@@ -157,7 +158,7 @@ install it anywhere and tell koji to look in that particular
 
    # Python 3 user install
    python3 setup.py bdist_wheel
-   pip3 install --user -I dist/kojismokydingo-0.9.3-py3-none-any.whl
+   pip3 install --user -I dist/kojismokydingo-0.9.4-py3-none-any.whl
 
 And the following setting in ~/.koji/config assuming Python version 3.7
 – read the output of the install command above to verify your install
@@ -171,8 +172,8 @@ use the meta plugin with.
    plugin_paths = ~/.local/lib/python3.7/site-packages/koji_cli_plugins/
 
 With koji >=
-`1.18 <https://docs.pagure.org/koji/release_notes_1.18/>`__, the meta
-plugin can also be symlinked into ``~/.koji/plugins``
+`1.18 <https://docs.pagure.org/koji/release_notes/release_notes_1.18/>`__,
+the meta plugin can also be symlinked into ``~/.koji/plugins``
 
 .. code:: bash
 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -68,7 +68,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">ClientSession</span><span class="p">,</span> <span class="n">Fault</span><span class="p">,</span> <span class="n">GenericError</span><span class="p">,</span>
+    <span class="n">ClientSession</span><span class="p">,</span> <span class="n">Fault</span><span class="p">,</span> <span class="n">GenericError</span><span class="p">,</span> <span class="n">ParameterError</span><span class="p">,</span>
     <span class="n">convertFault</span><span class="p">,</span> <span class="n">read_config</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">koji_cli.lib</span> <span class="k">import</span> <span class="n">activate_session</span><span class="p">,</span> <span class="n">ensure_connection</span>
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">zip</span>
@@ -95,6 +95,7 @@
     <span class="s2">&quot;as_buildinfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_taginfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_targetinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;as_userinfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_build_archives&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_build_rpms&quot;</span><span class="p">,</span>
@@ -105,6 +106,7 @@
     <span class="s2">&quot;bulk_load_rpm_sigs&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_tags&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_tasks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_load_users&quot;</span><span class="p">,</span>
     <span class="s2">&quot;iter_bulk_load&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version_check&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version_require&quot;</span><span class="p">,</span>
@@ -136,7 +138,7 @@
 <span class="sd">    which can be used via tha ``with`` keyword.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;koji&quot;</span><span class="p">,</span> <span class="n">anon</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;koji&quot;</span><span class="p">):</span>
         <span class="n">conf</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
         <span class="n">server</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;server&quot;</span><span class="p">]</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ProfileClientSession</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span></div>
@@ -328,8 +330,9 @@
 
 <span class="sd">    Returns an `OrderedDict` associating the individual keys with the</span>
 <span class="sd">    returned value of loadfn. If `results` is specified, it must</span>
-<span class="sd">    support dict assignment, and will be used in place of a newly</span>
-<span class="sd">    allocated `OrderedDict` to store and return the results.</span>
+<span class="sd">    support dict-like assignment via an update method, and will be</span>
+<span class="sd">    used in place of a newly allocated `OrderedDict` to store and</span>
+<span class="sd">    return the results.</span>
 
 <span class="sd">    :param session: The koji session</span>
 
@@ -358,9 +361,9 @@
 <span class="sd">    :type size: int, optional</span>
 
 <span class="sd">    :param results: storage for `loadfn` results. If specified, must</span>
-<span class="sd">      support item assignment (like a dict), and it will be populated</span>
-<span class="sd">      and then used as the return value for this function. Default, a</span>
-<span class="sd">      new `OrderedDict` will be allocated.</span>
+<span class="sd">      support item assignment (like a dict) via an update method, and</span>
+<span class="sd">      it will be populated and then used as the return value for this</span>
+<span class="sd">      function. Default, a new `OrderedDict` will be allocated.</span>
 
 <span class="sd">    :type results: dict, optional</span>
 
@@ -371,10 +374,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
-
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
-
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">loadfn</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -399,7 +399,7 @@
 <span class="sd">    :type nvrs: Iterator[str] or Iterator[int]</span>
 
 <span class="sd">    :param err: Raise an exception if an NVR fails to load. Default,</span>
-<span class="sd">      bad or missing NVRs will be absent from the results mapping.</span>
+<span class="sd">      True.</span>
 
 <span class="sd">    :type err: bool, optional</span>
 
@@ -413,9 +413,8 @@
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span>
                                     <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
@@ -430,9 +429,8 @@
     <span class="n">fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getTaskInfo</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
@@ -449,9 +447,8 @@
         <span class="n">fn</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
@@ -466,17 +463,14 @@
 <span class="sd">    Returns an OrderedDict associating the individual RPM IDs with their</span>
 <span class="sd">    resulting RPM signature lists.</span>
 
-<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
-<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
-<span class="sd">    return the results.</span>
+<span class="sd">    If results is non-None, it must support a dict-like update method,</span>
+<span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
+<span class="sd">    store and return the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
-
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">queryRPMSigs</span><span class="p">,</span>
-                                    <span class="n">rpm_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
-
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">queryRPMSigs</span><span class="p">,</span>
+                                  <span class="n">rpm_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -484,12 +478,8 @@
                                  <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
-
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
-
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -497,12 +487,8 @@
                              <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
-
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
-
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -515,18 +501,14 @@
 <span class="sd">    Returns an OrderedDict associating the individual build IDs with</span>
 <span class="sd">    their resulting archive lists.</span>
 
-<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
-<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
-<span class="sd">    return the results.</span>
+<span class="sd">    If results is non-None, it must support dict-like update method,</span>
+<span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
+<span class="sd">    store and return the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
-
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">buildID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
-
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -538,17 +520,14 @@
 <span class="sd">    Returns an OrderedDict associating the individual build IDs with</span>
 <span class="sd">    their resulting archive lists.</span>
 
-<span class="sd">    If results is non-None, it must support dict assignment, and will</span>
-<span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
-<span class="sd">    return the results.</span>
+<span class="sd">    If results is non-None, it must support a dict-like update method,</span>
+<span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
+<span class="sd">    store and return the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
-
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">,</span>
-                                    <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
-
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">,</span>
+                                  <span class="n">build_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -560,16 +539,68 @@
 <span class="sd">    Returns an OrderedDict associating the individual buildroot IDs</span>
 <span class="sd">    with their resulting buildroot info dicts.</span>
 
+<span class="sd">    If results is non-None, it must support a dict-like update method,</span>
+<span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
+<span class="sd">    store and return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildroot</span><span class="p">,</span>
+                                  <span class="n">broot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="bulk_load_users"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_users">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_users</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load many userinfo dicts from a koji client session and a sequence of</span>
+<span class="sd">    user identifiers.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual identifiers with</span>
+<span class="sd">    their resulting userinfo.</span>
+
+<span class="sd">    If err is True (default) then any missing user info will raise a</span>
+<span class="sd">    NoSuchUser exception. If err is False, then a None will be</span>
+<span class="sd">    substituted into the ordered dict for the result.</span>
+
 <span class="sd">    If results is non-None, it must support dict assignment, and will</span>
 <span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
 <span class="sd">    return the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildroot</span><span class="p">,</span>
-                                    <span class="n">broot_ids</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">users</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="n">session_vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+    <span class="n">new_get_user</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">new_get_user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NoSuchUser</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># the use of as_userinfo will have updates the __new_get_user</span>
+        <span class="c1"># sentinel attribute to either True or False</span>
+        <span class="n">new_get_user</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">)</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">new_get_user</span><span class="p">:</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchUser</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
 
@@ -680,11 +711,64 @@
     <span class="k">return</span> <span class="n">info</span></div>
 
 
+<div class="viewcode-block" id="as_userinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_userinfo">[docs]</a><span class="k">def</span> <span class="nf">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolves user to a userinfo dict.</span>
+
+<span class="sd">    If user is a str or int, then getUser will be invoked. If user is</span>
+<span class="sd">    already a dict, it&#39;s presumed to be a userinfo already and it&#39;s</span>
+<span class="sd">    returned unaltered.</span>
+
+<span class="sd">    :param user: Name, ID, or User Info describing a koji user</span>
+
+<span class="sd">    :type user: str or int or dict</span>
+
+<span class="sd">    :rtype: dict</span>
+
+<span class="sd">    :raises NoSuchUser: when user cannot be found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">session_vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="n">new_get_user</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">new_get_user</span><span class="p">:</span>
+            <span class="c1"># we&#39;ve tried the new way and it worked, so keep doing it.</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">new_get_user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># an API incompatibility emerged at some point in Koji&#39;s</span>
+            <span class="c1"># past, so we need to try the new way first and fall back</span>
+            <span class="c1"># to the older signature if that fails. This happened</span>
+            <span class="c1"># before Koji hub started reporting its version, so we</span>
+            <span class="c1"># cannot use the version_check function to gate this.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">session_vars</span><span class="p">[</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">except</span> <span class="n">ParameterError</span><span class="p">:</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+                <span class="n">session_vars</span><span class="p">[</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># we&#39;ve already tried the new way once and it didn&#39;t work.</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">user</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
 <span class="k">def</span> <span class="nf">_int</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
         <span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">pass</span>
     <span class="k">return</span> <span class="n">val</span>
 
 
@@ -810,13 +894,13 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

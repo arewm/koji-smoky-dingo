@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Overview &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>Overview &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,9 +50,9 @@
             
   <div class="section" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
-<p>Koji Smoky Dingo is a collection of client command-line plugins for
-<a class="reference external" href="https://pagure.io/koji">koji</a>, and a set of utility modules for
-writing your own commands or scripts.</p>
+<p>Koji Smoky Dingo is a collection of client command-line plugins for the
+<a class="reference external" href="https://pagure.io/koji">Koji</a> build system, and a set of utility
+modules for writing your own commands or scripts.</p>
 <p>The phrase “smoky-dingo” was provided by
 <a class="reference external" href="https://pypi.org/project/coolname/">coolname</a> and has no particular
 relevance.</p>
@@ -72,8 +72,9 @@ for a direct reference.</p>
 <div class="section" id="tag-commands">
 <h2>Tag Commands<a class="headerlink" href="#tag-commands" title="Permalink to this headline">¶</a></h2>
 <p>These commands modify tag features, requiring either the tag permission
-(koji &gt;= <a class="reference external" href="https://docs.pagure.org/koji/release_notes_1.18/">1.18</a>) or
-the admin permission.</p>
+(koji &gt;=
+<a class="reference external" href="https://docs.pagure.org/koji/release_notes/release_notes_1.18/">1.18</a>)
+or the admin permission.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 41%" />
@@ -210,7 +211,7 @@ into the default site-packages for the python installation.</p>
 <p>If using an RPM-based distribution, this is easily achieved using the
 included spec to produce an RPM and install that.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make clean rpm
-dnf install dist/noarch/python3-kojismokydingo-0.9.3-1.fc32.noarch.rpm
+dnf install dist/noarch/python3-kojismokydingo-0.9.4-1.fc32.noarch.rpm
 </pre></div>
 </div>
 <p>Using traditional setuptools or pip installation methods can also
@@ -220,11 +221,11 @@ sudo python setup.py clean build install --root<span class="o">=</span>/
 
 <span class="c1"># Python 2.7 global install</span>
 python3 setup.py bdist_wheel
-pip3 install --prefix /usr -I dist/kojismokydingo-0.9.3-py2-none-any.whl
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.4-py2-none-any.whl
 
 <span class="c1"># Python 3 global install</span>
 python3 setup.py bdist_wheel
-pip3 install --prefix /usr -I dist/kojismokydingo-0.9.3-py3-none-any.whl
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.4-py3-none-any.whl
 </pre></div>
 </div>
 <p>However, if you only want the plugin available for yourself, you can
@@ -232,7 +233,7 @@ install it anywhere and tell koji to look in that particular
 <code class="docutils literal notranslate"><span class="pre">site-package/koji_cli_plugins</span></code> instance</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python 3 user install</span>
 python3 setup.py bdist_wheel
-pip3 install --user -I dist/kojismokydingo-0.9.3-py3-none-any.whl
+pip3 install --user -I dist/kojismokydingo-0.9.4-py3-none-any.whl
 </pre></div>
 </div>
 <p>And the following setting in ~/.koji/config assuming Python version 3.7
@@ -245,8 +246,8 @@ use the meta plugin with.</p>
 </pre></div>
 </div>
 <p>With koji &gt;=
-<a class="reference external" href="https://docs.pagure.org/koji/release_notes_1.18/">1.18</a>, the meta
-plugin can also be symlinked into <code class="docutils literal notranslate"><span class="pre">~/.koji/plugins</span></code></p>
+<a class="reference external" href="https://docs.pagure.org/koji/release_notes/release_notes_1.18/">1.18</a>,
+the meta plugin can also be symlinked into <code class="docutils literal notranslate"><span class="pre">~/.koji/plugins</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p ~/.koji/plugins
 ln -s ~/.local/lib/python3.7/site-packages/koji_cli_plugins/kojismokydingometa.py ~/.koji/plugins
 </pre></div>
@@ -334,12 +335,12 @@ with this library; if not, see <a class="reference external" href="http://www.gn
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.4 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

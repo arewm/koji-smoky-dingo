@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji list-build-archives &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>koji list-build-archives &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../list-btypes/" title="koji list-btypes"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,48 +51,56 @@
             
   <div class="section" id="koji-list-build-archives">
 <h1>koji list-build-archives<a class="headerlink" href="#koji-list-build-archives" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji list-build-archives [-h] [--json] [--urls]
-                                [--build-type TYPE | --rpm | --maven | --image | --win]
-                                [--archive-type EXT] [--key KEY] [--unsigned]
-                                NVR
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji list-build-archives [-h] [--show-deleted] [--json] [--urls]
+                                [--type TYPE | --rpm | --maven | --image | --win]
+                                [--archive-type EXT] [--arch ARCHES]
+                                [--key KEY] [--unsigned]
+                                NVR [NVR ...]
 
 List archives from a build
 
 positional arguments:
-  NVR                   The NVR containing the archives
+  NVR                 The NVR containing the archives
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --json                Output archive information as JSON
-  --urls, -U            Present archives as URLs using the configured topurl.
-                        Default: use the configured topdir
+  -h, --help          show this help message and exit
+  --show-deleted, -d  Show archives for a deleted build. Default, deleted
+                      builds show an empty archive list
+  --json              Output archive information as JSON
+  --urls, -U          Present archives as URLs using the configured topurl.
+                      Default: use the configured topdir
 
 Build Filtering Options:
-  --build-type TYPE     Only show archives for the given build type. Example
-                        types are rpm, maven, image, win. Default: show all
-                        archives.
-  --rpm                 --build-type=rpm
-  --maven               --build-type=maven
-  --image               --build-type=image
-  --win                 --build-type=win
+  --type TYPE         Only show archives for the given build type. Example
+                      types are rpm, maven, image, win. Default: show all
+                      archives.
+  --rpm               Synonym for --type=rpm
+  --maven             Synonym for --type=maven
+  --image             Synonym for --type=image
+  --win               Synonym for --type=win
 
 Archive Filtering Options:
-  --archive-type EXT, -a EXT
-                        Only show archives with the given archive type. Can be
-                        specified multiple times. Default: show all
+  --archive-type EXT  Only show archives with the given archive type. Can be
+                      specified multiple times. Default: show all
+  --arch ARCHES       Only show archives with the given arch. Can be specified
+                      multiple times. Default: show all
 
 RPM Options:
-  --key KEY, -k KEY     Only show RPMs signed with the given key. Can be
-                        specified multiple times to indicate any of the keys
-                        is valid. Preferrence is in order defined. Default:
-                        show unsigned RPMs
-  --unsigned            Allow unsigned copies if no signed copies are found
-                        when --key=KEY is specified. Otherwise if keys are
-                        specified, then only RPMs signed with one of those
-                        keys are shown.
+  --key KEY, -k KEY   Only show RPMs signed with the given key. Can be
+                      specified multiple times to indicate any of the keys is
+                      valid. Preferrence is in order defined. Default: show
+                      unsigned RPMs
+  --unsigned          Allow unsigned copies if no signed copies are found when
+                      --key=KEY is specified. Otherwise if keys are specified,
+                      then only RPMs signed with one of those keys are shown.
 </pre></div>
 </div>
-<p>Print paths for archives and RPMs attached to a build</p>
+<p>Print paths for archives and RPMs attached to a build.</p>
+<p>Allows optional filtering based on the build type, archive type,
+architecture, and available signatures.</p>
+<p>The paths are based on the koji client configuration for the profile
+in use, and so will start with the <code class="docutils literal notranslate"><span class="pre">topdir</span></code> value. If <code class="docutils literal notranslate"><span class="pre">--urls</span></code> is
+specified, then the <code class="docutils literal notranslate"><span class="pre">topurl</span></code> value is used instead.</p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -158,13 +166,13 @@ RPM Options:
         <li class="right" >
           <a href="../list-btypes/" title="koji list-btypes"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

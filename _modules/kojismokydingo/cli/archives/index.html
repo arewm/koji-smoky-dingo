@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -68,61 +68,67 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">SUPPRESS</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">itervalues</span>
+
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">pretty_json</span><span class="p">,</span> <span class="n">resplit</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">NoSuchBuild</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">bulk_load_builds</span>
 <span class="kn">from</span> <span class="nn">..archives</span> <span class="k">import</span> \
     <span class="n">filter_archives</span><span class="p">,</span> <span class="n">gather_build_archives</span><span class="p">,</span> <span class="n">gather_latest_archives</span>
+<span class="kn">from</span> <span class="nn">..builds</span> <span class="k">import</span> <span class="n">BUILD_COMPLETE</span><span class="p">,</span> <span class="n">build_dedup</span>
 
 
-<div class="viewcode-block" id="cli_list_build_archives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.cli_list_build_archives">[docs]</a><span class="k">def</span> <span class="nf">cli_list_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvr</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
-                            <span class="n">atypes</span><span class="o">=</span><span class="p">(),</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
+<div class="viewcode-block" id="cli_list_build_archives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.cli_list_build_archives">[docs]</a><span class="k">def</span> <span class="nf">cli_list_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
+                            <span class="n">atypes</span><span class="o">=</span><span class="p">(),</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
+                            <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                             <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
-    <span class="c1"># quick sanity check, and we&#39;ll work with the build info rather</span>
-    <span class="c1"># than the NVR from here on out</span>
-    <span class="n">binfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuild</span><span class="p">(</span><span class="n">nvr</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">binfo</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">NoSuchBuild</span><span class="p">(</span><span class="n">nvr</span><span class="p">)</span>
+    <span class="n">loaded</span> <span class="o">=</span> <span class="n">bulk_load_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">found</span> <span class="o">=</span> <span class="n">gather_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
-                                  <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">binfo</span> <span class="ow">in</span> <span class="n">build_dedup</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">loaded</span><span class="p">)):</span>
+        <span class="c1"># the meaning of the --show-deleted/-d setting is a little</span>
+        <span class="c1"># different than explained. Any non-COMPLETE build will</span>
+        <span class="c1"># normally show no archives, but with that setting enabled,</span>
+        <span class="c1"># any state will show archives if the data is recorded in</span>
+        <span class="c1"># koji.</span>
+        <span class="k">if</span> <span class="n">deleted</span> <span class="ow">or</span> <span class="n">binfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">BUILD_COMPLETE</span><span class="p">:</span>
+            <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
+                                               <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">atypes</span><span class="p">:</span>
-        <span class="n">found</span> <span class="o">=</span> <span class="n">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">atypes</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">atypes</span><span class="p">,</span> <span class="n">arches</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
         <span class="n">pretty_json</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="k">return</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">])</span></div>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="cli_latest_tag_archives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.cli_latest_tag_archives">[docs]</a><span class="k">def</span> <span class="nf">cli_latest_tag_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
-                            <span class="n">atypes</span><span class="o">=</span><span class="p">(),</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
+                            <span class="n">atypes</span><span class="o">=</span><span class="p">(),</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
                             <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">found</span> <span class="o">=</span> <span class="n">gather_latest_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
                                    <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">inherit</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">atypes</span><span class="p">:</span>
-        <span class="n">found</span> <span class="o">=</span> <span class="n">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">atypes</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">found</span><span class="p">,</span> <span class="n">atypes</span><span class="p">,</span> <span class="n">arches</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
         <span class="n">pretty_json</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="k">return</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="ArchiveDingo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveDingo">[docs]</a><span class="k">class</span> <span class="nc">ArchiveDingo</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
-
-    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="ArchiveDingo.archive_arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveDingo.archive_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">archive_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="ArchiveFiltering"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveFiltering">[docs]</a><span class="k">class</span> <span class="nc">ArchiveFiltering</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="ArchiveFiltering.archive_arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveFiltering.archive_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">archive_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">goptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span>
 
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
@@ -140,32 +146,41 @@
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--build-type&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TYPE&quot;</span><span class="p">,</span>
                <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;btype&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--type&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TYPE&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;btype&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only show archives for the given build type. Example&quot;</span>
                <span class="s2">&quot; types are rpm, maven, image, win. Default: show all&quot;</span>
                <span class="s2">&quot; archives.&quot;</span><span class="p">)</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--rpm&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;btype&quot;</span><span class="p">,</span>
                <span class="n">const</span><span class="o">=</span><span class="s2">&quot;rpm&quot;</span><span class="p">,</span>
-               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;--build-type=rpm&quot;</span><span class="p">)</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Synonym for --type=rpm&quot;</span><span class="p">)</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--maven&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;btype&quot;</span><span class="p">,</span>
                <span class="n">const</span><span class="o">=</span><span class="s2">&quot;maven&quot;</span><span class="p">,</span>
-               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;--build-type=maven&quot;</span><span class="p">)</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Synonym for --type=maven&quot;</span><span class="p">)</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--image&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;btype&quot;</span><span class="p">,</span>
                <span class="n">const</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">,</span>
-               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;--build-type=image&quot;</span><span class="p">)</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Synonym for --type=image&quot;</span><span class="p">)</span>
 
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--win&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;btype&quot;</span><span class="p">,</span>
                <span class="n">const</span><span class="o">=</span><span class="s2">&quot;win&quot;</span><span class="p">,</span>
-               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;--build-type=win&quot;</span><span class="p">)</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Synonym for --type=win&quot;</span><span class="p">)</span>
 
         <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Archive Filtering Options&quot;</span><span class="p">)</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
 
-        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--archive-type&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;EXT&quot;</span><span class="p">,</span>
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--archive-type&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;EXT&quot;</span><span class="p">,</span>
                <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;atypes&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only show archives with the given archive type.&quot;</span>
+               <span class="s2">&quot; Can be specified multiple times. Default: show all&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--arch&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;arches&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only show archives with the given arch.&quot;</span>
                <span class="s2">&quot; Can be specified multiple times. Default: show all&quot;</span><span class="p">)</span>
 
         <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;RPM Options&quot;</span><span class="p">)</span>
@@ -187,8 +202,9 @@
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="ArchiveDingo.validate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveDingo.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="ArchiveFiltering.validate_archive_options"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveFiltering.validate_archive_options">[docs]</a>    <span class="k">def</span> <span class="nf">validate_archive_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="n">options</span><span class="o">.</span><span class="n">atypes</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">atypes</span><span class="p">)</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">arches</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">arches</span><span class="p">)</span>
 
         <span class="n">keys</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">keys</span> <span class="ow">and</span> <span class="n">options</span><span class="o">.</span><span class="n">unsigned</span><span class="p">:</span>
@@ -196,7 +212,7 @@
         <span class="n">options</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span></div></div>
 
 
-<div class="viewcode-block" id="ListBuildArchives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives">[docs]</a><span class="k">class</span> <span class="nc">ListBuildArchives</span><span class="p">(</span><span class="n">ArchiveDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="ListBuildArchives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives">[docs]</a><span class="k">class</span> <span class="nc">ListBuildArchives</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">ArchiveFiltering</span><span class="p">):</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;List archives from a build&quot;</span>
 
@@ -204,23 +220,34 @@
 <div class="viewcode-block" id="ListBuildArchives.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
 
-        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;nvr&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NVR&quot;</span><span class="p">,</span>
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;nvrs&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NVR&quot;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The NVR containing the archives&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--show-deleted&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;deleted&quot;</span><span class="p">,</span>
+               <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show archives for a deleted build. Default, deleted&quot;</span>
+               <span class="s2">&quot; builds show an empty archive list&quot;</span><span class="p">)</span>
 
         <span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">archive_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
+<div class="viewcode-block" id="ListBuildArchives.validate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_archive_options</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="ListBuildArchives.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">cli_list_build_archives</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">nvr</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">cli_list_build_archives</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">nvrs</span><span class="p">,</span>
                                        <span class="n">btype</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">btype</span><span class="p">,</span>
                                        <span class="n">atypes</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">atypes</span><span class="p">,</span>
+                                       <span class="n">arches</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">arches</span><span class="p">,</span>
                                        <span class="n">rpmkeys</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span>
+                                       <span class="n">deleted</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">deleted</span><span class="p">,</span>
                                        <span class="n">path</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
                                        <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="LatestArchives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.LatestArchives">[docs]</a><span class="k">class</span> <span class="nc">LatestArchives</span><span class="p">(</span><span class="n">ArchiveDingo</span><span class="p">):</span>
+<div class="viewcode-block" id="LatestArchives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.LatestArchives">[docs]</a><span class="k">class</span> <span class="nc">LatestArchives</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">ArchiveFiltering</span><span class="p">):</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;List latest archives from a tag&quot;</span>
 
@@ -239,10 +266,15 @@
         <span class="k">return</span> <span class="n">parser</span></div>
 
 
+<div class="viewcode-block" id="LatestArchives.validate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.LatestArchives.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_archive_options</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="LatestArchives.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.LatestArchives.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cli_latest_tag_archives</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span>
                                        <span class="n">btype</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">btype</span><span class="p">,</span>
                                        <span class="n">atypes</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">atypes</span><span class="p">,</span>
+                                       <span class="n">arches</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">arches</span><span class="p">,</span>
                                        <span class="n">rpmkeys</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span>
                                        <span class="n">inherit</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">inherit</span><span class="p">,</span>
                                        <span class="n">path</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
@@ -281,7 +313,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -289,7 +321,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

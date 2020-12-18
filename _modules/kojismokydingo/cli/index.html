@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -75,15 +75,39 @@
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">json</span> <span class="k">import</span> <span class="n">dump</span>
 <span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">GenericError</span>
 <span class="kn">from</span> <span class="nn">koji_cli.lib</span> <span class="k">import</span> <span class="n">activate_session</span><span class="p">,</span> <span class="n">ensure_connection</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">devnull</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">basename</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">add_metaclass</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">zip_longest</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="n">zip_longest</span>
 
-<span class="kn">from</span> <span class="nn">kojismokydingo</span> <span class="k">import</span> <span class="n">BadDingo</span><span class="p">,</span> <span class="n">NotPermitted</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">BadDingo</span><span class="p">,</span> <span class="n">NotPermitted</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;AdminSmokyDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AnonSmokyDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HostSmokyDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SmokyDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TagSmokyDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TargetSmokyDingo&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;clean_lines&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;find_action&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;remove_action&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;int_or_str&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;open_output&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pretty_json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;printerr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;read_clean_lines&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resplit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;space_normalize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tabulate&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="c1"># these mimic the default format for jq output</span>
@@ -124,6 +148,39 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="find_action"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.find_action">[docs]</a><span class="k">def</span> <span class="nf">find_action</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hunts through a parser to discover an action whose dest, metavar,</span>
+<span class="sd">    or option strings matches the given key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">act</span><span class="o">.</span><span class="n">dest</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="n">act</span><span class="o">.</span><span class="n">metavar</span> \
+           <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">act</span><span class="o">.</span><span class="n">option_strings</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">act</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="remove_action"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.remove_action">[docs]</a><span class="k">def</span> <span class="nf">remove_action</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hunts through a parser to remove an action based on the given key. The</span>
+<span class="sd">    key can match either the dest, the metavar, or the option strings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="n">find_action</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">_actions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">_optionals</span><span class="o">.</span><span class="n">_actions</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">_optionals</span><span class="o">.</span><span class="n">_actions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">_action_groups</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">grp</span><span class="o">.</span><span class="n">_group_actions</span><span class="p">:</span>
+            <span class="n">grp</span><span class="o">.</span><span class="n">_group_actions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">found</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="resplit"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.resplit">[docs]</a><span class="k">def</span> <span class="nf">resplit</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Collapses comma-separated and multi-specified items into a single</span>
@@ -139,8 +196,49 @@
 <span class="sd">    ``x = [1, 2, 3, 4, 5, 6, 7, 8]``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">work</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">work</span> <span class="k">if</span> <span class="n">a</span><span class="p">]</span></div>
+    <span class="n">work</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">work</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="open_output"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.open_output">[docs]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">open_output</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Context manager for a CLI output file.</span>
+
+<span class="sd">    Files will be opened for text-mode output, and closed when the</span>
+<span class="sd">    context exits.</span>
+
+<span class="sd">    If the filename is ``&quot;-&quot;`` then stdout will be used as the output file</span>
+<span class="sd">    stream, but it will not be closed.</span>
+
+<span class="sd">    If the filename is ``&quot;&quot;`` or ``None`` then `os.devnull` will be used.</span>
+
+<span class="sd">    If append is True, the file will be appended to. If append is</span>
+<span class="sd">    False, the file will be overwritten. If append is None, then the</span>
+<span class="sd">    file will be overwriten unless it specified with a prefix of</span>
+<span class="sd">    ``&quot;@&quot;``. This prefix will be stripped from the filename in this</span>
+<span class="sd">    case only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">append</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">):</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">append</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">append</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">devnull</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;at&quot;</span> <span class="k">if</span> <span class="n">append</span> <span class="k">else</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">stream</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="o">!=</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="clean_lines"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.clean_lines">[docs]</a><span class="k">def</span> <span class="nf">clean_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">skip_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -168,8 +266,9 @@
     <span class="k">if</span> <span class="n">skip_comments</span><span class="p">:</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span><span class="p">]</span></div>
+        <span class="n">lines</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="read_clean_lines"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.read_clean_lines">[docs]</a><span class="k">def</span> <span class="nf">read_clean_lines</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">skip_comments</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -270,7 +369,7 @@
     <span class="c1"># convert data to a list, and apply the key if necessary to find</span>
     <span class="c1"># the real columns</span>
     <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sorting</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="p">(</span><span class="n">sorting</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">))</span>
@@ -302,8 +401,37 @@
 
 
 <div class="viewcode-block" id="space_normalize"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.space_normalize">[docs]</a><span class="k">def</span> <span class="nf">space_normalize</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
-    <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">txt</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">t</span><span class="p">)</span></div>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Normalizes the whitespace in txt to single spaces.</span>
+
+<span class="sd">    :param txt: Original text</span>
+<span class="sd">    :type txt: str</span>
+
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">txt</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="int_or_str"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.int_or_str">[docs]</a><span class="k">def</span> <span class="nf">int_or_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For use as an argument type where the value may be either an int</span>
+<span class="sd">    (if it is entirely numeric) or a str.</span>
+
+<span class="sd">    :rtype: str or int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">value</span></div>
 
 
 <div class="viewcode-block" id="SmokyDingo"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo">[docs]</a><span class="nd">@add_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)</span>
@@ -349,12 +477,19 @@
     <span class="n">permission</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># check that the class doesn&#39;t already define a name as a</span>
+            <span class="c1"># default. Failing that, use a squished version of the</span>
+            <span class="c1"># classname</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
         <span class="c1"># this is used to register the command with koji in a manner</span>
         <span class="c1"># that it expects to deal with</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;handle_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;handle_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
 
         <span class="c1"># this is necessary for koji to recognize us as a cli command.</span>
         <span class="c1"># We only set this on instances, not on the class itself,</span>
@@ -513,7 +648,7 @@
     <span class="n">permission</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># koji won&#39;t even bother fully authenticating our session for</span>
@@ -606,14 +741,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

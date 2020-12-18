@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.archives &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo.archives &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -70,7 +70,7 @@
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">join</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iterkeys</span><span class="p">,</span> <span class="n">iteritems</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">bulk_load_rpm_sigs</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">as_buildinfo</span><span class="p">,</span> <span class="n">as_taginfo</span><span class="p">,</span> <span class="n">bulk_load_rpm_sigs</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -106,7 +106,7 @@
         <span class="k">return</span> <span class="n">PathInfo</span><span class="p">(</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="filter_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.filter_archives">[docs]</a><span class="k">def</span> <span class="nf">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">archive_types</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_archives"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.filter_archives">[docs]</a><span class="k">def</span> <span class="nf">filter_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">archive_types</span><span class="o">=</span><span class="p">(),</span> <span class="n">arches</span><span class="o">=</span><span class="p">()):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a list of archives (or RPMs dressed up like archives),</span>
 <span class="sd">    return a new list of those archives which are of the given archive</span>
@@ -120,8 +120,15 @@
 
 <span class="sd">    :type archive_types: list[str]</span>
 
+<span class="sd">    :param arches: Desired architectures</span>
+
+<span class="sd">    :type arches: list[str]</span>
+
 <span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">archive_types</span> <span class="ow">or</span> <span class="n">arches</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">archives</span>
 
     <span class="c1"># convert the list of string extensions from atypes into a set of</span>
     <span class="c1"># archive type IDs</span>
@@ -140,12 +147,12 @@
 
     <span class="c1"># find only those archives whose type_id is in the set of desired</span>
     <span class="c1"># archive types</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;type_id&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">atypes</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">result</span></div>
+    <span class="k">def</span> <span class="nf">filter_fn</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">((</span><span class="ow">not</span> <span class="n">atypes</span> <span class="ow">or</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;type_id&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">atypes</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="n">arches</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;arch&quot;</span><span class="p">,</span> <span class="s2">&quot;noarch&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">arches</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">,</span> <span class="n">archives</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="gather_signed_rpms"><a class="viewcode-back" href="../../../kojismokydingo/archives/#kojismokydingo.archives.gather_signed_rpms">[docs]</a><span class="k">def</span> <span class="nf">gather_signed_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span> <span class="n">sigkeys</span><span class="p">):</span>
@@ -332,21 +339,35 @@
 <span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">binfo</span> <span class="o">=</span> <span class="n">as_buildinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">)</span>
+
     <span class="n">known_types</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;rpm&quot;</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
 
+    <span class="c1"># Check for a decorated list of build types. If not present, then</span>
+    <span class="c1"># get it from koji directly. Having this allows us to avoid</span>
+    <span class="c1"># querying koji for archives of a btype that the build doesn&#39;t</span>
+    <span class="c1"># have.</span>
+    <span class="n">build_types</span> <span class="o">=</span> <span class="n">binfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">build_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">build_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getBuildType</span><span class="p">(</span><span class="n">binfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">and</span> <span class="n">btype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">build_types</span><span class="p">:</span>
+        <span class="c1"># we already know we&#39;ll find nothing, so don&#39;t bother asking</span>
+        <span class="k">return</span> <span class="n">found</span>
+
     <span class="n">path</span> <span class="o">=</span> <span class="n">as_pathinfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;rpm&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;rpm&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;rpm&quot;</span> <span class="ow">in</span> <span class="n">build_types</span><span class="p">:</span>
         <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;maven&quot;</span> <span class="ow">in</span> <span class="n">build_types</span><span class="p">:</span>
         <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_maven_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;win&quot;</span> <span class="ow">in</span> <span class="n">build_types</span><span class="p">:</span>
         <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_win_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;image&quot;</span> <span class="ow">in</span> <span class="n">build_types</span><span class="p">:</span>
         <span class="n">found</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gather_build_image_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">binfo</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">btype</span> <span class="ow">in</span> <span class="n">known_types</span><span class="p">:</span>
@@ -597,12 +618,17 @@
 
 <span class="sd">    :type path: str</span>
 
+<span class="sd">    :raises NoSuchTag: if specified tag doesn&#39;t exist</span>
+
 <span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">taginfo</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">NoSuchTag</span><span class="p">(</span><span class="n">tagname</span><span class="p">)</span>
+    <span class="c1"># we&#39;ll cheat a bit and use as_taginfo to verify that the tag</span>
+    <span class="c1"># exists -- it will raise a NoSuchTag for us if necessary. We</span>
+    <span class="c1"># aren&#39;t doing any such checking in the lower-level per-type</span>
+    <span class="c1"># gather functions.</span>
+    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">)</span>
+    <span class="n">tagname</span> <span class="o">=</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
     <span class="n">known_types</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;rpm&quot;</span><span class="p">,</span> <span class="s2">&quot;maven&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
@@ -710,14 +736,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

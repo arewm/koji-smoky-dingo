@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji list-component-builds &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>koji list-component-builds &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../list-cgs/" title="koji list-cgs"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,15 +51,20 @@
             
   <div class="section" id="koji-list-component-builds">
 <h1>koji list-component-builds<a class="headerlink" href="#koji-list-component-builds" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji list-component-builds [-h] [-f NVR_FILE] [--tag TAG] [--inherit]
-                                  [--latest] [--nvr-sort | --id-sort]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usage: koji list-component-builds [-h] [-f NVR_FILE] [--strict] [--tag TAG]
+                                  [--inherit] [--latest]
+                                  [--nvr-sort | --id-sort]
                                   [--lookaside LOOKASIDE]
                                   [--shallow-lookaside SHALLOW_LOOKASIDE]
                                   [--limit LIMIT]
                                   [--shallow-limit SHALLOW_LIMIT]
-                                  [--type BTYPES] [-c CG_NAME]
+                                  [--type BUILD_TYPE] [--rpm] [--maven]
+                                  [--image] [--win] [-c CG_NAME]
                                   [--imports | --no-imports]
                                   [--completed | --deleted]
+                                  [--param KEY=VALUE] [--env-params]
+                                  [--output FLAG:FILENAME]
+                                  [--filter FILTER | --filter-file FILTER_FILE]
                                   [NVR [NVR ...]]
 
 List a build&#39;s component dependencies
@@ -72,6 +77,8 @@ optional arguments:
   -f NVR_FILE, --file NVR_FILE
                         Read list of builds from file, one NVR per line.
                         Specify - to read from stdin.
+  --strict              Error if any of the NVRs do not resolve into a real
+                        build. Otherwise, bad NVRs are ignored.
 
 Components of tagged builds:
   --tag TAG             Look for components of builds in this tag
@@ -93,7 +100,14 @@ Filtering by tag:
                         Limit results to builds found directly in this tag
 
 Filtering by type:
-  --type BTYPES         Limit to builds of this BType
+  --type BUILD_TYPE     Limit to builds with this BType. May be specified
+                        multiple times to allow for more than one type.
+  --rpm                 Synonym for --type=rpm
+  --maven               Synonym for --type=maven
+  --image               Synonym for --type=image
+  --win                 Synonym for --type=win
+
+Filtering by origin:
   -c CG_NAME, --content-generator CG_NAME
                         show content generator imports by build system name.
                         Default: display no CG builds. Specify &#39;any&#39; to see CG
@@ -105,6 +119,20 @@ Filtering by type:
 Filtering by state:
   --completed           Limit to completed builds
   --deleted             Limit to deleted builds
+
+Filtering with Sifty sieves:
+  --param KEY=VALUE, -P KEY=VALUE
+                        Provide compile-time values to the sifty filter
+                        expressions
+  --env-params          Use environment vars for params left unassigned
+  --output FLAG:FILENAME, -o FLAG:FILENAME
+                        Divert results marked with the given FLAG to FILENAME.
+                        If FILENAME is &#39;-&#39;, output to stdout. The &#39;default&#39;
+                        flag is output to stdout by default, and other flags
+                        are discarded
+  --filter FILTER       Use the given sifty filter predicates
+  --filter-file FILTER_FILE
+                        Load sifty filter predictes from file
 </pre></div>
 </div>
 <p>This command identifies the builds used to produce another build.</p>
@@ -117,6 +145,16 @@ lists will be concatenated in that order.</p>
 <p>If no NVRs are given as arguments, and the <code class="docutils literal notranslate"><span class="pre">--file</span></code> option isn't
 specified, and stdin is detected to not be a TTY, then the list of
 NVRs will be read from stdin.</p>
+<div class="section" id="filtering-builds-with-sifty-dingo">
+<h2>Filtering Builds with Sifty Dingo<a class="headerlink" href="#filtering-builds-with-sifty-dingo" title="Permalink to this headline">¶</a></h2>
+<p>This command supports filtering using the <a class="reference internal" href="../../siftylang/#sifty-dingo-filtering-language"><span class="std std-ref">Sifty Dingo Filtering Language</span></a>. Sieve predicates can be specified inline using the
+<code class="docutils literal notranslate"><span class="pre">--filter</span></code> option or loaded from a file using the <code class="docutils literal notranslate"><span class="pre">--filter-file</span></code>
+option.</p>
+<p>It's important to note that sifty dingo filtering only happens after
+any conventional filtering has been applied, and thus only those
+builds which have passed the conventional filters will be fed into the
+sifter.</p>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -135,6 +173,7 @@ NVRs will be read from stdin.</p>
   <h3><a href="../../">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">koji list-component-builds</a><ul>
+<li><a class="reference internal" href="#filtering-builds-with-sifty-dingo">Filtering Builds with Sifty Dingo</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -182,13 +221,13 @@ NVRs will be read from stdin.</p>
         <li class="right" >
           <a href="../list-cgs/" title="koji list-cgs"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

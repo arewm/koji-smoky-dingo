@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -60,8 +60,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Koji Smoky Dingo - tags and targets</span>
 
-<span class="sd">:author: cobrien@redhat.com</span>
-<span class="sd">:license: GPL version 3</span>
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -76,10 +76,22 @@
     <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_tags</span><span class="p">)</span>
 
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;collect_tag_extras&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;convert_tag_extras&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ensure_tag&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;find_inheritance_parent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gather_affected_targets&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gather_tag_ids&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;renum_inheritance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resolve_tag&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
 <div class="viewcode-block" id="ensure_tag"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.ensure_tag">[docs]</a><span class="k">def</span> <span class="nf">ensure_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a name, resolve it to a tag info dict. If there is no such</span>
-<span class="sd">    tag, then create it first.</span>
+<span class="sd">    tag, then create it and return its newly created tag info.</span>
 
 <span class="sd">    :param name: tag name</span>
 
@@ -135,7 +147,24 @@
     <span class="k">return</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_affected_targets"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.get_affected_targets">[docs]</a><span class="k">def</span> <span class="nf">get_affected_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagnames</span><span class="p">):</span>
+<div class="viewcode-block" id="gather_affected_targets"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.gather_affected_targets">[docs]</a><span class="k">def</span> <span class="nf">gather_affected_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagnames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the list of target info dicts representing the targets</span>
+<span class="sd">    which inherit any of the given named tags. That is to say, the</span>
+<span class="sd">    targets whose build tags are children of the named tags.</span>
+
+<span class="sd">    This list allows us to gauge what build configurations would be</span>
+<span class="sd">    impacted by changes to the given tags.</span>
+
+<span class="sd">    :param tagnames: List of tag names</span>
+
+<span class="sd">    :type tagnames: list[str]</span>
+
+<span class="sd">    :raises NoSuchTag: if any of the names do not resolve to a tag</span>
+<span class="sd">      info</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">tagnames</span><span class="p">)]</span>
 
@@ -154,9 +183,26 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">multiCall</span><span class="p">()</span> <span class="k">if</span> <span class="n">t</span><span class="p">)))</span></div>
 
 
-<div class="viewcode-block" id="renum_inheritance"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.renum_inheritance">[docs]</a><span class="k">def</span> <span class="nf">renum_inheritance</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="renum_inheritance"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.renum_inheritance">[docs]</a><span class="k">def</span> <span class="nf">renum_inheritance</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    a new copy of the tag inheritance data, renumbered</span>
+<span class="sd">    Create a new copy of the tag inheritance data with the priority</span>
+<span class="sd">    values renumbered. Ordering is preserved.</span>
+
+<span class="sd">    :param inheritance: Inheritance structure data</span>
+
+<span class="sd">    :type inheritance: list[dict]</span>
+
+<span class="sd">    :param begin: Starting point for renumbering priority</span>
+<span class="sd">      values. Default, 0</span>
+
+<span class="sd">    :type begin: int, optional</span>
+
+<span class="sd">    :param step: Priority value increment for each priority after the</span>
+<span class="sd">      first. Default, 10</span>
+
+<span class="sd">    :type step: int, optional</span>
+
+<span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">renumbered</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -171,9 +217,11 @@
 
 <div class="viewcode-block" id="find_inheritance_parent"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.find_inheritance_parent">[docs]</a><span class="k">def</span> <span class="nf">find_inheritance_parent</span><span class="p">(</span><span class="n">inheritance</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the parent link in the inheritance list with the given tag ID.</span>
+
 <span class="sd">    :param inheritance: the output of a getFullInheritance call</span>
 
-<span class="sd">    :type inheritance: list(dict)</span>
+<span class="sd">    :type inheritance: list[dict]</span>
 
 <span class="sd">    :param parent_id: the ID of a parent tag to look for in the</span>
 <span class="sd">        inheritance data.</span>
@@ -184,17 +232,34 @@
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inheritance</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">parent_id</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">inheritance</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">parent</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">parent_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parent</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="convert_tag_extras"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.convert_tag_extras">[docs]</a><span class="k">def</span> <span class="nf">convert_tag_extras</span><span class="p">(</span><span class="n">taginfo</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides a merged view of the tag extra settings for a tag. The</span>
+<span class="sd">    extras are decorated with additional keys:</span>
+
+<span class="sd">      * name - str, the name of the setting</span>
+<span class="sd">      * blocked - bool, whether the setting is blocked</span>
+<span class="sd">      * tag_name - str, the name of the tag that provided this setting</span>
+<span class="sd">      * tag_id - int, the ID of the tag that provided this setting</span>
+
+<span class="sd">    When into is not None, then only settings which are not already</span>
+<span class="sd">    present in that dict will be set. This behavior is used by</span>
+<span class="sd">    :py:func:`collect_tag_extras` to merge the extra settings across a</span>
+<span class="sd">    tag and all its parents into a single dict.</span>
+
+<span class="sd">    :param taginfo: A koji tag info dict</span>
+
+<span class="sd">    :type taginfo: dict</span>
+
 <span class="sd">    :param into: Existing dict to collect extras into. Default, create</span>
-<span class="sd">        a new OrderedDict</span>
+<span class="sd">        a new OrderedDict.</span>
 
 <span class="sd">    :type into: dict, optional</span>
 
@@ -208,7 +273,11 @@
 
     <span class="n">found</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">into</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">into</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;extra&quot;</span><span class="p">]):</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="n">taginfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extra&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">extra</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">found</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">extra</span><span class="p">):</span>
 
         <span class="c1"># check whether the taginfo was gathered with blocks included.</span>
         <span class="c1"># See https://pagure.io/koji/pull-request/2495#_4__40</span>
@@ -358,14 +427,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

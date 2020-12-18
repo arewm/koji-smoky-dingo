@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -67,6 +67,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">BUILD_STATES</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
@@ -78,10 +80,49 @@
     <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_build_archives</span><span class="p">,</span> <span class="n">bulk_load_build_rpms</span><span class="p">,</span>
     <span class="n">bulk_load_builds</span><span class="p">,</span> <span class="n">bulk_load_buildroots</span><span class="p">,</span>
     <span class="n">bulk_load_buildroot_archives</span><span class="p">,</span> <span class="n">bulk_load_buildroot_rpms</span><span class="p">,</span>
-    <span class="n">bulk_load_tasks</span><span class="p">)</span>
+    <span class="n">bulk_load_rpm_sigs</span><span class="p">,</span> <span class="n">bulk_load_tasks</span><span class="p">,</span> <span class="n">iter_bulk_load</span><span class="p">,</span> <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">chunkseq</span><span class="p">,</span> <span class="n">merge_extend</span><span class="p">,</span> <span class="n">rpm_evr_compare</span><span class="p">,</span>
-    <span class="n">unique</span><span class="p">,</span> <span class="n">update_extend</span><span class="p">)</span>
+    <span class="n">unique</span><span class="p">,</span> <span class="n">update_extend</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;BUILD_BUILDING&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BUILD_COMPLETE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BUILD_DELETED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BUILD_FAILED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BUILD_CANCELED&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;BuildFilter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BuildNEVRCompare&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;build_dedup&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;build_id_sort&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;build_nvr_sort&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_tag_builds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bulk_tag_nvrs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;decorate_builds_btypes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;decorate_builds_cg_list&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;decorate_builds_maven&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filter_by_state&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filter_by_tags&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filter_imported&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gather_buildroots&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gather_rpm_sigkeys&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gather_component_build_ids&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gather_wrapped_builds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gavgetter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;iter_bulk_tag_builds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;iter_latest_maven_builds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;latest_maven_builds&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">BUILD_BUILDING</span> <span class="o">=</span> <span class="n">BUILD_STATES</span><span class="p">[</span><span class="s2">&quot;BUILDING&quot;</span><span class="p">]</span>
+<span class="n">BUILD_COMPLETE</span> <span class="o">=</span> <span class="n">BUILD_STATES</span><span class="p">[</span><span class="s2">&quot;COMPLETE&quot;</span><span class="p">]</span>
+<span class="n">BUILD_DELETED</span> <span class="o">=</span> <span class="n">BUILD_STATES</span><span class="p">[</span><span class="s2">&quot;DELETED&quot;</span><span class="p">]</span>
+<span class="n">BUILD_FAILED</span> <span class="o">=</span> <span class="n">BUILD_STATES</span><span class="p">[</span><span class="s2">&quot;FAILED&quot;</span><span class="p">]</span>
+<span class="n">BUILD_CANCELED</span> <span class="o">=</span> <span class="n">BUILD_STATES</span><span class="p">[</span><span class="s2">&quot;CANCELED&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="BuildNEVRCompare"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildNEVRCompare">[docs]</a><span class="k">class</span> <span class="nc">BuildNEVRCompare</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -133,6 +174,8 @@
 <span class="sd">    If dedup is True (the default), then duplicate NVRs will be</span>
 <span class="sd">    omitted.</span>
 
+<span class="sd">    All None infos will be dropped.</span>
+
 <span class="sd">    :param build_infos: build infos to be sorted and de-duplicated</span>
 <span class="sd">    :type build_infos: list[dict]</span>
 
@@ -142,9 +185,10 @@
 <span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">build_infos</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">dedup</span><span class="p">:</span>
-        <span class="n">dd</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="n">b</span><span class="p">)</span>
-        <span class="n">build_infos</span> <span class="o">=</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">dd</span><span class="p">)</span>
+        <span class="n">build_infos</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">BuildNEVRCompare</span><span class="p">)</span></div>
 
@@ -154,6 +198,8 @@
 <span class="sd">    Given a sequence of build info dictionaries, return a de-duplicated</span>
 <span class="sd">    list of same, sorted by the build ID</span>
 
+<span class="sd">    All None infos will be dropped.</span>
+
 <span class="sd">    :param build_infos: build infos to be sorted and de-duplicated</span>
 <span class="sd">    :type build_infos: list[dict]</span>
 
@@ -163,11 +209,12 @@
 <span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">build_infos</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">dedup</span><span class="p">:</span>
-        <span class="n">builds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="n">b</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">_bid</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iteritems</span><span class="p">(</span><span class="n">builds</span><span class="p">))]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span></div>
+        <span class="n">build_infos</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="build_dedup"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.build_dedup">[docs]</a><span class="k">def</span> <span class="nf">build_dedup</span><span class="p">(</span><span class="n">build_infos</span><span class="p">):</span>
@@ -175,14 +222,15 @@
 <span class="sd">    Given a sequence of build info dictionaries, return a de-duplicated</span>
 <span class="sd">    list of same, with order preserved.</span>
 
+<span class="sd">    All None infos will be dropped.</span>
+
 <span class="sd">    :param build_infos: build infos to be de-duplicated.</span>
 <span class="sd">    :type build_infos: list[dict]</span>
 
 <span class="sd">    :rtype: list[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">dedup</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="n">b</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">dedup</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">unique</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="iter_bulk_tag_builds"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.iter_bulk_tag_builds">[docs]</a><span class="k">def</span> <span class="nf">iter_bulk_tag_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
@@ -361,25 +409,155 @@
                            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="decorate_build_archive_data"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.decorate_build_archive_data">[docs]</a><span class="k">def</span> <span class="nf">decorate_build_archive_data</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span> <span class="n">with_cg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="n">gavgetter</span> <span class="o">=</span> <span class="n">itemgetter</span><span class="p">(</span><span class="s2">&quot;maven_group_id&quot;</span><span class="p">,</span> <span class="s2">&quot;maven_artifact_id&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;maven_version&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="iter_latest_maven_builds"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.iter_latest_maven_builds">[docs]</a><span class="k">def</span> <span class="nf">iter_latest_maven_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">pkg_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Yields ``((G, A, V), build_info)`` representing the latest build for</span>
+<span class="sd">    each GAV in the tag.</span>
+
+<span class="sd">    If pkg_names is given, then only those builds matching the given</span>
+<span class="sd">    package names are yielded.</span>
+
+<span class="sd">    :rtype: Generator[tuple[str], dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">taginfo</span> <span class="o">=</span> <span class="n">as_taginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+    <span class="n">tid</span> <span class="o">=</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">pkg_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># pkgs = session.listPackages(tid, inherited=True)</span>
+        <span class="c1"># pkg_names = [p[&#39;package_name&#39;] for p in pkgs if not p[&#39;blocked&#39;]]</span>
+        <span class="n">pkg_names</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pkg_names</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">pkg_names</span><span class="p">)</span>
+
+    <span class="n">latest</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listTagged</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="n">inherit</span><span class="p">,</span>
+                                      <span class="n">package</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;maven&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">pkg</span><span class="p">,</span> <span class="n">builds</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">pkg_names</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">builds</span><span class="p">:</span>
+            <span class="n">gav</span> <span class="o">=</span> <span class="n">gavgetter</span><span class="p">(</span><span class="n">bld</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">gav</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">latest</span><span class="p">:</span>
+                <span class="n">latest</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gav</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">gav</span><span class="p">,</span> <span class="n">bld</span></div>
+
+
+<div class="viewcode-block" id="latest_maven_builds"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.latest_maven_builds">[docs]</a><span class="k">def</span> <span class="nf">latest_maven_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">pkg_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dict mapping each (G, A, V) to a build_info dict,</span>
+<span class="sd">    representing the latest build for each GAV in the tag.</span>
+
+<span class="sd">    If pkg_names is given, then only those builds matching the given</span>
+<span class="sd">    package names are returned.</span>
+
+<span class="sd">    :rtype: dict[tuple[str], dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">builds</span> <span class="o">=</span> <span class="n">iter_latest_maven_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">pkg_names</span><span class="p">,</span> <span class="n">inherit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="decorate_builds_maven"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.decorate_builds_maven">[docs]</a><span class="k">def</span> <span class="nf">decorate_builds_maven</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For any build info which does not have a maven_group_id and hasn&#39;t</span>
+<span class="sd">    already been checked for additional btype data, augment the btype</span>
+<span class="sd">    data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">build_infos</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">build_infos</span><span class="p">)</span>
+
+    <span class="n">wanted</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">bld</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span>
+                   <span class="p">(</span><span class="s2">&quot;maven_group_id&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bld</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">wanted</span><span class="p">:</span>
+        <span class="n">decorate_builds_btypes</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">wanted</span><span class="p">,</span> <span class="n">with_fields</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">build_infos</span></div>
+
+
+<div class="viewcode-block" id="decorate_builds_btypes"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.decorate_builds_btypes">[docs]</a><span class="k">def</span> <span class="nf">decorate_builds_btypes</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span> <span class="n">with_fields</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Augments a list of build_info dicts with two new keys:</span>
+
+<span class="sd">    * archive_btype_ids is a list of BType IDs for the build</span>
+
+<span class="sd">    * archive_btype_names is a list of BType names for the build</span>
+
+<span class="sd">    Returns a tuple of the original input of build_infos. Any</span>
+<span class="sd">    build_infos which had not been previously decorated will be</span>
+<span class="sd">    mutated with their new keys.</span>
+
+<span class="sd">    If with_fields is True (the default) then any special btype fields</span>
+<span class="sd">    will be merged into the build info dict as well.</span>
+
+<span class="sd">    :param session: an active koji session</span>
+
+<span class="sd">    :type session: koji.ClientSession</span>
+
+<span class="sd">    :param build_infos: list of build infos to decorate and return</span>
+
+<span class="sd">    :type build_infos: list[dict] or Iterator[dict]</span>
+
+<span class="sd">    :param with_fields: also decorate btype-specific fields. Default,</span>
+<span class="sd">      True</span>
+
+<span class="sd">    :type with_fields: bool, optional</span>
+
+<span class="sd">    :rtype: tuple[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">build_infos</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">build_infos</span><span class="p">)</span>
+
+    <span class="n">wanted</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">bld</span><span class="p">)</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span>
+                  <span class="s2">&quot;archive_btype_names&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bld</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">wanted</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">build_infos</span>
+
+    <span class="n">btypes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bt</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">bt</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">listBTypes</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">bid</span><span class="p">,</span> <span class="n">bts</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildType</span><span class="p">,</span> <span class="n">wanted</span><span class="p">):</span>
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">wanted</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span>
+
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">btype_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bts</span><span class="p">)</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">btypes</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">btype_names</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">with_fields</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">btn</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">bts</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">btn</span> <span class="o">==</span> <span class="s2">&quot;win&quot;</span><span class="p">:</span>
+                <span class="c1"># the win field doesn&#39;t get prefixed with &quot;win_&quot;</span>
+                <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;platform&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;platform&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># everything else gets prefixed with its type name and</span>
+                <span class="c1"># an underscore</span>
+                <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;build_id&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                    <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">btn</span><span class="p">,</span> <span class="n">key</span><span class="p">))]</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">return</span> <span class="n">build_infos</span></div>
+
+
+<div class="viewcode-block" id="decorate_builds_cg_list"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.decorate_builds_cg_list">[docs]</a><span class="k">def</span> <span class="nf">decorate_builds_cg_list</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Augments a list of build_info dicts with two or four new keys:</span>
 
-<span class="sd">    * archive_btype_ids is a set of btype IDs for each archive of the</span>
-<span class="sd">      build</span>
+<span class="sd">    * archive_cg_ids is a list of content generator IDs for each</span>
+<span class="sd">      archive of the build</span>
 
-<span class="sd">    * archive_btype_names is a set of btype names for each archive of</span>
-<span class="sd">      the build</span>
+<span class="sd">    * archive_cg_names is a list of content generator names for each</span>
+<span class="sd">      archive of the build</span>
 
-<span class="sd">    * archive_cg_ids is a set of content generator IDs for each</span>
-<span class="sd">      archive of the build if with_cg is True, absent if with_cg is</span>
-<span class="sd">      False</span>
-
-<span class="sd">    * archive_cg_names is a set of content generator names for each</span>
-<span class="sd">      archive of the build if with_cg is True, absent if with_cg is</span>
-<span class="sd">      False</span>
-
-<span class="sd">    Returns a de-duplicated sequence of the build_infos. Any</span>
+<span class="sd">    Returns a tuple of the original input of build_infos. Any</span>
 <span class="sd">    build_infos which had not been previously decorated will be</span>
 <span class="sd">    mutated with their new keys.</span>
 
@@ -391,13 +569,7 @@
 
 <span class="sd">    :type build_infos: list[dict] or Iterator[dict]</span>
 
-<span class="sd">    :param with_cg: load buildroot data for each archive of each build</span>
-<span class="sd">      to determine the CG names and IDs. Default, does not load</span>
-<span class="sd">      buildroot data.</span>
-
-<span class="sd">    :type with_cg: bool, optional</span>
-
-<span class="sd">    :rtype: Iterator[dict]</span>
+<span class="sd">    :rtype: tuple[dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># some of the facets we might consider as a property of the build</span>
@@ -411,49 +583,18 @@
     <span class="c1"># possible while farming all the data, and we also make it so that</span>
     <span class="c1"># we do not re-decorate builds which have already been decorated.</span>
 
-    <span class="c1"># convert build_infos into an id:info dict -- this also helps us</span>
-    <span class="c1"># ensure that the sequence of build_infos is preserved, for cases</span>
-    <span class="c1"># where it might have been a generator</span>
-    <span class="n">builds</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span><span class="p">)</span>
+    <span class="n">build_infos</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">build_infos</span><span class="p">)</span>
 
-    <span class="c1"># we&#39;ll only decorate the build infos which aren&#39;t already</span>
-    <span class="c1"># decorated</span>
-    <span class="n">needed</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wanted</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">bld</span><span class="p">)</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span>
+                  <span class="s2">&quot;archive_cg_names&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bld</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">bid</span><span class="p">,</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">builds</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">with_cg</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;archive_cg_ids&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bld</span><span class="p">:</span>
-                <span class="n">needed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;archive_btype_ids&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bld</span><span class="p">:</span>
-                <span class="n">needed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">needed</span><span class="p">:</span>
-        <span class="c1"># everything seems to be decorated already, let&#39;s call it done!</span>
-        <span class="k">return</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span>
-
-    <span class="n">btypes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">bt</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">bt</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">listBTypes</span><span class="p">())</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">with_cg</span><span class="p">:</span>
-        <span class="c1"># no need to go fetching all those buildroots, let&#39;s offload</span>
-        <span class="c1"># some of the lifting to the hub. In cases where we do want</span>
-        <span class="c1"># the CG info, these fields will get filled in from the</span>
-        <span class="c1"># archives -- we&#39;ll correlate it ourselves rather than having</span>
-        <span class="c1"># koji look it up for us twice.</span>
-
-        <span class="n">needful</span> <span class="o">=</span> <span class="n">bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildType</span><span class="p">,</span> <span class="n">needed</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">bid</span><span class="p">,</span> <span class="n">btns</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">needful</span><span class="p">):</span>
-            <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span>
-            <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">btns</span><span class="p">)</span>
-            <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">btypes</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">btns</span><span class="p">)</span>
-
-        <span class="c1"># Done!</span>
-        <span class="k">return</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">wanted</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">build_infos</span>
 
     <span class="c1"># multicall to fetch the artifacts and rpms for all build IDs that</span>
     <span class="c1"># need decorating</span>
-    <span class="n">archives</span> <span class="o">=</span> <span class="n">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">)</span>
-    <span class="n">rpms</span> <span class="o">=</span> <span class="n">bulk_load_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="n">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">wanted</span><span class="p">)</span>
+    <span class="n">rpms</span> <span class="o">=</span> <span class="n">bulk_load_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">wanted</span><span class="p">)</span>
 
     <span class="c1"># gather all the buildroot IDs, based on both the archives and</span>
     <span class="c1"># RPMs of the build.</span>
@@ -473,20 +614,15 @@
                 <span class="n">root_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">broot_id</span><span class="p">)</span>
 
     <span class="c1"># multicall to fetch all the buildroots</span>
-    <span class="n">buildroots</span> <span class="o">=</span> <span class="n">bulk_load_buildroots</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">root_ids</span><span class="p">))</span>
+    <span class="n">buildroots</span> <span class="o">=</span> <span class="n">bulk_load_buildroots</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">root_ids</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">build_id</span><span class="p">,</span> <span class="n">archive_list</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">archives</span><span class="p">):</span>
-        <span class="c1"># always decorate with the initial values</span>
-        <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">btype_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">btype_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cg_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cg_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">wanted</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span>
+
+        <span class="n">cg_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cg_names</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span> <span class="n">archive_list</span><span class="p">:</span>
-            <span class="n">btype_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">archive</span><span class="p">[</span><span class="s2">&quot;btype_id&quot;</span><span class="p">])</span>
-            <span class="n">btype_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">archive</span><span class="p">[</span><span class="s2">&quot;btype&quot;</span><span class="p">])</span>
-
             <span class="n">broot_id</span> <span class="o">=</span> <span class="n">archive</span><span class="p">[</span><span class="s2">&quot;buildroot_id&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">broot_id</span><span class="p">:</span>
                 <span class="c1"># no buildroot, thus no CG info, skip</span>
@@ -499,22 +635,22 @@
 
             <span class="n">cg_id</span> <span class="o">=</span> <span class="n">broot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cg_id&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cg_id</span><span class="p">:</span>
-                <span class="n">cg_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cg_id</span><span class="p">)</span>
+                <span class="n">cg_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cg_id</span><span class="p">)</span>
 
             <span class="n">cg_name</span> <span class="o">=</span> <span class="n">broot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cg_name&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cg_name</span><span class="p">:</span>
-                <span class="n">cg_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cg_name</span><span class="p">)</span>
+                <span class="n">cg_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cg_name</span><span class="p">)</span>
+
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">cg_ids</span><span class="p">)</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">cg_names</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">build_id</span><span class="p">,</span> <span class="n">rpm_list</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">rpms</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">rpm_list</span><span class="p">:</span>
             <span class="k">continue</span>
 
-        <span class="n">bld</span> <span class="o">=</span> <span class="n">builds</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span>
+        <span class="n">bld</span> <span class="o">=</span> <span class="n">wanted</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span>
         <span class="n">cg_ids</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_ids&quot;</span><span class="p">]</span>
         <span class="n">cg_names</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">]</span>
-
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">btypes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rpm&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;rpm&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">rpm</span> <span class="ow">in</span> <span class="n">rpm_list</span><span class="p">:</span>
             <span class="n">broot_id</span> <span class="o">=</span> <span class="n">rpm</span><span class="p">[</span><span class="s2">&quot;buildroot_id&quot;</span><span class="p">]</span>
@@ -529,13 +665,16 @@
 
             <span class="n">cg_id</span> <span class="o">=</span> <span class="n">broot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cg_id&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cg_id</span><span class="p">:</span>
-                <span class="n">cg_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cg_id</span><span class="p">)</span>
+                <span class="n">cg_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cg_id</span><span class="p">)</span>
 
             <span class="n">cg_name</span> <span class="o">=</span> <span class="n">broot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cg_name&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cg_name</span><span class="p">:</span>
-                <span class="n">cg_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cg_name</span><span class="p">)</span>
+                <span class="n">cg_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cg_name</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span></div>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">cg_ids</span><span class="p">)</span>
+        <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">cg_names</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">build_infos</span></div>
 
 
 <div class="viewcode-block" id="filter_by_tags"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_by_tags">[docs]</a><span class="k">def</span> <span class="nf">filter_by_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
@@ -589,7 +728,7 @@
     <span class="k">return</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_by_state">[docs]</a><span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_by_state">[docs]</a><span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">BUILD_COMPLETE</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dicts, return a generator of those</span>
 <span class="sd">    matching the given state.</span>
@@ -631,7 +770,7 @@
 <span class="sd">    imports.</span>
 
 <span class="sd">    build_infos may have been decorated by the</span>
-<span class="sd">    `decorate_build_archive_data` function. This provides an accurate</span>
+<span class="sd">    `decorate_builds_cg_list` function. This provides an accurate</span>
 <span class="sd">    listing of the content generators which have been used to import</span>
 <span class="sd">    the build (if any). In the event that they have not been thus</span>
 <span class="sd">    decorated, the cg filtering will rely on the cg_name setting on</span>
@@ -674,7 +813,7 @@
 
         <span class="c1"># either get the decorated archive cg names, or start a fresh</span>
         <span class="c1"># one based on the possible cg_name associated with this build</span>
-        <span class="n">build_cgs</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="n">build_cgs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">build</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;archive_cg_names&quot;</span><span class="p">,</span> <span class="p">()))</span>
         <span class="n">cg_name</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cg_name&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cg_name</span><span class="p">:</span>
             <span class="n">build_cgs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cg_name</span><span class="p">)</span>
@@ -707,9 +846,20 @@
 
 
 <div class="viewcode-block" id="gather_buildroots"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.gather_buildroots">[docs]</a><span class="k">def</span> <span class="nf">gather_buildroots</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each build ID given, produce the list of buildroots used to</span>
+<span class="sd">    create it.</span>
+
+<span class="sd">    :param build_ids: build IDs to fetch buildroots for</span>
+
+<span class="sd">    :type build_ids: list[int]</span>
+
+<span class="sd">    :rtype: dict[int, list[dict]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># multicall to fetch the artifacts for all build IDs</span>
-    <span class="n">archives</span> <span class="o">=</span> <span class="n">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="n">merge_extend</span><span class="p">(</span><span class="n">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">),</span>
+                            <span class="n">bulk_load_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">))</span>
 
     <span class="c1"># gather all the buildroot IDs</span>
     <span class="n">root_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -727,8 +877,37 @@
 
     <span class="k">for</span> <span class="n">build_id</span><span class="p">,</span> <span class="n">archive_list</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">archives</span><span class="p">):</span>
         <span class="n">broots</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;buildroot_id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">archive_list</span><span class="p">)</span>
-        <span class="n">broots</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">broots</span> <span class="k">if</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">broots</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">broots</span><span class="p">))</span>
         <span class="n">results</span><span class="p">[</span><span class="n">build_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">buildroots</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">broots</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="gather_rpm_sigkeys"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.gather_rpm_sigkeys">[docs]</a><span class="k">def</span> <span class="nf">gather_rpm_sigkeys</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a sequence of build IDs, collect the available sigkeys for</span>
+<span class="sd">    each rpm in each build.</span>
+
+<span class="sd">    Returns a dict mapping the original build IDs to a set of the</span>
+<span class="sd">    discovered sigkeys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># first load a mapping of build_id: [RPMS]</span>
+    <span class="n">loaded</span> <span class="o">=</span> <span class="n">bulk_load_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">)</span>
+
+    <span class="c1"># now load a mapping of rpm_id: [SIGS]</span>
+    <span class="n">rpmids</span> <span class="o">=</span> <span class="p">(</span><span class="n">rpm</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">rpm</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">itervalues</span><span class="p">(</span><span class="n">loaded</span><span class="p">)))</span>
+    <span class="n">rpm_sigs</span> <span class="o">=</span> <span class="n">bulk_load_rpm_sigs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">rpmids</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># now just correlate the set of sigkeys back to each needed</span>
+    <span class="c1"># cache entry</span>
+    <span class="k">for</span> <span class="n">bid</span><span class="p">,</span> <span class="n">rpms</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">loaded</span><span class="p">):</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">rpm</span> <span class="ow">in</span> <span class="n">rpms</span><span class="p">:</span>
+            <span class="n">rsigs</span> <span class="o">=</span> <span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="s2">&quot;sigkey&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">sig</span> <span class="ow">in</span> <span class="n">rpm_sigs</span><span class="p">[</span><span class="n">rpm</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]])</span>
+            <span class="n">sigs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rsigs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
 
@@ -887,23 +1066,28 @@
 
 
 <div class="viewcode-block" id="BuildFilter.filter_by_btype"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter.filter_by_btype">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_btype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
+
         <span class="n">bt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_btypes</span>
-        <span class="k">if</span> <span class="n">bt</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
-                <span class="n">btn</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">btn</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">bt</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">btn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bt</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">build_infos</span>
 
-            <span class="n">build_infos</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+            <span class="n">btn</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;archive_btype_names&quot;</span><span class="p">,</span> <span class="p">()))</span>
+            <span class="k">return</span> <span class="n">btn</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">bt</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">btn</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">build_infos</span></div>
+        <span class="n">build_infos</span> <span class="o">=</span> <span class="n">decorate_builds_btypes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">filter</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BuildFilter.filter_imported"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter.filter_imported">[docs]</a>    <span class="k">def</span> <span class="nf">filter_imported</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imported</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">negate</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imported</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imported</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span><span class="p">,</span> <span class="n">negate</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">build_infos</span></div>
+            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">decorate_builds_cg_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span><span class="p">,</span> <span class="n">negate</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">build_infos</span></div>
 
 
 <div class="viewcode-block" id="BuildFilter.filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter.filter_by_state">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
@@ -928,12 +1112,6 @@
 
         <span class="c1"># first stage filtering, based on tag membership</span>
         <span class="n">work</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_by_tags</span><span class="p">(</span><span class="n">work</span><span class="p">)</span>
-
-        <span class="c1"># check if we&#39;re going to need the decorated additional data</span>
-        <span class="c1"># for filtering, and if so decorate</span>
-        <span class="n">with_cg</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imported</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_btypes</span> <span class="ow">or</span> <span class="n">with_cg</span><span class="p">:</span>
-            <span class="n">work</span> <span class="o">=</span> <span class="n">decorate_build_archive_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">work</span><span class="p">,</span> <span class="n">with_cg</span><span class="p">)</span>
 
         <span class="c1"># filtering by btype (provided by decorated addtl data)</span>
         <span class="n">work</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_by_btype</span><span class="p">(</span><span class="n">work</span><span class="p">)</span>
@@ -976,14 +1154,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

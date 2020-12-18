@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.hosts"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Core API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -54,10 +54,10 @@
 <p>Koji Smoky Dingo - tags and targets</p>
 <dl class="field-list simple">
 <dt class="field-odd">author</dt>
-<dd class="field-odd"><p><a class="reference external" href="mailto:cobrien&#37;&#52;&#48;redhat&#46;com">cobrien<span>&#64;</span>redhat<span>&#46;</span>com</a></p>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
 </dd>
 <dt class="field-even">license</dt>
-<dd class="field-even"><p>GPL version 3</p>
+<dd class="field-even"><p>GPL v3</p>
 </dd>
 </dl>
 <dl class="function">
@@ -78,14 +78,14 @@ of the following keys:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>taginfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) -- koji tag info dict, or tag name</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- Extra name prefix to select for. If set, only tag
+<li><p><strong>taginfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- koji tag info dict, or tag name</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) -- Extra name prefix to select for. If set, only tag
 extra fields whose key starts with the prefix string will be
 collected. Default, collect all.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.8)">collections.OrderedDict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.9)">collections.OrderedDict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -93,17 +93,32 @@ collected. Default, collect all.</p></li>
 <dl class="function">
 <dt id="kojismokydingo.tags.convert_tag_extras">
 <code class="sig-name descname">convert_tag_extras</code><span class="sig-paren">(</span><em class="sig-param">taginfo</em>, <em class="sig-param">into=None</em>, <em class="sig-param">prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#convert_tag_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.convert_tag_extras" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Provides a merged view of the tag extra settings for a tag. The
+extras are decorated with additional keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>name - str, the name of the setting</p></li>
+<li><p>blocked - bool, whether the setting is blocked</p></li>
+<li><p>tag_name - str, the name of the tag that provided this setting</p></li>
+<li><p>tag_id - int, the ID of the tag that provided this setting</p></li>
+</ul>
+</div></blockquote>
+<p>When into is not None, then only settings which are not already
+present in that dict will be set. This behavior is used by
+<a class="reference internal" href="#kojismokydingo.tags.collect_tag_extras" title="kojismokydingo.tags.collect_tag_extras"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect_tag_extras()</span></code></a> to merge the extra settings across a
+tag and all its parents into a single dict.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>into</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) -- Existing dict to collect extras into. Default, create
-a new OrderedDict</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) -- Only gather and convert extras with keys having
+<li><p><strong>taginfo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- A koji tag info dict</p></li>
+<li><p><strong>into</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) -- Existing dict to collect extras into. Default, create
+a new OrderedDict.</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) -- Only gather and convert extras with keys having
 this prefix. Default, gather all keys not already found.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -112,13 +127,13 @@ this prefix. Default, gather all keys not already found.</p></li>
 <dt id="kojismokydingo.tags.ensure_tag">
 <code class="sig-name descname">ensure_tag</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#ensure_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.ensure_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a name, resolve it to a tag info dict. If there is no such
-tag, then create it first.</p>
+tag, then create it and return its newly created tag info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- tag name</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) -- tag name</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -126,10 +141,11 @@ tag, then create it first.</p>
 <dl class="function">
 <dt id="kojismokydingo.tags.find_inheritance_parent">
 <code class="sig-name descname">find_inheritance_parent</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">parent_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#find_inheritance_parent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.find_inheritance_parent" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Find the parent link in the inheritance list with the given tag ID.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inheritance</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>)</em>) -- the output of a getFullInheritance call</p></li>
+<li><p><strong>inheritance</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- the output of a getFullInheritance call</p></li>
 <li><p><strong>parent_id</strong> -- the ID of a parent tag to look for in the
 inheritance data.</p></li>
 </ul>
@@ -139,7 +155,29 @@ inheritance data.</p></li>
 found with the given parent_id</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.tags.gather_affected_targets">
+<code class="sig-name descname">gather_affected_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#gather_affected_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.gather_affected_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of target info dicts representing the targets
+which inherit any of the given named tags. That is to say, the
+targets whose build tags are children of the named tags.</p>
+<p>This list allows us to gauge what build configurations would be
+impacted by changes to the given tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tagnames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) -- List of tag names</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>NoSuchTag</strong></a> -- if any of the names do not resolve to a tag
+info</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -155,26 +193,36 @@ allocated and returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>shallow</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of tag names to resolve IDs for</p></li>
-<li><p><strong>deep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of tag names to resolve IDs and parent IDs for</p></li>
-<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) -- storage for resolved IDs. Default, create a new set</p></li>
+<li><p><strong>shallow</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of tag names to resolve IDs for</p></li>
+<li><p><strong>deep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of tag names to resolve IDs and parent IDs for</p></li>
+<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) -- storage for resolved IDs. Default, create a new set</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="kojismokydingo.tags.get_affected_targets">
-<code class="sig-name descname">get_affected_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#get_affected_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.get_affected_targets" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="kojismokydingo.tags.renum_inheritance">
-<code class="sig-name descname">renum_inheritance</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">begin</em>, <em class="sig-param">step</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#renum_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.renum_inheritance" title="Permalink to this definition">¶</a></dt>
-<dd><p>a new copy of the tag inheritance data, renumbered</p>
+<code class="sig-name descname">renum_inheritance</code><span class="sig-paren">(</span><em class="sig-param">inheritance</em>, <em class="sig-param">begin=0</em>, <em class="sig-param">step=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/tags/#renum_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.tags.renum_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new copy of the tag inheritance data with the priority
+values renumbered. Ordering is preserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inheritance</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- Inheritance structure data</p></li>
+<li><p><strong>begin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Starting point for renumbering priority
+values. Default, 0</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Priority value increment for each priority after the
+first. Default, 10</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -187,8 +235,8 @@ resulting taginfo will be from that target's build tag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Tag or Target name</p></li>
-<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) -- name specified a target rather than a tag, fetch
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) -- Tag or Target name</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- name specified a target rather than a tag, fetch
 the build tag name from the target and look up that. Default,
 name specifies a tag.</p></li>
 </ul>
@@ -200,7 +248,7 @@ name specifies a tag.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -255,13 +303,13 @@ name specifies a tag.</p></li>
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.hosts"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Core API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>

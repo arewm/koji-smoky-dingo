@@ -1,0 +1,927 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.sift.builds &#8212; kojismokydingo 0.9.4 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="kojismokydingo.sift.parse" href="../parse/" />
+    <link rel="prev" title="Sift API Reference" href="../" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../parse/" title="kojismokydingo.sift.parse"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Sift API Reference"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Sift API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kojismokydingo.sift.builds">
+<span id="kojismokydingo-sift-builds"></span><h1>kojismokydingo.sift.builds<a class="headerlink" href="#module-kojismokydingo.sift.builds" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo - Sifty Dingo filtering for Koji Builds</p>
+<p>This module provides sieves for filtering through koji build info
+dicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.CGImportedSieve">
+<em class="property">class </em><code class="sig-name descname">CGImportedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*cgnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#CGImportedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.CGImportedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: (cg-imported [CGNAME...])</p>
+<p>Passes build infos that have been produced via a cg-import by any
+of the named content generators. If no CGs are named, then passes
+build infos that have been produced by any content generator.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.CGImportedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#CGImportedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.CGImportedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.CGImportedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'cg-imported'</em><a class="headerlink" href="#kojismokydingo.sift.builds.CGImportedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.CGImportedSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#CGImportedSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.CGImportedSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.CGImportedSieve.check" title="kojismokydingo.sift.builds.CGImportedSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EpochSieve">
+<em class="property">class </em><code class="sig-name descname">EpochSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EpochSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EpochSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(epoch</span> <span class="pre">EPOCH</span> <span class="pre">[EPOCH...])</span></code></p>
+<p>filters for dict infos whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">epoch</span></code> key matches any of the given
+EPOCH matchers.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EpochSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'epoch'</em><a class="headerlink" href="#kojismokydingo.sift.builds.EpochSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EpochSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'epoch'</em><a class="headerlink" href="#kojismokydingo.sift.builds.EpochSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EVRCompareEQ">
+<em class="property">class </em><code class="sig-name descname">EVRCompareEQ</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EVRCompareEQ"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareEQ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.EVRCompare</span></code></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(==</span> <span class="pre">VER)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VER</span></code> can be in any of the following forms</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+<p>Passes builds whose EVR compares as requested.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EVRCompareEQ.name">
+<code class="sig-name descname">name</code><em class="property"> = '=='</em><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareEQ.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EVRCompareNE">
+<em class="property">class </em><code class="sig-name descname">EVRCompareNE</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EVRCompareNE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareNE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.EVRCompare</span></code></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(!=</span> <span class="pre">VER)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VER</span></code> can be in any of the following forms</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+<p>Passes builds whose EVR compares as requested.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EVRCompareNE.name">
+<code class="sig-name descname">name</code><em class="property"> = '!='</em><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareNE.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EVRCompareLT">
+<em class="property">class </em><code class="sig-name descname">EVRCompareLT</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EVRCompareLT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareLT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.EVRCompare</span></code></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(&lt;</span> <span class="pre">VER)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VER</span></code> can be in any of the following forms</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+<p>Passes builds whose EVR compares as requested.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EVRCompareLT.name">
+<code class="sig-name descname">name</code><em class="property"> = '&lt;'</em><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareLT.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EVRCompareLE">
+<em class="property">class </em><code class="sig-name descname">EVRCompareLE</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EVRCompareLE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.EVRCompare</span></code></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(&lt;=</span> <span class="pre">VER)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VER</span></code> can be in any of the following forms</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+<p>Passes builds whose EVR compares as requested.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EVRCompareLE.name">
+<code class="sig-name descname">name</code><em class="property"> = '&lt;='</em><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareLE.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EVRCompareGT">
+<em class="property">class </em><code class="sig-name descname">EVRCompareGT</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EVRCompareGT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareGT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.EVRCompare</span></code></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(&gt;</span> <span class="pre">VER)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VER</span></code> can be in any of the following forms</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+<p>Passes builds whose EVR compares as requested.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EVRCompareGT.name">
+<code class="sig-name descname">name</code><em class="property"> = '&gt;'</em><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareGT.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.EVRCompareGE">
+<em class="property">class </em><code class="sig-name descname">EVRCompareGE</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#EVRCompareGE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.EVRCompare</span></code></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(&gt;=</span> <span class="pre">VER)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VER</span></code> can be in any of the following forms</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+<p>Passes builds whose EVR compares as requested.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.EVRCompareGE.name">
+<code class="sig-name descname">name</code><em class="property"> = '&gt;='</em><a class="headerlink" href="#kojismokydingo.sift.builds.EVRCompareGE.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.ImportedSieve">
+<em class="property">class </em><code class="sig-name descname">ImportedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#ImportedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.ImportedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(imported)</span></code></p>
+<p>filters for build info dicts whose task ID is empty or null.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.ImportedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#ImportedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.ImportedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.ImportedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'imported'</em><a class="headerlink" href="#kojismokydingo.sift.builds.ImportedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.InheritedSieve">
+<em class="property">class </em><code class="sig-name descname">InheritedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">tagname</em>, <em class="sig-param">*tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#InheritedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.InheritedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: (inherited TAG [TAG...])</p>
+<p>Matches builds which are tagged into any of the given tags or
+their parent tags. Each TAG must be a tag name or tag ID, patterns
+are not allowed.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.InheritedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#InheritedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.InheritedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.InheritedSieve.get_cache">
+<code class="sig-name descname">get_cache</code><span class="sig-paren">(</span><em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#InheritedSieve.get_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.InheritedSieve.get_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.InheritedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'inherited'</em><a class="headerlink" href="#kojismokydingo.sift.builds.InheritedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.InheritedSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#InheritedSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.InheritedSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.InheritedSieve.check" title="kojismokydingo.sift.builds.InheritedSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.LatestSieve">
+<em class="property">class </em><code class="sig-name descname">LatestSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">tagname</em>, <em class="sig-param">*tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: (latest TAG [TAG...])</p>
+<p>Passes build infos that are the latest build of their package name in
+any of the tags.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.LatestSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.LatestSieve.latest_ids">
+<em class="property">static </em><code class="sig-name descname">latest_ids</code><span class="sig-paren">(</span><em class="sig-param">cache={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestSieve.latest_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestSieve.latest_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a cache mapping a tag ID to latest build IDs in that
+tag. It's populated by all the LatestSieve instances when they
+run their prep.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.LatestSieve.load_latest_ids">
+<code class="sig-name descname">load_latest_ids</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagid</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestSieve.load_latest_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestSieve.load_latest_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.LatestSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'latest'</em><a class="headerlink" href="#kojismokydingo.sift.builds.LatestSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.LatestSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.LatestSieve.check" title="kojismokydingo.sift.builds.LatestSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.LatestMavenSieve">
+<em class="property">class </em><code class="sig-name descname">LatestMavenSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestMavenSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestMavenSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.VariadicSieve" title="kojismokydingo.sift.VariadicSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.VariadicSieve</span></code></a></p>
+<p>usage: (latest-maven TAG [TAG...])</p>
+<p>Passes build infos that have btype maven and are the build of their
+GAV in any of the tags.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.LatestMavenSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestMavenSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestMavenSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.LatestMavenSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'latest-maven'</em><a class="headerlink" href="#kojismokydingo.sift.builds.LatestMavenSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.LatestMavenSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#LatestMavenSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.LatestMavenSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.LatestMavenSieve.check" title="kojismokydingo.sift.builds.LatestMavenSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.NameSieve">
+<em class="property">class </em><code class="sig-name descname">NameSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#NameSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.NameSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(name</span> <span class="pre">NAME</span> <span class="pre">[NAME...])</span></code></p>
+<p>filters for dict infos whose <a class="reference internal" href="#kojismokydingo.sift.builds.NameSieve.name" title="kojismokydingo.sift.builds.NameSieve.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a> key matches any of the given
+NAME matchers.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.NameSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'name'</em><a class="headerlink" href="#kojismokydingo.sift.builds.NameSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.NameSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'name'</em><a class="headerlink" href="#kojismokydingo.sift.builds.NameSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.NVRSieve">
+<em class="property">class </em><code class="sig-name descname">NVRSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#NVRSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.NVRSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(nvr</span> <span class="pre">NVR</span> <span class="pre">[NVR...])</span></code></p>
+<p>filters for dict infos whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">nvr</span></code> key matches any of the given
+NVR matchers.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.NVRSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'nvr'</em><a class="headerlink" href="#kojismokydingo.sift.builds.NVRSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.NVRSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'nvr'</em><a class="headerlink" href="#kojismokydingo.sift.builds.NVRSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.OwnerSieve">
+<em class="property">class </em><code class="sig-name descname">OwnerSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">user</em>, <em class="sig-param">*users</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#OwnerSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.OwnerSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(owner</span> <span class="pre">USER</span> <span class="pre">[USER...])`</span></code></p>
+<p>filters for builds whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">owner_name</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">owner_id</span></code> key matches
+any of the given USERs.</p>
+<p>The users will be validated at the time of the sieve's first
+invocation, which may result in a NoSuchUser error.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.OwnerSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#OwnerSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.OwnerSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.OwnerSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'owner'</em><a class="headerlink" href="#kojismokydingo.sift.builds.OwnerSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.OwnerSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">_build_infos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#OwnerSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.OwnerSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.OwnerSieve.check" title="kojismokydingo.sift.builds.OwnerSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.PkgAllowedSieve">
+<em class="property">class </em><code class="sig-name descname">PkgAllowedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">tagname</em>, <em class="sig-param">*tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#PkgAllowedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.PkgAllowedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.PkgSieve</span></code></p>
+<p>usage: (pkg-allowed TAG [TAG...])</p>
+<p>Matches builds which are have their package listing present and
+not blocked in and of the given tags or their parents.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.PkgAllowedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#PkgAllowedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.PkgAllowedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.PkgAllowedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'pkg-allowed'</em><a class="headerlink" href="#kojismokydingo.sift.builds.PkgAllowedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.PkgBlockedSieve">
+<em class="property">class </em><code class="sig-name descname">PkgBlockedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">tagname</em>, <em class="sig-param">*tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#PkgBlockedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.PkgBlockedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.PkgSieve</span></code></p>
+<p>usage: (pkg-blocked TAG [TAG...])</p>
+<p>Matches builds which are have their package name blocked in and of the
+given tags or their parents.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.PkgBlockedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#PkgBlockedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.PkgBlockedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.PkgBlockedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'pkg-blocked'</em><a class="headerlink" href="#kojismokydingo.sift.builds.PkgBlockedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.ReleaseSieve">
+<em class="property">class </em><code class="sig-name descname">ReleaseSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#ReleaseSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.ReleaseSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(release</span> <span class="pre">REL</span> <span class="pre">[REL...])</span></code></p>
+<p>filters for dict infos whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">release</span></code> key matches any of the given
+REL matchers.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.ReleaseSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'release'</em><a class="headerlink" href="#kojismokydingo.sift.builds.ReleaseSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.ReleaseSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'release'</em><a class="headerlink" href="#kojismokydingo.sift.builds.ReleaseSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.SignedSieve">
+<em class="property">class </em><code class="sig-name descname">SignedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#SignedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.SignedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(signed</span> <span class="pre">[KEY...])</span></code></p>
+<p>Passes builds which have RPMs signed with any of the given
+keys. If no keys are specified then passes builds which have RPMs
+signed with any key at all.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.SignedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#SignedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.SignedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.SignedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'signed'</em><a class="headerlink" href="#kojismokydingo.sift.builds.SignedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.SignedSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#SignedSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.SignedSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.SignedSieve.check" title="kojismokydingo.sift.builds.SignedSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.StateSieve">
+<em class="property">class </em><code class="sig-name descname">StateSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#StateSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(state</span> <span class="pre">BUILD_STATE</span> <span class="pre">[BUILD_STATE...])</span></code></p>
+<p>filters for dict infos whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code> key matches any of the given
+koji build states. Build states may be specified as either an integer
+or one of the following strings or symbols</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BUILDING</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COMPLETE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DELETED</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FAILED</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CANCELED</span></code></p></li>
+</ul>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.StateSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'state'</em><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.StateSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'state'</em><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.TaggedSieve">
+<em class="property">class </em><code class="sig-name descname">TaggedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tagnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#TaggedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.TaggedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: (tagged [TAG...])</p>
+<p>If no TAG patterns are specified, matches builds which have any
+tags at all.</p>
+<p>If TAG patterns are specified, then only matches builds which have
+a tag that matches any of the given patterns.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.TaggedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#TaggedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.TaggedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.TaggedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'tagged'</em><a class="headerlink" href="#kojismokydingo.sift.builds.TaggedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.TaggedSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#TaggedSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.TaggedSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.TaggedSieve.check" title="kojismokydingo.sift.builds.TaggedSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.TypeSieve">
+<em class="property">class </em><code class="sig-name descname">TypeSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">btype</em>, <em class="sig-param">*btypes</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#TypeSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.TypeSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: (type BTYPE [BTYPE...])</p>
+<p>Passes build infos that have archives of the given btype. Normal
+btypes are rpm, maven, image, and win.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.TypeSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#TypeSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.TypeSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.TypeSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'type'</em><a class="headerlink" href="#kojismokydingo.sift.builds.TypeSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.TypeSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">binfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#TypeSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.TypeSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.builds.TypeSieve.check" title="kojismokydingo.sift.builds.TypeSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.builds.VersionSieve">
+<em class="property">class </em><code class="sig-name descname">VersionSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#VersionSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.VersionSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(version</span> <span class="pre">VER</span> <span class="pre">[VER...])</span></code></p>
+<p>filters for dict infos whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code> key matches any of the given
+VER matchers.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.VersionSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'version'</em><a class="headerlink" href="#kojismokydingo.sift.builds.VersionSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.builds.VersionSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'version'</em><a class="headerlink" href="#kojismokydingo.sift.builds.VersionSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.builds.build_info_sieves">
+<code class="sig-name descname">build_info_sieves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#build_info_sieves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.build_info_sieves" title="Permalink to this definition">¶</a></dt>
+<dd><p>A new list containing the default build-info sieve classes.</p>
+<p>This function is used by <a class="reference internal" href="#kojismokydingo.sift.builds.build_info_sifter" title="kojismokydingo.sift.builds.build_info_sifter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_info_sifter</span></code></a> when creating its
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">Sifter</span></code> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)">type</a>[<a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve">Sieve</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.builds.build_info_sifter">
+<code class="sig-name descname">build_info_sifter</code><span class="sig-paren">(</span><em class="sig-param">source</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#build_info_sifter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.build_info_sifter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Sifter from the source using the default build-info
+Sieves.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source</strong> (<em>stream</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) -- sieve expressions source</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../#kojismokydingo.sift.Sifter" title="kojismokydingo.sift.Sifter">Sifter</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.builds.sift_builds">
+<code class="sig-name descname">sift_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">src_str</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#sift_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.sift_builds" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_str</strong> (<em>src</em>) -- sieve expressions source</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- list of build info dicts to filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.builds.sift_nvrs">
+<code class="sig-name descname">sift_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">src_str</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#sift_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.sift_nvrs" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_str</strong> (<em>src</em>) -- sieve expressions source</p></li>
+<li><p><strong>nvrs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) -- list of NVRs to load and filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Sift API Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../parse/"
+                        title="next chapter">kojismokydingo.sift.parse</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/kojismokydingo/sift/builds.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../parse/" title="kojismokydingo.sift.parse"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Sift API Reference"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Sift API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2020-12-18.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji set-rpm-macro &#8212; kojismokydingo 0.9.3 documentation</title>
+    <title>koji set-rpm-macro &#8212; kojismokydingo 0.9.4 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../set-env-var/" title="koji set-env-var"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -68,7 +68,11 @@ optional arguments:
   --target    Specify by target rather than a tag
 </pre></div>
 </div>
-<p>Defines an RPM macro on a tag.</p>
+<p>Configures RPM macro settings on a tag.</p>
+<p>Koji 1.18 and later support defining RPM macros via mock as part of a
+tag's configuration metadata.</p>
+<p>Koji 1.23 and later also support blocking such settings from being
+inherited.</p>
 <p>This command is a user-friendly alternative to using the <code class="docutils literal notranslate"><span class="pre">koji</span>
 <span class="pre">edit-tag</span></code> command as defined in <a class="reference external" href="https://docs.pagure.org/koji/setting_rpm_macros/#setting-rpm-macro-values">Setting RPM Macros for Builds -
 Setting rpm.macro values</a>.
@@ -76,9 +80,10 @@ Use of this command requires either the <code class="docutils literal notranslat
 permission, as it is mutating tag configuration data.</p>
 <p>The underlying tag extra setting will be constructed with the prefix
 <code class="docutils literal notranslate"><span class="pre">rpm.macro.</span></code> and the macro name (minus any leading <code class="docutils literal notranslate"><span class="pre">%</span></code>)</p>
-<p>Empty RPM macro values are not permitted. The closest is <code class="docutils literal notranslate"><span class="pre">%nil</span></code>
-which is the default if no value is specified.</p>
-<p>Note that RPM macros definitioned in this manner will take precedence
+<p>Empty RPM macro values are not permitted. The closest no an empty
+value is <code class="docutils literal notranslate"><span class="pre">%nil</span></code> which is used as the default value if not otherwise
+specified.</p>
+<p>Note that RPM macros definined in this manner will take precedence
 over any other definitions that may be provided by installed packages
 in the buildroot.</p>
 <p>These settings are inheritable, so care must be taken not to
@@ -186,13 +191,13 @@ koji edit-tag my-tag-1.0-build --block-extra rpm.macro.dist
         <li class="right" >
           <a href="../set-env-var/" title="koji set-env-var"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-10-02.
+      Last updated on 2020-12-18.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>
