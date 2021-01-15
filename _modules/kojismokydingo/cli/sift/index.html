@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.sift &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.cli.sift &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -73,20 +73,69 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">basename</span>
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">iter_entry_points</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">open_output</span><span class="p">,</span> <span class="n">resplit</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">open_output</span><span class="p">,</span> <span class="n">printerr</span><span class="p">,</span> <span class="n">resplit</span>
 <span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">escapable_replace</span>
-<span class="kn">from</span> <span class="nn">..sift</span> <span class="k">import</span> <span class="n">DEFAULT_SIEVES</span><span class="p">,</span> <span class="n">Sifter</span><span class="p">,</span> <span class="n">SifterError</span>
+<span class="kn">from</span> <span class="nn">..sift</span> <span class="k">import</span> <span class="n">DEFAULT_SIEVES</span><span class="p">,</span> <span class="n">Sieve</span><span class="p">,</span> <span class="n">Sifter</span><span class="p">,</span> <span class="n">SifterError</span>
 <span class="kn">from</span> <span class="nn">..sift.builds</span> <span class="k">import</span> <span class="n">build_info_sieves</span>
+<span class="kn">from</span> <span class="nn">..sift.tags</span> <span class="k">import</span> <span class="n">tag_info_sieves</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;BuildSifting&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Sifting&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TagSifting&quot;</span><span class="p">,</span>
 
     <span class="s2">&quot;output_sifted&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_entry_point_sieves</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">on_err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iter_entry_points</span><span class="p">(</span><span class="n">key</span><span class="p">),</span>
+                    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">module_name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="n">collected</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">entry_point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ep_ref</span> <span class="o">=</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+            <span class="c1"># is this TOO flexible? The entry point can load as</span>
+            <span class="c1"># any of:</span>
+            <span class="c1">#  * Sieve subclass</span>
+            <span class="c1">#  * list/tuple of Sieve subclasses</span>
+            <span class="c1">#  * null arityy callable which returns the above</span>
+
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">,</span> <span class="n">Sieve</span><span class="p">):</span>
+                <span class="n">collected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">):</span>
+                <span class="n">ep_ref</span> <span class="o">=</span> <span class="n">ep_ref</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">collected</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">,</span> <span class="n">Sieve</span><span class="p">):</span>
+                <span class="n">collected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">on_err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">on_err</span><span class="p">(</span><span class="n">entry_point</span><span class="p">,</span> <span class="n">ex</span><span class="p">):</span>
+                <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">collected</span>
+
+
+<span class="k">def</span> <span class="nf">entry_point_tag_info_sieves</span><span class="p">(</span><span class="n">on_err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_entry_point_sieves</span><span class="p">(</span><span class="s2">&quot;koji_smoky_dingo_tag_sieves&quot;</span><span class="p">,</span> <span class="n">on_err</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">entry_point_build_info_sieves</span><span class="p">(</span><span class="n">on_err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_entry_point_sieves</span><span class="p">(</span><span class="s2">&quot;koji_smoky_dingo_build_sieves&quot;</span><span class="p">,</span> <span class="n">on_err</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Sifting"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting">[docs]</a><span class="k">class</span> <span class="nc">Sifting</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -123,6 +172,11 @@
                <span class="s2">&quot; FILENAME. If FILENAME is &#39;-&#39;, output to stdout.&quot;</span>
                <span class="s2">&quot; The &#39;default&#39; flag is output to stdout by default,&quot;</span>
                <span class="s2">&quot; and other flags are discarded&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--no-entry-points&quot;</span><span class="p">,</span> <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_false&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;entry_points&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Disable loading of additional sieves from&quot;</span>
+               <span class="s2">&quot; entry_points&quot;</span><span class="p">)</span>
 
         <span class="n">grp</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
@@ -206,7 +260,7 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="Sifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.Sifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_points</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">DEFAULT_SIEVES</span></div>
 
 
@@ -228,14 +282,39 @@
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">sieves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sieves</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">entry_points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Sifter</span><span class="p">(</span><span class="n">sieves</span><span class="p">,</span> <span class="n">filter_src</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div></div>
 
-        <span class="k">return</span> <span class="n">Sifter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_sieves</span><span class="p">(),</span> <span class="n">filter_src</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div></div>
+
+<span class="k">def</span> <span class="nf">_report_problem</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">entry_point</span><span class="p">,</span> <span class="n">exc</span><span class="p">):</span>
+    <span class="n">printerr</span><span class="p">(</span><span class="n">msg</span> <span class="o">%</span> <span class="p">(</span><span class="n">entry_point</span><span class="p">,</span> <span class="n">exc</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">True</span>
 
 
 <div class="viewcode-block" id="BuildSifting"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.BuildSifting">[docs]</a><span class="k">class</span> <span class="nc">BuildSifting</span><span class="p">(</span><span class="n">Sifting</span><span class="p">):</span>
 
-<div class="viewcode-block" id="BuildSifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.BuildSifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">build_info_sieves</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="BuildSifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.BuildSifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_points</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">sieves</span> <span class="o">=</span> <span class="n">build_info_sieves</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">entry_points</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Error loading build sieve from entry_point </span><span class="si">%r</span><span class="s2"> : </span><span class="si">%r</span><span class="s2">&quot;</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_report_problem</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+            <span class="n">sieves</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entry_point_tag_info_sieves</span><span class="p">(</span><span class="n">on_err</span><span class="o">=</span><span class="n">err</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">sieves</span></div></div>
+
+
+<div class="viewcode-block" id="TagSifting"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.TagSifting">[docs]</a><span class="k">class</span> <span class="nc">TagSifting</span><span class="p">(</span><span class="n">Sifting</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TagSifting.get_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.TagSifting.get_sieves">[docs]</a>    <span class="k">def</span> <span class="nf">get_sieves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_points</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">sieves</span> <span class="o">=</span> <span class="n">tag_info_sieves</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">entry_points</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Error loading tag sieve from entry_point </span><span class="si">%r</span><span class="s2"> : </span><span class="si">%r</span><span class="s2">&quot;</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_report_problem</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+            <span class="n">sieves</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entry_point_tag_info_sieves</span><span class="p">(</span><span class="n">on_err</span><span class="o">=</span><span class="n">err</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">sieves</span></div></div>
 
 
 <div class="viewcode-block" id="output_sifted"><a class="viewcode-back" href="../../../../kojismokydingo/cli/sift/#kojismokydingo.cli.sift.output_sifted">[docs]</a><span class="k">def</span> <span class="nf">output_sifted</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -339,7 +418,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -347,8 +426,8 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

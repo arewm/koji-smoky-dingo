@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Sifty Dingo Filtering Language &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>Sifty Dingo Filtering Language &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Core API Reference" href="../kojismokydingo/" />
-    <link rel="prev" title="koji unset-rpm-macro" href="../commands/unset-rpm-macro/" />
+    <link rel="prev" title="ksd-filter-tags" href="../standalone/ksd-filter-tags/" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <!--[if lte IE 6]>
@@ -37,9 +37,9 @@
           <a href="../kojismokydingo/" title="Core API Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../commands/unset-rpm-macro/" title="koji unset-rpm-macro"
+          <a href="../standalone/ksd-filter-tags/" title="ksd-filter-tags"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -92,6 +92,8 @@ sieve. Subsequent elements are the arguments to the predicate.</p>
 <h3>Sieve Predicate<a class="headerlink" href="#sieve-predicate" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(foo)
 (foo 1 two &quot;three&quot; /four/ |five|)
+(bar x y)
+(bar x y optional: True)
 (and (foo 1) (bar 2))
 (or (baz 3) (and (qux) (quux 4)))
 </pre></div>
@@ -119,6 +121,11 @@ numeric -- it would instead be interpreted as a Number in that case.</p>
 <p>Symbols with a leading dollar-sign are interpreted as variables, and
 their value will be substituted from a sifter parameter at compile
 time.</p>
+<p>When used as arguments to a sieve predicate, symbols with a trailing
+<code class="docutils literal notranslate"><span class="pre">:</span></code> character are treated as keyword markers. The value following a
+keyword marker is used as the keyword's argument. They keyword and its
+value form an option pair, which is fed into the sieve via its
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">set_options</span></code> method.</p>
 </div>
 <div class="section" id="number">
 <h3>Number<a class="headerlink" href="#number" title="Permalink to this headline">¶</a></h3>
@@ -301,8 +308,8 @@ a number of available sieves provided in the
 <a class="reference internal" href="../kojismokydingo/sift/builds/#module-kojismokydingo.sift.builds" title="kojismokydingo.sift.builds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds</span></code></a> module.</p>
 <p>A sifter instance with these and the core sieves available by default can be
 created via <a class="reference internal" href="../kojismokydingo/sift/builds/#kojismokydingo.sift.builds.build_info_sifter" title="kojismokydingo.sift.builds.build_info_sifter"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds.build_info_sifter()</span></code></a></p>
-<div class="section" id="evr-comparison-predicates">
-<h3>EVR Comparison Predicates<a class="headerlink" href="#evr-comparison-predicates" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-evr-comparison-predicates">
+<h3>Build EVR Comparison Predicates<a class="headerlink" href="#build-evr-comparison-predicates" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(OP VER)
 </pre></div>
 </div>
@@ -331,8 +338,8 @@ If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></
 <p>These predicates filter by using RPM EVR comparison rules against the
 epoch, version, and release values of the builds.</p>
 </div>
-<div class="section" id="predicate-cg-imported">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">cg-imported</span></code><a class="headerlink" href="#predicate-cg-imported" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-cg-imported">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">cg-imported</span></code><a class="headerlink" href="#build-predicate-cg-imported" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(cg-imported [CGNAME...])
 </pre></div>
 </div>
@@ -342,24 +349,52 @@ with them.</p>
 <p>If any optional <code class="docutils literal notranslate"><span class="pre">CGNAME</span></code> matchers are supplied, then filters for
 builds which are produced by matching content generators only.</p>
 </div>
-<div class="section" id="predicate-epoch">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">epoch</span></code><a class="headerlink" href="#predicate-epoch" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-compare-latest-id">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">compare-latest-id</span></code><a class="headerlink" href="#build-predicate-compare-latest-id" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(compare-latest-id OP TAG)
+</pre></div>
+</div>
+<p>Filters for builds which have an ID that compares to the latest build
+of the same package name in the given tag. If there is no matching
+build in the tag, then the filtered build will not be included.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OP</span></code> can be any of the following comparison operators: <code class="docutils literal notranslate"><span class="pre">==</span></code>,
+<code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">TAG</span></code> may be specified by either name or ID, but not by pattern.
+<code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
+result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
+</div>
+<div class="section" id="build-predicate-compare-latest-nvr">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">compare-latest-nvr</span></code><a class="headerlink" href="#build-predicate-compare-latest-nvr" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(compare-latest-nvr OP TAG)
+</pre></div>
+</div>
+<p>Filters for builds which have an NVR that compares to the latest build
+of the same package name in the given tag. If there is no matching
+build in the tag, then the filtered build will not be included.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OP</span></code> can be any of the following comparison operators: <code class="docutils literal notranslate"><span class="pre">==</span></code>,
+<code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">TAG</span></code> may be specified by either name or ID, but not by pattern.
+<code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
+result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
+</div>
+<div class="section" id="build-predicate-epoch">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">epoch</span></code><a class="headerlink" href="#build-predicate-epoch" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(epoch EPOCH [EPOCH...])
 </pre></div>
 </div>
 <p>Filters for builds whose epoch value matches any of the given <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code>
 patterns.</p>
 </div>
-<div class="section" id="predicate-imported">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">imported</span></code><a class="headerlink" href="#predicate-imported" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-imported">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">imported</span></code><a class="headerlink" href="#build-predicate-imported" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(imported)
 </pre></div>
 </div>
 <p>Filters for builds which have no task ID. These builds could be either raw
 imports or from a content generator.</p>
 </div>
-<div class="section" id="predicate-inherited">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">inherited</span></code><a class="headerlink" href="#predicate-inherited" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-inherited">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">inherited</span></code><a class="headerlink" href="#build-predicate-inherited" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(inherited TAG [TAG...])
 </pre></div>
 </div>
@@ -369,8 +404,8 @@ their parents.</p>
 <code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
 result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
 </div>
-<div class="section" id="predicate-latest">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">latest</span></code><a class="headerlink" href="#predicate-latest" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-latest">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">latest</span></code><a class="headerlink" href="#build-predicate-latest" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(latest TAG [TAG...])
 </pre></div>
 </div>
@@ -381,8 +416,8 @@ listings and blocks.</p>
 <code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
 result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
 </div>
-<div class="section" id="predicate-latest-maven">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">latest-maven</span></code><a class="headerlink" href="#predicate-latest-maven" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-latest-maven">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">latest-maven</span></code><a class="headerlink" href="#build-predicate-latest-maven" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(latest-maven TAG [TAG...])
 </pre></div>
 </div>
@@ -396,24 +431,24 @@ uniqueness is by the GAV rather than the package name.</p>
 <code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
 result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
 </div>
-<div class="section" id="predicate-name">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">name</span></code><a class="headerlink" href="#predicate-name" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-name">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">name</span></code><a class="headerlink" href="#build-predicate-name" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(name NAME [NAME...])
 </pre></div>
 </div>
 <p>Filters for builds which have a name matching any of the given
 <code class="docutils literal notranslate"><span class="pre">NAME</span></code> patterns.</p>
 </div>
-<div class="section" id="predicate-nvr">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">nvr</span></code><a class="headerlink" href="#predicate-nvr" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-nvr">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">nvr</span></code><a class="headerlink" href="#build-predicate-nvr" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(nvr NVR [NVR...])
 </pre></div>
 </div>
 <p>Filters for builds which have an NVR matching any of the given <code class="docutils literal notranslate"><span class="pre">NVR</span></code>
 (name-version-release) patterns.</p>
 </div>
-<div class="section" id="predicate-owner">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">owner</span></code><a class="headerlink" href="#predicate-owner" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-owner">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">owner</span></code><a class="headerlink" href="#build-predicate-owner" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(owner USER [USER...])
 </pre></div>
 </div>
@@ -423,8 +458,8 @@ pattern. <code class="docutils literal notranslate"><span class="pre">USER</span
 this may result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchUser" title="kojismokydingo.NoSuchUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchUser</span></code></a> exception being
 raised.</p>
 </div>
-<div class="section" id="predicate-pkg-allowed">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">pkg-allowed</span></code><a class="headerlink" href="#predicate-pkg-allowed" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-pkg-allowed">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">pkg-allowed</span></code><a class="headerlink" href="#build-predicate-pkg-allowed" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(pkg-allowed TAG [TAG...])
 </pre></div>
 </div>
@@ -434,8 +469,8 @@ tags, honoring inheritance.</p>
 <code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
 result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
 </div>
-<div class="section" id="predicate-pkg-blocked">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">pkg-blocked</span></code><a class="headerlink" href="#predicate-pkg-blocked" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-pkg-blocked">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">pkg-blocked</span></code><a class="headerlink" href="#build-predicate-pkg-blocked" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(pkg-blocked TAG [TAG...])
 </pre></div>
 </div>
@@ -445,16 +480,27 @@ the given tags, honoring inheritance.</p>
 <code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
 result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
 </div>
-<div class="section" id="predicate-release">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">release</span></code><a class="headerlink" href="#predicate-release" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-pkg-unlisted">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">pkg-unlisted</span></code><a class="headerlink" href="#build-predicate-pkg-unlisted" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(pkg-unlisted TAG [TAG...])
+</pre></div>
+</div>
+<p>Filters for builds which have their package name unlisted (neither
+allowed nor blocked) in any of the given tags, honoring inheritance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TAG</span></code> may be specified by either name or ID, but not by pattern.
+<code class="docutils literal notranslate"><span class="pre">TAG</span></code> will be validated when the sieve is first run -- this may
+result in a <a class="reference internal" href="../kojismokydingo/#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.NoSuchTag</span></code></a> exception being raised.</p>
+</div>
+<div class="section" id="build-predicate-release">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">release</span></code><a class="headerlink" href="#build-predicate-release" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(release REL [REL...])
 </pre></div>
 </div>
 <p>Filters for builds which have a release matching any of the given
 <code class="docutils literal notranslate"><span class="pre">REL</span></code> patterns.</p>
 </div>
-<div class="section" id="predicate-signed">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">signed</span></code><a class="headerlink" href="#predicate-signed" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-signed">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">signed</span></code><a class="headerlink" href="#build-predicate-signed" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(signed [SIGKEY...])
 </pre></div>
 </div>
@@ -463,8 +509,8 @@ a key matching any of the given <code class="docutils literal notranslate"><span
 <p>If no <code class="docutils literal notranslate"><span class="pre">SIGKEY</span></code> patterns are supplied, then filters for builds which
 have an RPM archive that has been signed with any key.</p>
 </div>
-<div class="section" id="predicate-state">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">state</span></code><a class="headerlink" href="#predicate-state" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-state">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">state</span></code><a class="headerlink" href="#build-predicate-state" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(state STATE [STATE...])
 </pre></div>
 </div>
@@ -482,8 +528,8 @@ must be a valid koji build state.</p>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="predicate-tagged">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">tagged</span></code><a class="headerlink" href="#predicate-tagged" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-tagged">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">tagged</span></code><a class="headerlink" href="#build-predicate-tagged" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(tagged [TAG...])
 </pre></div>
 </div>
@@ -492,8 +538,8 @@ matching any of the given <code class="docutils literal notranslate"><span class
 <p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, then filters for builds which
 have any tags at all.</p>
 </div>
-<div class="section" id="predicate-type">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">type</span></code><a class="headerlink" href="#predicate-type" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-type">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">type</span></code><a class="headerlink" href="#build-predicate-type" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(type BTYPE [BTYPE...])
 </pre></div>
 </div>
@@ -501,13 +547,224 @@ have any tags at all.</p>
 build types are rpm, maven, image, and win. Koji instances may support
 plugins which extend the available build types beyond these.</p>
 </div>
-<div class="section" id="predicate-version">
-<h3>Predicate <code class="docutils literal notranslate"><span class="pre">version</span></code><a class="headerlink" href="#predicate-version" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-predicate-version">
+<h3>Build Predicate <code class="docutils literal notranslate"><span class="pre">version</span></code><a class="headerlink" href="#build-predicate-version" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(version VER [VER...])
 </pre></div>
 </div>
 <p>Filters for builds which have a version matching any of the given
 <code class="docutils literal notranslate"><span class="pre">VER</span></code> patterns.</p>
+</div>
+<div class="section" id="add-on-build-predicates">
+<h3>Add-On Build Predicates<a class="headerlink" href="#add-on-build-predicates" title="Permalink to this headline">¶</a></h3>
+<p>The koji plugin commands <code class="docutils literal notranslate"><span class="pre">filter-builds</span></code> and
+<code class="docutils literal notranslate"><span class="pre">list-component-builds</span></code>, and the standalone command
+<code class="docutils literal notranslate"><span class="pre">ksd-filter-tags</span></code> will attempt to load additional user-defined build
+sieves utilizing Python entry_points. This behavior may be disabled by
+with the <code class="docutils literal notranslate"><span class="pre">--no-entry-points</span></code> option.</p>
+<p>In order to provide additional tag sieves, a Python package must
+supply an entry_point to a nullary function which will return a list
+of Sieve classes, under the group named
+<code class="docutils literal notranslate"><span class="pre">koji_smoky_dingo_build_sieves</span></code></p>
+</div>
+</div>
+<div class="section" id="tag-sieves">
+<h2>Tag Sieves<a class="headerlink" href="#tag-sieves" title="Permalink to this headline">¶</a></h2>
+<p>To facilitate filtering sequences of koji tag info dicts, there are
+a number of available sieves provided in the
+<a class="reference internal" href="../kojismokydingo/sift/tags/#module-kojismokydingo.sift.tags" title="kojismokydingo.sift.tags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags</span></code></a> module.</p>
+<p>A sifter instance with these and the core sieves available by default can be
+created via <a class="reference internal" href="../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.tag_info_sifter" title="kojismokydingo.sift.tags.tag_info_sifter"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.tag_info_sifter()</span></code></a></p>
+<div class="section" id="tag-predicate-arch">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">arch</span></code><a class="headerlink" href="#tag-predicate-arch" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(arch [ARCH...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> patterns are specified, matches tags which have any
+architectures at all.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> patterns are specified, then only matches tags which have
+an architecture that matches any of the given patterns.</p>
+</div>
+<div class="section" id="tag-predicate-build-tag">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">build-tag</span></code><a class="headerlink" href="#tag-predicate-build-tag" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(build-tag [TARGET...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> is specified, then matches tags which are used as the
+build tag for any target.</p>
+<p>If any <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> patterns are specified, then matches tags which are
+used as the build tag for a target with a name matching any of the
+patterns.</p>
+</div>
+<div class="section" id="tag-predicate-compare-latest">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">compare-latest</span></code><a class="headerlink" href="#tag-predicate-compare-latest" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(compare-latest PACKAGE [OP VERSION])
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">OP</span></code> and <code class="docutils literal notranslate"><span class="pre">VERSION</span></code> are not specified, matches tags which have
+any build of the given <code class="docutils literal notranslate"><span class="pre">PACKAGE</span></code> name as latest.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">OP</span></code> and <code class="docutils literal notranslate"><span class="pre">VERSION</span></code> are specified, matches tags which have the a
+latest build of the given <code class="docutils literal notranslate"><span class="pre">PACKAGE</span></code> name which compare correctly. If
+tag doesn't have any build of the given package, it will not match.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OP</span></code> can be any of the following comparison operators: <code class="docutils literal notranslate"><span class="pre">==</span></code>,
+<code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code> can be in any of the following forms:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH:VERSION-RELEASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VERSION-RELEASE</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>If <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> is omitted, it is presumed to be <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> is omitted, it is presumed to be equivalent.</p>
+</div>
+<div class="section" id="tag-predicate-dest-tag">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">dest-tag</span></code><a class="headerlink" href="#tag-predicate-dest-tag" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(dest-tag [TARGET...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> is specified, then matches tags which are used as the
+destination tag for any target.</p>
+<p>If any <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> patterns are specified, then matches tags which are
+used as the destination tag for a target with a name matching any of
+the patterns.</p>
+</div>
+<div class="section" id="tag-predicate-exact-arch">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">exact-arch</span></code><a class="headerlink" href="#tag-predicate-exact-arch" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(exact-arch [ARCH...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> names are specified, matches only tags which have no
+architectures.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> names are specified, they must be specified as
+symbols. Only matches tags which have the exact same set of
+architectures.</p>
+</div>
+<div class="section" id="tag-predicate-group">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">group</span></code><a class="headerlink" href="#tag-predicate-group" title="Permalink to this headline">¶</a></h3>
+<dl class="simple">
+<dt>::</dt><dd><p>(group GROUP [GROUP...])</p>
+</dd>
+</dl>
+<p>Matches tags which have any of the given install groups configured.
+Honors inheritance.</p>
+</div>
+<div class="section" id="tag-predicate-group-pkg">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">group-pkg</span></code><a class="headerlink" href="#tag-predicate-group-pkg" title="Permalink to this headline">¶</a></h3>
+<dl class="simple">
+<dt>::</dt><dd><p>(group-pkg GROUP PKG [PKG...] [requireAll: False])</p>
+</dd>
+</dl>
+<p>Matches tags which have the given install group, which also contains
+any of the given <code class="docutils literal notranslate"><span class="pre">PKG</span></code> names.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">requireAll</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> then all of the given <code class="docutils literal notranslate"><span class="pre">PKG</span></code>
+names must be present in order for a tag to match.</p>
+</div>
+<div class="section" id="tag-predicate-has-ancestor">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-ancestor</span></code><a class="headerlink" href="#tag-predicate-has-ancestor" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(has-ancestor [TAG...])
+(inherits-from [TAG...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which have any
+parents.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which have a parent at
+any depth matching any of the given patterns.</p>
+</div>
+<div class="section" id="tag-predicate-has-child">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-child</span></code><a class="headerlink" href="#tag-predicate-has-child" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(has-child [TAG...])
+(parent-of [TAG...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are the
+direct parent to any other tag.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are the direct
+parent to any tag matching any of the given patterns.</p>
+</div>
+<div class="section" id="tag-predicate-has-descendant">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-descendant</span></code><a class="headerlink" href="#tag-predicate-has-descendant" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(has-descendant [TAG...])
+(inherited-by [TAG...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are inherited
+by any other tag.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are inherited by
+any tag matching any of the patterns, at any depth.</p>
+</div>
+<div class="section" id="tag-predicate-has-parent">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-parent</span></code><a class="headerlink" href="#tag-predicate-has-parent" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(has-parent [TAG...])
+(child-of [TAG...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which have any
+parents.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matchs tags which have any direct
+parent matching any of the given patterns.</p>
+</div>
+<div class="section" id="tag-predicate-locked">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">locked</span></code><a class="headerlink" href="#tag-predicate-locked" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(locked)
+</pre></div>
+</div>
+<p>Matches tags which have been locked.</p>
+</div>
+<div class="section" id="tag-predicate-name">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">name</span></code><a class="headerlink" href="#tag-predicate-name" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(name NAME [NAME...])
+</pre></div>
+</div>
+<p>Matches tags which have a name that matches any of the given <code class="docutils literal notranslate"><span class="pre">NAME</span></code>
+patterns.</p>
+</div>
+<div class="section" id="tag-predicate-permission">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">permission</span></code><a class="headerlink" href="#tag-predicate-permission" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(permission [PERM...])
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">PERM</span></code> is specified, then matches tags which have any
+permission set.</p>
+<p>If any <code class="docutils literal notranslate"><span class="pre">PERM</span></code> patters are specified, then matches tags which have
+any of the listed permissions set.</p>
+</div>
+<div class="section" id="tag-predicate-pkg-allowed">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">pkg-allowed</span></code><a class="headerlink" href="#tag-predicate-pkg-allowed" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(pkg-allowed PKG [PKG...])
+</pre></div>
+</div>
+<p>Matches tags which have a package listing with any of the given
+<code class="docutils literal notranslate"><span class="pre">PKG</span></code> contained therein and not blocked, honoring inheritance.</p>
+</div>
+<div class="section" id="tag-predicate-pkg-blocked">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">pkg-blocked</span></code><a class="headerlink" href="#tag-predicate-pkg-blocked" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(pkg-blocked PKG [PKG...])
+</pre></div>
+</div>
+<p>Matches tags which have a package listing with any of the given
+<code class="docutils literal notranslate"><span class="pre">PKG</span></code> contained therein and blocked, honoring inheritance.</p>
+</div>
+<div class="section" id="tag-predicate-pkg-unlisted">
+<h3>Tag Predicate <code class="docutils literal notranslate"><span class="pre">pkg-unlisted</span></code><a class="headerlink" href="#tag-predicate-pkg-unlisted" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(pkg-unlisted PKG [PKG...])
+</pre></div>
+</div>
+<p>Matches tags which have no package listing (neither allowed nor
+blocked) for any of the given <code class="docutils literal notranslate"><span class="pre">PKG</span></code> names. Honors inheritance.</p>
+</div>
+<div class="section" id="add-on-tag-predicates">
+<h3>Add-On Tag Predicates<a class="headerlink" href="#add-on-tag-predicates" title="Permalink to this headline">¶</a></h3>
+<p>The koji plugin command <code class="docutils literal notranslate"><span class="pre">filter-tags</span></code> and the standalone command
+<code class="docutils literal notranslate"><span class="pre">ksd-filter-tags</span></code> will attempt to load additional user-defined tag
+sieves utilizing Python entry_points. This behavior may be disabled by
+with the <code class="docutils literal notranslate"><span class="pre">--no-entry-points</span></code> option.</p>
+<p>In order to provide additional tag sieves, a Python package must
+supply an entry_point to a nullary function which will return a list
+of Sieve classes, under the group named
+<code class="docutils literal notranslate"><span class="pre">koji_smoky_dingo_tag_sieves</span></code></p>
 </div>
 </div>
 </div>
@@ -543,24 +800,49 @@ plugins which extend the available build types beyond these.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#build-sieves">Build Sieves</a><ul>
-<li><a class="reference internal" href="#evr-comparison-predicates">EVR Comparison Predicates</a></li>
-<li><a class="reference internal" href="#predicate-cg-imported">Predicate <code class="docutils literal notranslate"><span class="pre">cg-imported</span></code></a></li>
-<li><a class="reference internal" href="#predicate-epoch">Predicate <code class="docutils literal notranslate"><span class="pre">epoch</span></code></a></li>
-<li><a class="reference internal" href="#predicate-imported">Predicate <code class="docutils literal notranslate"><span class="pre">imported</span></code></a></li>
-<li><a class="reference internal" href="#predicate-inherited">Predicate <code class="docutils literal notranslate"><span class="pre">inherited</span></code></a></li>
-<li><a class="reference internal" href="#predicate-latest">Predicate <code class="docutils literal notranslate"><span class="pre">latest</span></code></a></li>
-<li><a class="reference internal" href="#predicate-latest-maven">Predicate <code class="docutils literal notranslate"><span class="pre">latest-maven</span></code></a></li>
-<li><a class="reference internal" href="#predicate-name">Predicate <code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
-<li><a class="reference internal" href="#predicate-nvr">Predicate <code class="docutils literal notranslate"><span class="pre">nvr</span></code></a></li>
-<li><a class="reference internal" href="#predicate-owner">Predicate <code class="docutils literal notranslate"><span class="pre">owner</span></code></a></li>
-<li><a class="reference internal" href="#predicate-pkg-allowed">Predicate <code class="docutils literal notranslate"><span class="pre">pkg-allowed</span></code></a></li>
-<li><a class="reference internal" href="#predicate-pkg-blocked">Predicate <code class="docutils literal notranslate"><span class="pre">pkg-blocked</span></code></a></li>
-<li><a class="reference internal" href="#predicate-release">Predicate <code class="docutils literal notranslate"><span class="pre">release</span></code></a></li>
-<li><a class="reference internal" href="#predicate-signed">Predicate <code class="docutils literal notranslate"><span class="pre">signed</span></code></a></li>
-<li><a class="reference internal" href="#predicate-state">Predicate <code class="docutils literal notranslate"><span class="pre">state</span></code></a></li>
-<li><a class="reference internal" href="#predicate-tagged">Predicate <code class="docutils literal notranslate"><span class="pre">tagged</span></code></a></li>
-<li><a class="reference internal" href="#predicate-type">Predicate <code class="docutils literal notranslate"><span class="pre">type</span></code></a></li>
-<li><a class="reference internal" href="#predicate-version">Predicate <code class="docutils literal notranslate"><span class="pre">version</span></code></a></li>
+<li><a class="reference internal" href="#build-evr-comparison-predicates">Build EVR Comparison Predicates</a></li>
+<li><a class="reference internal" href="#build-predicate-cg-imported">Build Predicate <code class="docutils literal notranslate"><span class="pre">cg-imported</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-compare-latest-id">Build Predicate <code class="docutils literal notranslate"><span class="pre">compare-latest-id</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-compare-latest-nvr">Build Predicate <code class="docutils literal notranslate"><span class="pre">compare-latest-nvr</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-epoch">Build Predicate <code class="docutils literal notranslate"><span class="pre">epoch</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-imported">Build Predicate <code class="docutils literal notranslate"><span class="pre">imported</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-inherited">Build Predicate <code class="docutils literal notranslate"><span class="pre">inherited</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-latest">Build Predicate <code class="docutils literal notranslate"><span class="pre">latest</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-latest-maven">Build Predicate <code class="docutils literal notranslate"><span class="pre">latest-maven</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-name">Build Predicate <code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-nvr">Build Predicate <code class="docutils literal notranslate"><span class="pre">nvr</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-owner">Build Predicate <code class="docutils literal notranslate"><span class="pre">owner</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-pkg-allowed">Build Predicate <code class="docutils literal notranslate"><span class="pre">pkg-allowed</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-pkg-blocked">Build Predicate <code class="docutils literal notranslate"><span class="pre">pkg-blocked</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-pkg-unlisted">Build Predicate <code class="docutils literal notranslate"><span class="pre">pkg-unlisted</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-release">Build Predicate <code class="docutils literal notranslate"><span class="pre">release</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-signed">Build Predicate <code class="docutils literal notranslate"><span class="pre">signed</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-state">Build Predicate <code class="docutils literal notranslate"><span class="pre">state</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-tagged">Build Predicate <code class="docutils literal notranslate"><span class="pre">tagged</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-type">Build Predicate <code class="docutils literal notranslate"><span class="pre">type</span></code></a></li>
+<li><a class="reference internal" href="#build-predicate-version">Build Predicate <code class="docutils literal notranslate"><span class="pre">version</span></code></a></li>
+<li><a class="reference internal" href="#add-on-build-predicates">Add-On Build Predicates</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tag-sieves">Tag Sieves</a><ul>
+<li><a class="reference internal" href="#tag-predicate-arch">Tag Predicate <code class="docutils literal notranslate"><span class="pre">arch</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-build-tag">Tag Predicate <code class="docutils literal notranslate"><span class="pre">build-tag</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-compare-latest">Tag Predicate <code class="docutils literal notranslate"><span class="pre">compare-latest</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-dest-tag">Tag Predicate <code class="docutils literal notranslate"><span class="pre">dest-tag</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-exact-arch">Tag Predicate <code class="docutils literal notranslate"><span class="pre">exact-arch</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-group">Tag Predicate <code class="docutils literal notranslate"><span class="pre">group</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-group-pkg">Tag Predicate <code class="docutils literal notranslate"><span class="pre">group-pkg</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-has-ancestor">Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-ancestor</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-has-child">Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-child</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-has-descendant">Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-descendant</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-has-parent">Tag Predicate <code class="docutils literal notranslate"><span class="pre">has-parent</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-locked">Tag Predicate <code class="docutils literal notranslate"><span class="pre">locked</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-name">Tag Predicate <code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-permission">Tag Predicate <code class="docutils literal notranslate"><span class="pre">permission</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-pkg-allowed">Tag Predicate <code class="docutils literal notranslate"><span class="pre">pkg-allowed</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-pkg-blocked">Tag Predicate <code class="docutils literal notranslate"><span class="pre">pkg-blocked</span></code></a></li>
+<li><a class="reference internal" href="#tag-predicate-pkg-unlisted">Tag Predicate <code class="docutils literal notranslate"><span class="pre">pkg-unlisted</span></code></a></li>
+<li><a class="reference internal" href="#add-on-tag-predicates">Add-On Tag Predicates</a></li>
 </ul>
 </li>
 </ul>
@@ -568,8 +850,8 @@ plugins which extend the available build types beyond these.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../commands/unset-rpm-macro/"
-                        title="previous chapter">koji unset-rpm-macro</a></p>
+  <p class="topless"><a href="../standalone/ksd-filter-tags/"
+                        title="previous chapter">ksd-filter-tags</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../kojismokydingo/"
                         title="next chapter">Core API Reference</a></p>
@@ -607,15 +889,15 @@ plugins which extend the available build types beyond these.</p>
           <a href="../kojismokydingo/" title="Core API Reference"
              >next</a> |</li>
         <li class="right" >
-          <a href="../commands/unset-rpm-macro/" title="koji unset-rpm-macro"
+          <a href="../standalone/ksd-filter-tags/" title="ksd-filter-tags"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

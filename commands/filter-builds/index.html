@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>koji filter-builds &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>koji filter-builds &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
-    <link rel="next" title="koji latest-archives" href="../latest-archives/" />
+    <link rel="next" title="koji filter-tags" href="../filter-tags/" />
     <link rel="prev" title="koji client-config" href="../client-config/" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
@@ -34,12 +34,12 @@
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../latest-archives/" title="koji latest-archives"
+          <a href="../filter-tags/" title="koji filter-tags"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../client-config/" title="koji client-config"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Plugin Commands</a> &#187;</li> 
       </ul>
     </div>  
@@ -60,6 +60,7 @@
                           [--win] [-c CG_NAME] [--imports | --no-imports]
                           [--completed | --deleted] [--param KEY=VALUE]
                           [--env-params] [--output FLAG:FILENAME]
+                          [--no-entry-points]
                           [--filter FILTER | --filter-file FILTER_FILE]
                           [NVR [NVR ...]]
 
@@ -126,6 +127,8 @@ Filtering with Sifty sieves:
                         If FILENAME is &#39;-&#39;, output to stdout. The &#39;default&#39;
                         flag is output to stdout by default, and other flags
                         are discarded
+  --no-entry-points, -n
+                        Disable loading of additional sieves from entry_points
   --filter FILTER       Use the given sifty filter predicates
   --filter-file FILTER_FILE
                         Load sifty filter predictes from file
@@ -133,7 +136,7 @@ Filtering with Sifty sieves:
 </div>
 <p>Given a list of NVRs, output only those which match a set of filtering
 parameters.</p>
-<p>The set of NVRs to tag can be fed to this command in multiple
+<p>The set of NVRs to filter can be fed to this command in multiple
 ways. They can be specified as arguments, or they can be specified
 using the <code class="docutils literal notranslate"><span class="pre">--file</span></code> option to reference either a file containing a
 list of NVRs (one per line) or <code class="docutils literal notranslate"><span class="pre">-</span></code> to indicate stdin. The NVR list
@@ -161,6 +164,7 @@ sifter.</p>
 <li><p><a class="reference internal" href="../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.FilterBuilds" title="kojismokydingo.cli.builds.FilterBuilds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.cli.builds.FilterBuilds</span></code></a></p></li>
 <li><p><a class="reference internal" href="../../kojismokydingo/cli/builds/#kojismokydingo.cli.builds.cli_filter_builds" title="kojismokydingo.cli.builds.cli_filter_builds"><code class="xref py py-func docutils literal notranslate"><span class="pre">kojismokydingo.cli.builds.cli_filter_builds()</span></code></a></p></li>
 <li><p><a class="reference internal" href="../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter" title="kojismokydingo.builds.BuildFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.builds.BuildFilter</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kojismokydingo/sift/builds/#module-kojismokydingo.sift.builds" title="kojismokydingo.sift.builds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kojismokydingo.sift.builds</span></code></a></p></li>
 </ul>
 </div>
 </div>
@@ -184,8 +188,8 @@ sifter.</p>
   <p class="topless"><a href="../client-config/"
                         title="previous chapter">koji client-config</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../latest-archives/"
-                        title="next chapter">koji latest-archives</a></p>
+  <p class="topless"><a href="../filter-tags/"
+                        title="next chapter">koji filter-tags</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -217,19 +221,19 @@ sifter.</p>
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../latest-archives/" title="koji latest-archives"
+          <a href="../filter-tags/" title="koji filter-tags"
              >next</a> |</li>
         <li class="right" >
           <a href="../client-config/" title="koji client-config"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Plugin Commands</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

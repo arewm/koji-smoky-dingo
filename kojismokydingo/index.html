@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Core API Reference &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>Core API Reference &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../siftylang/" title="Sifty Dingo Filtering Language"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -111,6 +111,18 @@ authenticated login and logout.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="kojismokydingo.NoSuchArchive">
+<em class="property">exception </em><code class="sig-name descname">NoSuchArchive</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchArchive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchArchive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<p>An archive was not found</p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchArchive.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such archive'</em><a class="headerlink" href="#kojismokydingo.NoSuchArchive.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
 <dt id="kojismokydingo.NoSuchBuild">
 <em class="property">exception </em><code class="sig-name descname">NoSuchBuild</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchBuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchBuild" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
@@ -154,6 +166,18 @@ authenticated login and logout.</p>
 <dl class="attribute">
 <dt id="kojismokydingo.NoSuchPermission.complaint">
 <code class="sig-name descname">complaint</code><em class="property"> = 'No such permission'</em><a class="headerlink" href="#kojismokydingo.NoSuchPermission.complaint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="kojismokydingo.NoSuchRPM">
+<em class="property">exception </em><code class="sig-name descname">NoSuchRPM</code><a class="reference internal" href="../_modules/kojismokydingo/#NoSuchRPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.NoSuchRPM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.BadDingo" title="kojismokydingo.BadDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.BadDingo</span></code></a></p>
+<p>An RPM was not found</p>
+<dl class="attribute">
+<dt id="kojismokydingo.NoSuchRPM.complaint">
+<code class="sig-name descname">complaint</code><em class="property"> = 'No such RPM'</em><a class="headerlink" href="#kojismokydingo.NoSuchRPM.complaint" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -228,6 +252,31 @@ which can be used via tha <code class="docutils literal notranslate"><span class
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.as_archiveinfo">
+<code class="sig-name descname">as_archiveinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">archive</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_archiveinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_archiveinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerces an archive value into an archive info dict.</p>
+<dl class="simple">
+<dt>If archive is an:</dt><dd><ul class="simple">
+<li><p>int, will attempt to load as an archive ID</p></li>
+<li><p>str, will attempt to load as an archive filename</p></li>
+<li><p>dict, will presume already an archive info</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>archive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- value to lookup</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#kojismokydingo.NoSuchArchive" title="kojismokydingo.NoSuchArchive"><strong>NoSuchArchive</strong></a> -- if the archive value could not be resolved
+into an archive info dict</p>
+</dd>
+<dt class="field-odd">Rtype dict</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.as_buildinfo">
 <code class="sig-name descname">as_buildinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_buildinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_buildinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coerces a build value into a koji build info dict.</p>
@@ -246,6 +295,58 @@ which can be used via tha <code class="docutils literal notranslate"><span class
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="#kojismokydingo.NoSuchBuild" title="kojismokydingo.NoSuchBuild"><strong>NoSuchBuild</strong></a> -- if the build value could not be resolved
 into a build info dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.as_hostinfo">
+<code class="sig-name descname">as_hostinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">host</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_hostinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_hostinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerces a host value into a host info dict.</p>
+<dl class="simple">
+<dt>If target is an:</dt><dd><ul class="simple">
+<li><p>int, will attempt to load as a host ID</p></li>
+<li><p>str, will attempt to load as a host name</p></li>
+<li><p>dict, will presume already a host info</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- value to lookup</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NoSuchHost</strong> -- if the host value could not be resolved
+into a host info dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.as_rpminfo">
+<code class="sig-name descname">as_rpminfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">rpm</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_rpminfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_rpminfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coerces a host value into a RPM info dict.</p>
+<dl class="simple">
+<dt>If rpm is an:</dt><dd><ul class="simple">
+<li><p>int, will attempt to load as a RPM ID</p></li>
+<li><p>str, will attempt to load as a RPM NVR</p></li>
+<li><p>dict, will presume already an RPM info</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rpm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- value to lookup</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#kojismokydingo.NoSuchRPM" title="kojismokydingo.NoSuchRPM"><strong>NoSuchRPM</strong></a> -- if the rpm value could not be resolved
+into a RPM info dict</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
@@ -308,6 +409,11 @@ into a target info dict</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.as_taskinfo">
+<code class="sig-name descname">as_taskinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">task</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_taskinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_taskinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.as_userinfo">
@@ -637,13 +743,13 @@ fails. Default, with a minimum of <code class="docutils literal notranslate"><sp
         <li class="right" >
           <a href="../siftylang/" title="Sifty Dingo Filtering Language"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

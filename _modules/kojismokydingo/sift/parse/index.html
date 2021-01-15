@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift.parse &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.sift.parse &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.sift</a> &#187;</li> 
@@ -76,7 +76,7 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">product</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">add_metaclass</span><span class="p">,</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="nb">map</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">range</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">BadDingo</span>
 
@@ -177,6 +177,34 @@
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;SymbolGroup(</span><span class="si">%r</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">src</span></div>
+
+
+<span class="k">class</span> <span class="nc">FormattedSeries</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A portion of a SymbolGroup representing a repeatable formatted</span>
+<span class="sd">    sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">seq</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param fmt: formatting to apply</span>
+<span class="sd">        :type fmt: str</span>
+
+<span class="sd">        :param seq: sequence which can safely have `iter` called on it</span>
+<span class="sd">          multiple times</span>
+<span class="sd">        :type seq: iterable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fmt</span> <span class="o">=</span> <span class="n">fmt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seq</span> <span class="o">=</span> <span class="n">seq</span>
+
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seq</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seq</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Number"><a class="viewcode-back" href="../../../../kojismokydingo/sift/parse/#kojismokydingo.sift.parse.Number">[docs]</a><span class="k">class</span> <span class="nc">Number</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Matcher</span><span class="p">):</span>
@@ -342,6 +370,10 @@
 
 
 <div class="viewcode-block" id="ItemPath"><a class="viewcode-back" href="../../../../kojismokydingo/sift/parse/#kojismokydingo.sift.parse.ItemPath">[docs]</a><span class="k">class</span> <span class="nc">ItemPath</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a collection of elements inside a nested tree of lists</span>
+<span class="sd">    and dicts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">paths</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
@@ -387,8 +419,10 @@
 
 <span class="k">def</span> <span class="nf">split_symbol_groups</span><span class="p">(</span><span class="n">reader</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Invoked to by convert_token to split up a symbol into a series of</span>
-<span class="sd">    groups which can then be combined to form a SymbolGroup.</span>
+<span class="sd">    Invoked to by `convert_token` to split up a symbol into a series</span>
+<span class="sd">    of groups which can then be combined to form a SymbolGroup.</span>
+
+<span class="sd">    :rtype: generator[list[str]]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -436,15 +470,21 @@
 
 
 <span class="k">def</span> <span class="nf">convert_group</span><span class="p">(</span><span class="n">grp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function for `split_symbol_groups`</span>
+
+<span class="sd">    :rtype: list[str] or FormattedSeries</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;..&quot;</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">convert_range</span><span class="p">(</span><span class="n">grp</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">convert_range</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;{&quot;</span><span class="p">,</span> <span class="n">grp</span><span class="p">,</span> <span class="s2">&quot;}&quot;</span><span class="p">))]</span>
 
     <span class="n">work</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">brk</span> <span class="ow">in</span> <span class="n">grp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">work</span> <span class="ow">and</span> <span class="n">_trailing_esc</span><span class="p">(</span><span class="n">work</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">work</span> <span class="ow">and</span> <span class="n">work</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">_trailing_esc</span><span class="p">(</span><span class="n">work</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">work</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">work</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">brk</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">work</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brk</span><span class="p">)</span>
@@ -456,6 +496,19 @@
 
 
 <span class="k">def</span> <span class="nf">convert_range</span><span class="p">(</span><span class="n">rng</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function for `convert_group` to work with the group range</span>
+<span class="sd">    notation.</span>
+
+<span class="sd">    range notation can be specified as ``START..STOP`` or as</span>
+<span class="sd">    ``START..STOP..STEP``. note that any zero-prefix padding is honored,</span>
+<span class="sd">    and padding will be applied to values that</span>
+
+<span class="sd">    produces a FormattedSeries built on a range instance</span>
+
+<span class="sd">    :rtype: FormattedSeries</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">broken</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
     <span class="n">blen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
 
@@ -481,7 +534,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0:d}</span><span class="s2">&quot;</span>
 
-    <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">istart</span><span class="p">,</span> <span class="n">istop</span><span class="p">,</span> <span class="n">istep</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">FormattedSeries</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">istart</span><span class="p">,</span> <span class="n">istop</span><span class="p">,</span> <span class="n">istep</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="parse_exprs"><a class="viewcode-back" href="../../../../kojismokydingo/sift/parse/#kojismokydingo.sift.parse.parse_exprs">[docs]</a><span class="k">def</span> <span class="nf">parse_exprs</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -606,6 +659,8 @@
 
 <span class="sd">    * An all-digit value will become Number</span>
 <span class="sd">    * None, null, nil become a Null</span>
+<span class="sd">    * True becomes the boolean True</span>
+<span class="sd">    * False becomes the boolean False</span>
 <span class="sd">    * Use of {} may become a SymbolGroup or Symbol</span>
 <span class="sd">    * Everything else becomes a Symbol.</span>
 
@@ -617,6 +672,14 @@
 
     <span class="k">if</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;null&quot;</span><span class="p">,</span> <span class="s2">&quot;nil&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Null</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
+        <span class="c1"># note, we do not use &#39;in&#39; because 1 would match as True</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">elif</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
+        <span class="c1"># note, we do not use &#39;in&#39; because 0 would match as False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">elif</span> <span class="n">NUMBER_RE</span> <span class="o">==</span> <span class="n">val</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Number</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
@@ -630,11 +693,10 @@
                 <span class="c1"># in cases where there&#39;s only one choice in all the</span>
                 <span class="c1"># groups, then we can simply create a single Symbol</span>
                 <span class="c1"># from those merged choices.</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grps</span><span class="p">)</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grps</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">SymbolGroup</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">grps</span><span class="p">)</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 
@@ -770,13 +832,13 @@
 
 <span class="k">def</span> <span class="nf">parse_quoted</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">quotec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">advanced_escapes</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function for parse_exprs, will parse quoted values and</span>
+<span class="sd">    Helper function for `parse_exprs`, will parse quoted values and</span>
 <span class="sd">    return the appropriate wrapper type depending on the quoting</span>
 <span class="sd">    character.</span>
 
-<span class="sd">    * ``&quot;foo&quot;`` is a str</span>
-<span class="sd">    * ``/foo/`` is a Regex</span>
-<span class="sd">    * ``|foo|`` is a Glob</span>
+<span class="sd">    * ``&quot;foo&quot;`` is a `str`</span>
+<span class="sd">    * ``/foo/`` is a `Regex`</span>
+<span class="sd">    * ``|foo|`` is a `Glob`</span>
 
 <span class="sd">    Symbols are generated in the parse_exprs function directly, as</span>
 <span class="sd">    they are not quoted.</span>
@@ -871,7 +933,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.sift</a> &#187;</li> 
@@ -879,8 +941,8 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

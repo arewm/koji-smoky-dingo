@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -74,15 +74,23 @@
 <span class="kn">from</span> <span class="nn">koji_cli.lib</span> <span class="k">import</span> <span class="n">arg_filter</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">zip</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">zip</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">TagSmokyDingo</span><span class="p">,</span>
-    <span class="n">printerr</span><span class="p">,</span> <span class="n">pretty_json</span><span class="p">,</span> <span class="n">tabulate</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">BadDingo</span><span class="p">,</span> <span class="n">FeatureUnavailable</span><span class="p">,</span> <span class="n">NoSuchTag</span><span class="p">,</span> <span class="n">version_require</span>
+    <span class="n">int_or_str</span><span class="p">,</span> <span class="n">printerr</span><span class="p">,</span> <span class="n">pretty_json</span><span class="p">,</span> <span class="n">read_clean_lines</span><span class="p">,</span> <span class="n">tabulate</span><span class="p">,</span> <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.sift</span> <span class="k">import</span> <span class="n">TagSifting</span><span class="p">,</span> <span class="n">output_sifted</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">BadDingo</span><span class="p">,</span> <span class="n">FeatureUnavailable</span><span class="p">,</span> <span class="n">NoSuchTag</span><span class="p">,</span>
+    <span class="n">bulk_load_tags</span><span class="p">,</span> <span class="n">version_require</span><span class="p">,</span> <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">unique</span>
 <span class="kn">from</span> <span class="nn">..tags</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">collect_tag_extras</span><span class="p">,</span> <span class="n">find_inheritance_parent</span><span class="p">,</span> <span class="n">gather_affected_targets</span><span class="p">,</span>
-    <span class="n">renum_inheritance</span><span class="p">,</span> <span class="n">resolve_tag</span><span class="p">)</span>
+    <span class="n">renum_inheritance</span><span class="p">,</span> <span class="n">resolve_tag</span><span class="p">,</span> <span class="n">tag_dedup</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="n">SORT_BY_ID</span> <span class="o">=</span> <span class="s2">&quot;sort-by-id&quot;</span>
+<span class="n">SORT_BY_NAME</span> <span class="o">=</span> <span class="s2">&quot;sort-by-name&quot;</span>
 
 
 <div class="viewcode-block" id="BadSwap"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.BadSwap">[docs]</a><span class="k">class</span> <span class="nc">BadSwap</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
@@ -881,6 +889,107 @@
                                    <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
 
 
+<div class="viewcode-block" id="cli_filter_tags"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.cli_filter_tags">[docs]</a><span class="k">def</span> <span class="nf">cli_filter_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">,</span>
+                    <span class="n">search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">tag_sifter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">sorting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">search</span><span class="p">:</span>
+        <span class="n">tag_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span>
+                        <span class="n">session</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="s2">&quot;glob&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">regex</span><span class="p">:</span>
+        <span class="n">tag_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span>
+                        <span class="n">session</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="s2">&quot;regex&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="n">tag_list</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">int_or_str</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">))</span>
+    <span class="n">loaded</span> <span class="o">=</span> <span class="n">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag_list</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">strict</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">tag_dedup</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">loaded</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">tag_sifter</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">tag_sifter</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">sorting</span> <span class="o">==</span> <span class="n">SORT_BY_NAME</span><span class="p">:</span>
+        <span class="n">sortkey</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+    <span class="k">elif</span> <span class="n">sorting</span> <span class="o">==</span> <span class="n">SORT_BY_ID</span><span class="p">:</span>
+        <span class="n">sortkey</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sortkey</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">output_sifted</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="n">sortkey</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FilterTags"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.FilterTags">[docs]</a><span class="k">class</span> <span class="nc">FilterTags</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">TagSifting</span><span class="p">):</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Filter a list of tags&quot;</span>
+
+<div class="viewcode-block" id="FilterTags.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.FilterTags.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">int_or_str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAGNNAME&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tag names to filter through&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--file&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;tag_file&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TAG_FILE&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Read list of tags from file, one name per line.&quot;</span>
+               <span class="s2">&quot; Specify - to read from stdin.&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--strict&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Erorr if any of the tag names to not resolve into a&quot;</span>
+               <span class="s2">&quot; real tag. Otherwise, missing tags are ignored.&quot;</span><span class="p">)</span>
+
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Searching for tags&quot;</span><span class="p">)</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--search&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;GLOB&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filter the results of a search for tags with&quot;</span>
+               <span class="s2">&quot; the given name pattern&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--regex&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;REGEX&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filter the results of a search for tags with&quot;</span>
+               <span class="s2">&quot; the given regex name pattern&quot;</span><span class="p">)</span>
+
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Sorting of tags&quot;</span><span class="p">)</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--nvr-sort&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sorting&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">SORT_BY_NAME</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Sort output by Name in ascending order&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--id-sort&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sorting&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">SORT_BY_ID</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Sort output by Tag ID in ascending order&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FilterTags.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/tags/#kojismokydingo.cli.tags.FilterTags.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">tags</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">tag_file</span><span class="p">:</span>
+                <span class="n">options</span><span class="o">.</span><span class="n">tag_file</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">tag_file</span><span class="p">:</span>
+            <span class="n">tags</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">read_clean_lines</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">tag_file</span><span class="p">))</span>
+
+        <span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sifter</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cli_filter_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span>
+                               <span class="n">search</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">search</span><span class="p">,</span>
+                               <span class="n">regex</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">regex</span><span class="p">,</span>
+                               <span class="n">tag_sifter</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span>
+                               <span class="n">sorting</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">sorting</span><span class="p">,</span>
+                               <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
+                               <span class="n">strict</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">strict</span><span class="p">)</span></div></div>
+
+
 <span class="c1">#</span>
 <span class="c1"># The end.</span>
 </pre></div>
@@ -913,7 +1022,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -921,8 +1030,8 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

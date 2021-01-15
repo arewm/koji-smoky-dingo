@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.tags &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -69,11 +69,13 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">filter</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">NoSuchTag</span><span class="p">,</span>
     <span class="n">as_taginfo</span><span class="p">,</span> <span class="n">as_targetinfo</span><span class="p">,</span>
-    <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_tags</span><span class="p">)</span>
+    <span class="n">bulk_load</span><span class="p">,</span> <span class="n">bulk_load_tags</span><span class="p">,</span> <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">unique</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -85,7 +87,24 @@
     <span class="s2">&quot;gather_tag_ids&quot;</span><span class="p">,</span>
     <span class="s2">&quot;renum_inheritance&quot;</span><span class="p">,</span>
     <span class="s2">&quot;resolve_tag&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tag_dedup&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<div class="viewcode-block" id="tag_dedup"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.tag_dedup">[docs]</a><span class="k">def</span> <span class="nf">tag_dedup</span><span class="p">(</span><span class="n">tag_infos</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a sequence of tag info dictionaries, return a de-duplicated</span>
+<span class="sd">    list of same, with order preserved.</span>
+
+<span class="sd">    All None infos will be dropped.</span>
+
+<span class="sd">    :param tag_infos: tag infos to be de-duplicated.</span>
+<span class="sd">    :type tag_infos: list[dict]</span>
+
+<span class="sd">    :rtype: list[dict]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">unique</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag_infos</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ensure_tag"><a class="viewcode-back" href="../../../kojismokydingo/tags/#kojismokydingo.tags.ensure_tag">[docs]</a><span class="k">def</span> <span class="nf">ensure_tag</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -427,15 +446,15 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift.parse &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.sift.parse &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
-    <link rel="next" title="CLI API Reference" href="../../cli/" />
-    <link rel="prev" title="kojismokydingo.sift.builds" href="../builds/" />
+    <link rel="next" title="kojismokydingo.sift.tags" href="../tags/" />
+    <link rel="prev" title="kojismokydingo.sift.common" href="../common/" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <!--[if lte IE 6]>
@@ -34,12 +34,12 @@
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../../cli/" title="CLI API Reference"
+          <a href="../tags/" title="kojismokydingo.sift.tags"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../builds/" title="kojismokydingo.sift.builds"
+          <a href="../common/" title="kojismokydingo.sift.common"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Sift API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -114,6 +114,8 @@ or Regex)</p>
 <dt id="kojismokydingo.sift.parse.ItemPath">
 <em class="property">class </em><code class="sig-name descname">ItemPath</code><span class="sig-paren">(</span><em class="sig-param">*paths</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/parse/#ItemPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.parse.ItemPath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a collection of elements inside a nested tree of lists
+and dicts</p>
 <dl class="method">
 <dt id="kojismokydingo.sift.parse.ItemPath.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/parse/#ItemPath.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.parse.ItemPath.get" title="Permalink to this definition">¶</a></dt>
@@ -217,6 +219,8 @@ represented as a symbol containing groups within curly-braces</p>
 <ul class="simple">
 <li><p>An all-digit value will become Number</p></li>
 <li><p>None, null, nil become a Null</p></li>
+<li><p>True becomes the boolean True</p></li>
+<li><p>False becomes the boolean False</p></li>
 <li><p>Use of {} may become a SymbolGroup or Symbol</p></li>
 <li><p>Everything else becomes a Symbol.</p></li>
 </ul>
@@ -246,11 +250,11 @@ emits expressions as nested lists.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../builds/"
-                        title="previous chapter">kojismokydingo.sift.builds</a></p>
+  <p class="topless"><a href="../common/"
+                        title="previous chapter">kojismokydingo.sift.common</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../../cli/"
-                        title="next chapter">CLI API Reference</a></p>
+  <p class="topless"><a href="../tags/"
+                        title="next chapter">kojismokydingo.sift.tags</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -282,19 +286,19 @@ emits expressions as nested lists.</p>
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../../cli/" title="CLI API Reference"
+          <a href="../tags/" title="kojismokydingo.sift.tags"
              >next</a> |</li>
         <li class="right" >
-          <a href="../builds/" title="kojismokydingo.sift.builds"
+          <a href="../common/" title="kojismokydingo.sift.common"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Sift API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.standalone &#8212; kojismokydingo 0.9.6 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.standalone</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Standalone</span>
+
+<span class="sd">This package contains adaptive mechanisms for converting a SmokyDingo command</span>
+<span class="sd">into a stand-alone console_script entry point.</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:licence: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
+<span class="kn">from</span> <span class="nn">koji</span> <span class="k">import</span> <span class="n">GenericError</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">basename</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">AnonClientSession</span><span class="p">,</span> <span class="n">BadDingo</span><span class="p">,</span> <span class="n">ProfileClientSession</span>
+<span class="kn">from</span> <span class="nn">..cli</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">SmokyDingo</span><span class="p">,</span> <span class="n">printerr</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;AnonLonelyDingo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LonelyDingo&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="LonelyDingo"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.LonelyDingo">[docs]</a><span class="k">class</span> <span class="nc">LonelyDingo</span><span class="p">(</span><span class="n">SmokyDingo</span><span class="p">):</span>
+
+    <span class="n">default_profile</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="LonelyDingo.main"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.LonelyDingo.main">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">)(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LonelyDingo.create_session"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.LonelyDingo.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ProfileClientSession</span><span class="p">(</span><span class="n">options</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LonelyDingo.parser"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.LonelyDingo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">invoke</span> <span class="o">=</span> <span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">argp</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="n">invoke</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="n">argp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_arguments</span><span class="p">(</span><span class="n">argp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">argp</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">(</span><span class="n">argp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">argp</span></div>
+
+
+<div class="viewcode-block" id="LonelyDingo.profile_arguments"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.LonelyDingo.profile_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">profile_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Koji Profile options&quot;</span><span class="p">)</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_profile</span>
+        <span class="n">required</span> <span class="o">=</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--profile&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PROFILE&quot;</span><span class="p">,</span>
+               <span class="n">default</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;specify a configuration profile&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">()</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_session</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pre_handle</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">printerr</span><span class="p">()</span>
+            <span class="k">return</span> <span class="mi">130</span>
+
+        <span class="k">except</span> <span class="n">GenericError</span> <span class="k">as</span> <span class="n">kge</span><span class="p">:</span>
+            <span class="n">printerr</span><span class="p">(</span><span class="n">kge</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">except</span> <span class="n">BadDingo</span> <span class="k">as</span> <span class="n">bad</span><span class="p">:</span>
+            <span class="n">printerr</span><span class="p">(</span><span class="n">bad</span><span class="p">)</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">2</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># koji CLI hides tracebacks from us. If something goes</span>
+            <span class="c1"># wrong, we want to see it</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="k">raise</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="AnonLonelyDingo"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.AnonLonelyDingo">[docs]</a><span class="k">class</span> <span class="nc">AnonLonelyDingo</span><span class="p">(</span><span class="n">LonelyDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An adaptive layer to assist in converting an AnonSmokyDingo</span>
+<span class="sd">    instance into a callable suitable for use as a console_scripts</span>
+<span class="sd">    entry point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AnonLonelyDingo.create_session"><a class="viewcode-back" href="../../../kojismokydingo/standalone/#kojismokydingo.standalone.AnonLonelyDingo.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">AnonClientSession</span><span class="p">(</span><span class="n">options</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>

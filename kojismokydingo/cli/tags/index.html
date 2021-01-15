@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.cli.tags &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.cli.hosts"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">CLI API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -138,6 +138,30 @@ May return an alternative parser instance or None.</p>
 <dl class="method">
 <dt id="kojismokydingo.cli.tags.BlockRPMMacro.handle">
 <code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#BlockRPMMacro.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.BlockRPMMacro.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the full set of actions for this command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.cli.tags.FilterTags">
+<em class="property">class </em><code class="sig-name descname">FilterTags</code><span class="sig-paren">(</span><em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#FilterTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.FilterTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.cli.AnonSmokyDingo" title="kojismokydingo.cli.AnonSmokyDingo"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.AnonSmokyDingo</span></code></a>, <a class="reference internal" href="../sift/#kojismokydingo.cli.sift.TagSifting" title="kojismokydingo.cli.sift.TagSifting"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.cli.sift.TagSifting</span></code></a></p>
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.FilterTags.arguments">
+<code class="sig-name descname">arguments</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#FilterTags.arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.FilterTags.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add relevant arguments to the given parser instance.
+May return an alternative parser instance or None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.cli.tags.FilterTags.description">
+<code class="sig-name descname">description</code><em class="property"> = 'Filter a list of tags'</em><a class="headerlink" href="#kojismokydingo.cli.tags.FilterTags.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.cli.tags.FilterTags.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">options</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#FilterTags.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.FilterTags.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the full set of actions for this command.</p>
 </dd></dl>
 
@@ -423,6 +447,11 @@ May return an alternative parser instance or None.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.cli.tags.cli_filter_tags">
+<code class="sig-name descname">cli_filter_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag_list</em>, <em class="sig-param">search=None</em>, <em class="sig-param">regex=None</em>, <em class="sig-param">tag_sifter=None</em>, <em class="sig-param">sorting=None</em>, <em class="sig-param">outputs=None</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_filter_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_filter_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.cli.tags.cli_list_env_vars">
 <code class="sig-name descname">cli_list_env_vars</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagname</em>, <em class="sig-param">target=False</em>, <em class="sig-param">quiet=None</em>, <em class="sig-param">defn=False</em>, <em class="sig-param">json=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/cli/tags/#cli_list_env_vars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.cli.tags.cli_list_env_vars" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -537,14 +566,14 @@ flush: whether to forcibly flush the stream.</p>
         <li class="right" >
           <a href="../hosts/" title="kojismokydingo.cli.hosts"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >CLI API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

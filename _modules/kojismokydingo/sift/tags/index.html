@@ -1,0 +1,985 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.sift.tags &#8212; kojismokydingo 0.9.6 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.sift</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for kojismokydingo.sift.tags</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This library is free software; you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation; either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This library is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this library; if not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Koji Smoky Dingo - Sifty Dingo filtering for Koji Tags</span>
+
+<span class="sd">This module provides sieves for filtering through koji tag info</span>
+<span class="sd">dicts.</span>
+
+<span class="sd">:author: Christopher O&#39;Brien &lt;obriencj@gmail.com&gt;</span>
+<span class="sd">:license: GPL v3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span><span class="p">,</span> <span class="n">itervalues</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DEFAULT_SIEVES</span><span class="p">,</span>
+    <span class="n">IntStrSieve</span><span class="p">,</span> <span class="n">ItemSieve</span><span class="p">,</span> <span class="n">MatcherSieve</span><span class="p">,</span> <span class="n">Sieve</span><span class="p">,</span> <span class="n">Sifter</span><span class="p">,</span>
+    <span class="n">SymbolSieve</span><span class="p">,</span> <span class="n">VariadicSieve</span><span class="p">,</span>
+    <span class="n">ensure_int_or_str</span><span class="p">,</span> <span class="n">ensure_str</span><span class="p">,</span> <span class="n">ensure_symbol</span><span class="p">,</span> <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">CacheMixin</span><span class="p">,</span> <span class="n">ensure_comparison</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">as_buildinfo</span><span class="p">,</span> <span class="n">bulk_load_builds</span><span class="p">,</span> <span class="n">bulk_load_tags</span><span class="p">,</span> <span class="n">iter_bulk_load</span><span class="p">,</span> <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..builds</span> <span class="k">import</span> <span class="n">build_dedup</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">rpm_evr_compare</span>
+<span class="kn">from</span> <span class="nn">..tags</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">gather_tag_ids</span><span class="p">,</span> <span class="n">tag_dedup</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;DEFAULT_TAG_INFO_SIEVES&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;ArchSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BuildTagSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CompareLatestSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DestTagSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ExactArchSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HasAncestorSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HasChildSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HasDescendantSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HasParentSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GroupSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GroupPkgSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LatestSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LockedSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NameSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PermissionSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PkgAllowedSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PkgBlockedSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PkgUnlistedSieve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TaggedSieve&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;tag_info_sieves&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tag_info_sifter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sift_tags&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sift_tagnames&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="NameSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.NameSieve">[docs]</a><span class="k">class</span> <span class="nc">NameSieve</span><span class="p">(</span><span class="n">ItemSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Usage: ``(name NAME [NAME...])``</span>
+
+<span class="sd">    filters for dict infos whose name matches any of the given</span>
+<span class="sd">    ``NAME`` matchers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">field</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span></div>
+
+
+<div class="viewcode-block" id="ArchSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.ArchSieve">[docs]</a><span class="k">class</span> <span class="nc">ArchSieve</span><span class="p">(</span><span class="n">MatcherSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(arch [ARCH...])``</span>
+
+<span class="sd">    If no ``ARCH`` patterns are specified, matches tags which have any</span>
+<span class="sd">    architectures at all.</span>
+
+<span class="sd">    If ``ARCH`` patterns are specified, then only matches tags which</span>
+<span class="sd">    have an architecture that matches any of the given patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;arch&quot;</span>
+
+
+<div class="viewcode-block" id="ArchSieve.prep"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.ArchSieve.prep">[docs]</a>    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;arches&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">tagarch</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="s2">&quot;arches&quot;</span><span class="p">]</span>
+                <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;arches&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tagarch</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">tagarch</span> <span class="k">else</span> <span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ArchSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.ArchSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">wanted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wanted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;arches&quot;</span><span class="p">])</span>
+
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">arches</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;arches&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">arch</span> <span class="ow">in</span> <span class="n">arches</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">arch</span> <span class="ow">in</span> <span class="n">wanted</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="ExactArchSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.ExactArchSieve">[docs]</a><span class="k">class</span> <span class="nc">ExactArchSieve</span><span class="p">(</span><span class="n">SymbolSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(exact-arch [ARCH...])``</span>
+
+<span class="sd">    If no ``ARCH`` names are specified, matches only tags which have</span>
+<span class="sd">    no architectures.</span>
+
+<span class="sd">    If ``ARCH`` names are specified, they must be specified as</span>
+<span class="sd">    symbols.  Only matches tags which have the exact same set of</span>
+<span class="sd">    architectures.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;exact-arch&quot;</span>
+
+
+<div class="viewcode-block" id="ExactArchSieve.get_info_cache"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.ExactArchSieve.get_info_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_info_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tinfo</span><span class="p">):</span>
+        <span class="c1"># let&#39;s use the same caches that the ArchSieve uses</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="s2">&quot;arch&quot;</span><span class="p">,</span> <span class="n">tinfo</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExactArchSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.ExactArchSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">wanted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wanted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="ow">not</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;arches&quot;</span><span class="p">]</span>
+
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">arches</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;arches&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arches</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">wanted</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tok</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arches</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="LockedSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.LockedSieve">[docs]</a><span class="k">class</span> <span class="nc">LockedSieve</span><span class="p">(</span><span class="n">Sieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(locked)``</span>
+
+<span class="sd">    Matches tags which have been locked</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LockedSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LockedSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.LockedSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="PermissionSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PermissionSieve">[docs]</a><span class="k">class</span> <span class="nc">PermissionSieve</span><span class="p">(</span><span class="n">MatcherSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(permission [PERM...])```</span>
+
+<span class="sd">    If no ``PERM`` is specified, then matches tags which have any</span>
+<span class="sd">    non-None permission set.</span>
+
+<span class="sd">    If any ``PERM`` patters are specified, then matches tags which</span>
+<span class="sd">    have any of the listed permissions set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;permission&quot;</span>
+
+
+<div class="viewcode-block" id="PermissionSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PermissionSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;perm&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="ow">or</span>
+                <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;perm_id&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">TargetSieve</span><span class="p">(</span><span class="n">MatcherSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for BuildTagSieve and DestTagSieve. Both operate on the</span>
+<span class="sd">    same principal, but use slightly different queries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">prep_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;target_names&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">needed</span><span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cache</span>
+
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">targs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_targets</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">):</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;target_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targs</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;target_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targs</span><span class="p">]</span>
+
+
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">target_names</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_names&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="ow">and</span> <span class="n">target_names</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">target_names</span><span class="p">)</span>
+
+        <span class="n">target_ids</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_ids&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">target_names</span> <span class="ow">or</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">target_ids</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="BuildTagSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.BuildTagSieve">[docs]</a><span class="k">class</span> <span class="nc">BuildTagSieve</span><span class="p">(</span><span class="n">TargetSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(build-tag [TARGET...])``</span>
+
+<span class="sd">    If no ``TARGET`` is specified, then matches tags which are used as</span>
+<span class="sd">    the build tag for any target.</span>
+
+<span class="sd">    If any ``TARGET`` patterns are specified, then matches tags which</span>
+<span class="sd">    are used as the build tag for a target with a name matching any of</span>
+<span class="sd">    the patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;build-tag&quot;</span>
+
+
+<div class="viewcode-block" id="BuildTagSieve.prep_targets"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.BuildTagSieve.prep_targets">[docs]</a>    <span class="k">def</span> <span class="nf">prep_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTargets</span><span class="p">(</span><span class="n">buildTagID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DestTagSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.DestTagSieve">[docs]</a><span class="k">class</span> <span class="nc">DestTagSieve</span><span class="p">(</span><span class="n">TargetSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(dest-tag [TARGET...])``</span>
+
+<span class="sd">    If no ``TARGET`` is specified, then matches tags which are used as</span>
+<span class="sd">    the destination tag for any target.</span>
+
+<span class="sd">    If any ``TARGET`` patterns are specified, then matches tags which</span>
+<span class="sd">    are used as the destination tag for a target with a name matching</span>
+<span class="sd">    any of the patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;dest-tag&quot;</span>
+
+
+<div class="viewcode-block" id="DestTagSieve.prep_targets"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.DestTagSieve.prep_targets">[docs]</a>    <span class="k">def</span> <span class="nf">prep_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getBuildTargets</span><span class="p">(</span><span class="n">destTagID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">InheritanceSieve</span><span class="p">(</span><span class="n">MatcherSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for inheritance-checking sieves. The ``prep_inheritance``</span>
+<span class="sd">    method must be implemented to load the relevant inheritance links</span>
+<span class="sd">    for the given predicate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">prep_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+        <span class="n">needed</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;parents&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">needed</span><span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cache</span>
+
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">parents</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_inheritance</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">):</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;tag_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;tag_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
+
+
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">tag_names</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tag_names&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="ow">and</span> <span class="n">tag_names</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">tag_names</span><span class="p">)</span>
+
+        <span class="n">tag_ids</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tag_ids&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">tag_names</span> <span class="ow">or</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">tag_ids</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="HasParentSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasParentSieve">[docs]</a><span class="k">class</span> <span class="nc">HasParentSieve</span><span class="p">(</span><span class="n">InheritanceSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(has-parent [TAG...])``</span>
+<span class="sd">    alias: ``(child-of [TAG...])``</span>
+
+<span class="sd">    If no ``TAG`` patterns are specified, matches tags which have any</span>
+<span class="sd">    parents.</span>
+
+<span class="sd">    If ``TAG`` patterns are specified, matchs tags which have any</span>
+<span class="sd">    direct parent matching any of the given patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;has-parent&quot;</span>
+
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;child-of&quot;</span><span class="p">,</span> <span class="p">]</span>
+
+
+<div class="viewcode-block" id="HasParentSieve.prep_inheritance"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasParentSieve.prep_inheritance">[docs]</a>    <span class="k">def</span> <span class="nf">prep_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getInheritanceData</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="HasAncestorSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasAncestorSieve">[docs]</a><span class="k">class</span> <span class="nc">HasAncestorSieve</span><span class="p">(</span><span class="n">InheritanceSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(has-ancestor [TAG...])``</span>
+<span class="sd">    alias: ``(inherits-from [TAG...])``</span>
+
+<span class="sd">    If no ``TAG`` patterns are specified, matches tags which have any</span>
+<span class="sd">    parents.</span>
+
+<span class="sd">    If ``TAG`` patterns are specified, matches tags which have a</span>
+<span class="sd">    parent at any depth matching any of the given patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;has-ancestor&quot;</span>
+
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;inherits-from&quot;</span><span class="p">,</span> <span class="p">]</span>
+
+
+<div class="viewcode-block" id="HasAncestorSieve.prep_inheritance"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasAncestorSieve.prep_inheritance">[docs]</a>    <span class="k">def</span> <span class="nf">prep_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="HasChildSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasChildSieve">[docs]</a><span class="k">class</span> <span class="nc">HasChildSieve</span><span class="p">(</span><span class="n">InheritanceSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(has-child [TAG...])``</span>
+<span class="sd">    alias: ``(parent-of [TAG...])``</span>
+
+<span class="sd">    If no ``TAG`` patterns are specified, matches tags which are the direct</span>
+<span class="sd">    parent to any other tag.</span>
+
+<span class="sd">    If ``TAG`` patterns are specified, matches tags which are the</span>
+<span class="sd">    direct parent to any tag matching any of the given patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;has-child&quot;</span>
+
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parent-of&quot;</span><span class="p">,</span> <span class="p">]</span>
+
+
+<div class="viewcode-block" id="HasChildSieve.prep_inheritance"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasChildSieve.prep_inheritance">[docs]</a>    <span class="k">def</span> <span class="nf">prep_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">inher</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">tid</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">inher</span> <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;currdepth&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="HasDescendantSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasDescendantSieve">[docs]</a><span class="k">class</span> <span class="nc">HasDescendantSieve</span><span class="p">(</span><span class="n">InheritanceSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(has-descendant [TAG...])``</span>
+<span class="sd">    alias: ``(inherited-by [TAG...])``</span>
+
+<span class="sd">    If no ``TAG`` patterns are specified, matches tags which are inherited</span>
+<span class="sd">    by any other tag.</span>
+
+<span class="sd">    If ``TAG`` patterns are specified, matches tags which are inherited by</span>
+<span class="sd">    any tag matching any of the patterns, at any depth.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;has-descendant&quot;</span>
+
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;inherited-by&quot;</span><span class="p">,</span> <span class="p">]</span>
+
+
+<div class="viewcode-block" id="HasDescendantSieve.prep_inheritance"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.HasDescendantSieve.prep_inheritance">[docs]</a>    <span class="k">def</span> <span class="nf">prep_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getFullInheritance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">NVRSieve</span><span class="p">(</span><span class="n">VariadicSieve</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="n">nvr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">nvr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nvr</span> <span class="o">=</span> <span class="n">ensure_int_or_str</span><span class="p">(</span><span class="n">nvr</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">NVRSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="n">nvr</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pkg_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">prep_tagged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">prep_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+        <span class="n">pkg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pkg_name</span>
+
+        <span class="k">if</span> <span class="n">pkg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="n">bld</span> <span class="o">=</span> <span class="n">as_buildinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_id</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pkg_name</span> <span class="o">=</span> <span class="n">pkg</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+
+        <span class="n">needed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pkg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">needed</span><span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cache</span>
+
+        <span class="k">if</span> <span class="n">pkg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># we&#39;re not checking for any specific builds, just need a</span>
+            <span class="c1"># count.</span>
+            <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">found</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_count</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">):</span>
+                <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+                <span class="n">cache</span><span class="p">[</span><span class="n">pkg</span><span class="p">]</span> <span class="o">=</span> <span class="n">found</span><span class="p">,</span> <span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># need specific build IDs. count is unused but we may as</span>
+            <span class="c1"># well gather it too, to be consistent</span>
+            <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">found</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_tagged</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">pkg</span><span class="p">,</span> <span class="n">needed</span><span class="p">):</span>
+                <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+                <span class="n">cache</span><span class="p">[</span><span class="n">pkg</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">found</span><span class="p">),</span> <span class="n">found</span>
+
+
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">pkg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pkg_name</span>
+
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">count</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="n">pkg</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">pkg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_id</span> <span class="ow">in</span> <span class="n">found</span>
+
+
+<div class="viewcode-block" id="TaggedSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.TaggedSieve">[docs]</a><span class="k">class</span> <span class="nc">TaggedSieve</span><span class="p">(</span><span class="n">NVRSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(tagged [NVR...])``</span>
+
+<span class="sd">    If no ``NVR`` is specified, matches tags which have any builds tagged</span>
+<span class="sd">    in them.</span>
+
+<span class="sd">    If ``NVR`` is specified, matches tags which have any of the given</span>
+<span class="sd">    builds tagged in them. Each ``NVR`` must be a valid reference to a</span>
+<span class="sd">    build in this koji instance, or a NoSuchBuild exception will be</span>
+<span class="sd">    raised.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;tagged&quot;</span>
+
+
+<div class="viewcode-block" id="TaggedSieve.prep_tagged"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.TaggedSieve.prep_tagged">[docs]</a>    <span class="k">def</span> <span class="nf">prep_tagged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listTagged</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">pkgname</span><span class="p">,</span>
+                                          <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">latest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">blds</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">tid</span><span class="p">,</span> <span class="p">[</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">blds</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TaggedSieve.prep_count"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.TaggedSieve.prep_count">[docs]</a>    <span class="k">def</span> <span class="nf">prep_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;listTagged&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>
+                                     <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">latest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LatestSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.LatestSieve">[docs]</a><span class="k">class</span> <span class="nc">LatestSieve</span><span class="p">(</span><span class="n">NVRSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(latest [NVR...])``</span>
+
+<span class="sd">    If no ``NVR`` is specified, matches tags which have any builds</span>
+<span class="sd">    tagged in them or inherited from parent tags.</span>
+
+<span class="sd">    If ``NVR`` is specified, matches tags which have any of the given</span>
+<span class="sd">    builds as the latest inherited build of the relevant package name.</span>
+<span class="sd">    Each ``NVR`` must be valid a reference to a build in this koji</span>
+<span class="sd">    instance, or a NoSuchBuild exception will be raised.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span>
+
+
+<div class="viewcode-block" id="LatestSieve.prep_tagged"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.LatestSieve.prep_tagged">[docs]</a>    <span class="k">def</span> <span class="nf">prep_tagged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listTagged</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">pkgname</span><span class="p">,</span>
+                                          <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">blds</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">tid</span><span class="p">,</span> <span class="p">[</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">bld</span> <span class="ow">in</span> <span class="n">blds</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LatestSieve.prep_count"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.LatestSieve.prep_count">[docs]</a>    <span class="k">def</span> <span class="nf">prep_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">tagids</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;listTagged&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>
+                                     <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tagids</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CompareLatestSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.CompareLatestSieve">[docs]</a><span class="k">class</span> <span class="nc">CompareLatestSieve</span><span class="p">(</span><span class="n">Sieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(compare-latest PKG [OP VER])``</span>
+
+<span class="sd">    If OP and VER are not specified, matches tags which have any build</span>
+<span class="sd">    of the given package name as latest.</span>
+
+<span class="sd">    If OP and VER are specified, matches tags which have the a latest</span>
+<span class="sd">    build of the given package name which compare correctly. If tag</span>
+<span class="sd">    doesn&#39;t have any build of the given package name, it will not</span>
+<span class="sd">    match.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;compare-latest&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="n">ver</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">):</span>
+        <span class="n">pkgname</span> <span class="o">=</span> <span class="n">ensure_str</span><span class="p">(</span><span class="n">pkgname</span><span class="p">)</span>
+        <span class="n">opfn</span> <span class="o">=</span> <span class="n">ensure_comparison</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">ensure_str</span><span class="p">(</span><span class="n">ver</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">CompareLatestSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">ver</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">version</span><span class="p">:</span>
+            <span class="n">epoch</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+
+        <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">version</span><span class="p">:</span>
+            <span class="n">version</span><span class="p">,</span> <span class="n">release</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">release</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pkgname</span> <span class="o">=</span> <span class="n">pkgname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">opfn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="n">epoch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">release</span> <span class="o">=</span> <span class="n">release</span>
+
+
+<div class="viewcode-block" id="CompareLatestSieve.prep"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.CompareLatestSieve.prep">[docs]</a>    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+        <span class="n">pkgname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pkgname</span>
+
+        <span class="n">needed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pkgname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">needed</span><span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cache</span>
+
+        <span class="n">evr_getter</span> <span class="o">=</span> <span class="n">itemgetter</span><span class="p">(</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;release&quot;</span><span class="p">)</span>
+
+        <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getLatestBuilds</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">pkgname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">latest</span> <span class="ow">in</span> <span class="n">iter_bulk_load</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">needed</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">latest</span><span class="p">:</span>
+                <span class="n">latest</span> <span class="o">=</span> <span class="n">evr_getter</span><span class="p">(</span><span class="n">latest</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">latest</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="k">else</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">latest</span><span class="p">)</span>
+
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="n">pkgname</span><span class="p">]</span> <span class="o">=</span> <span class="n">latest</span> <span class="ow">or</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="CompareLatestSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.CompareLatestSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pkgname</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">ours</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">release</span> <span class="ow">or</span> <span class="n">other</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">relative</span> <span class="o">=</span> <span class="n">rpm_evr_compare</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ours</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">(</span><span class="n">relative</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">PkgListSieve</span><span class="p">(</span><span class="n">SymbolSieve</span><span class="p">,</span> <span class="n">CacheMixin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="o">*</span><span class="n">pkgnames</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PkgListSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="n">pkgname</span><span class="p">,</span> <span class="o">*</span><span class="n">pkgnames</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bulk_list_packages</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PkgAllowedSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PkgAllowedSieve">[docs]</a><span class="k">class</span> <span class="nc">PkgAllowedSieve</span><span class="p">(</span><span class="n">PkgListSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(pkg-allowed PKG [PKG...])``</span>
+
+<span class="sd">    Matches tags which have a package listing with any of the given</span>
+<span class="sd">    ``PKG`` contained therein and not blocked, honoring inheritance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pkg-allowed&quot;</span>
+
+
+<div class="viewcode-block" id="PkgAllowedSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PkgAllowedSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">pkgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_packages</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="PkgBlockedSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PkgBlockedSieve">[docs]</a><span class="k">class</span> <span class="nc">PkgBlockedSieve</span><span class="p">(</span><span class="n">PkgListSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(pkg-blocked PKG [PKG...])``</span>
+
+<span class="sd">    Matches tags which have a package listing with any of the given</span>
+<span class="sd">    ``PKG`` contained therein and blocked, honoring inheritance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pkg-blocked&quot;</span>
+
+
+<div class="viewcode-block" id="PkgBlockedSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PkgBlockedSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">pkgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocked_packages</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="PkgUnlistedSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PkgUnlistedSieve">[docs]</a><span class="k">class</span> <span class="nc">PkgUnlistedSieve</span><span class="p">(</span><span class="n">PkgListSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(pkg-unlisted PKG [PKG...])``</span>
+
+<span class="sd">    Matches tags which have no package listing (neither allowed nor</span>
+<span class="sd">    blocked) for any of the given ``PKG`` names. Honors inheritance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pkg-unlisted&quot;</span>
+
+
+<div class="viewcode-block" id="PkgUnlistedSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.PkgUnlistedSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">allowed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_packages</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">blocked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocked_packages</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">allowed</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="GroupSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupSieve">[docs]</a><span class="k">class</span> <span class="nc">GroupSieve</span><span class="p">(</span><span class="n">SymbolSieve</span><span class="p">,</span> <span class="n">CacheMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(group GROUP [GROUP...])``</span>
+
+<span class="sd">    Matches tags which have any of the given install groups</span>
+<span class="sd">    configured.  Honors inheritance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;group&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="o">*</span><span class="n">groups</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GroupSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="o">*</span><span class="n">groups</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GroupSieve.prep"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupSieve.prep">[docs]</a>    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+
+        <span class="n">needed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;group_names&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">needed</span><span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cache</span>
+
+        <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bulk_get_tag_groups</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">groups</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">loaded</span><span class="p">):</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;group_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">grp</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="GroupSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_names&quot;</span><span class="p">,</span> <span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="GroupPkgSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupPkgSieve">[docs]</a><span class="k">class</span> <span class="nc">GroupPkgSieve</span><span class="p">(</span><span class="n">SymbolSieve</span><span class="p">,</span> <span class="n">CacheMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(group-pkg GROUP PKG [PKG...])``</span>
+
+<span class="sd">    Matches tags which have the given install group, which also</span>
+<span class="sd">    contains any of the given ``PKG`` names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;group-pkg&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">pkg</span><span class="p">,</span> <span class="o">*</span><span class="n">pkgs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GroupPkgSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="n">pkg</span><span class="p">,</span> <span class="o">*</span><span class="n">pkgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">ensure_symbol</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GroupPkgSieve.set_options"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupPkgSieve.set_options">[docs]</a>    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">require_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GroupPkgSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">require_all</span><span class="o">=</span><span class="n">require_all</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">require_all</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">require_all</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GroupPkgSieve.prep"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupPkgSieve.prep">[docs]</a>    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfos</span><span class="p">):</span>
+
+        <span class="n">needed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">taginfos</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;group_pkgs&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="n">needed</span><span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cache</span>
+
+        <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bulk_get_tag_groups</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">needed</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">groups</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">loaded</span><span class="p">):</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">needed</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+            <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;group_pkgs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">simple_groups</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+                <span class="n">pkglist</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;packagelist&quot;</span><span class="p">,</span> <span class="p">())</span>
+                <span class="n">simple_groups</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pkglist</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="GroupPkgSieve.check"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupPkgSieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_pkgs&quot;</span><span class="p">)</span>
+
+        <span class="n">pkgs</span> <span class="o">=</span> <span class="n">groups</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pkgs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">require_all</span><span class="p">:</span>
+            <span class="c1"># require all tokens to be present</span>
+            <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">tok</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if any token is present, we match</span>
+            <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+
+
+<span class="k">class</span> <span class="nc">AllGroupPkgSieve</span><span class="p">(</span><span class="n">GroupPkgSieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    usage: ``(all-group-pkg GROUP PKG [PKG...])``</span>
+
+<span class="sd">    Matches tags which have the given install group, which must also</span>
+<span class="sd">    contain all of the given ``PKG`` names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;all-group-pkg&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">get_info_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="c1"># borrow the same cache from group-pkg</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="s2">&quot;group-pkg&quot;</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_pkgs&quot;</span><span class="p">)</span>
+
+        <span class="n">pkgs</span> <span class="o">=</span> <span class="n">groups</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pkgs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="n">DEFAULT_TAG_INFO_SIEVES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">AllGroupPkgSieve</span><span class="p">,</span>
+    <span class="n">ArchSieve</span><span class="p">,</span>
+    <span class="n">BuildTagSieve</span><span class="p">,</span>
+    <span class="n">CompareLatestSieve</span><span class="p">,</span>
+    <span class="n">DestTagSieve</span><span class="p">,</span>
+    <span class="n">ExactArchSieve</span><span class="p">,</span>
+    <span class="n">HasAncestorSieve</span><span class="p">,</span>
+    <span class="n">HasChildSieve</span><span class="p">,</span>
+    <span class="n">HasDescendantSieve</span><span class="p">,</span>
+    <span class="n">HasParentSieve</span><span class="p">,</span>
+    <span class="n">GroupPkgSieve</span><span class="p">,</span>
+    <span class="n">GroupSieve</span><span class="p">,</span>
+    <span class="n">LatestSieve</span><span class="p">,</span>
+    <span class="n">LockedSieve</span><span class="p">,</span>
+    <span class="n">NameSieve</span><span class="p">,</span>
+    <span class="n">PermissionSieve</span><span class="p">,</span>
+    <span class="n">PkgAllowedSieve</span><span class="p">,</span>
+    <span class="n">PkgBlockedSieve</span><span class="p">,</span>
+    <span class="n">PkgUnlistedSieve</span><span class="p">,</span>
+    <span class="n">TaggedSieve</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="tag_info_sieves"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.tag_info_sieves">[docs]</a><span class="k">def</span> <span class="nf">tag_info_sieves</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A new list containing the default tag-info sieve classes.</span>
+
+<span class="sd">    This function is used by `tag_info_sifter` when creating its</span>
+<span class="sd">    `Sifter` instance.</span>
+
+<span class="sd">    :rtype: list[type[Sieve]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sieves</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sieves</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">DEFAULT_SIEVES</span><span class="p">)</span>
+    <span class="n">sieves</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">DEFAULT_TAG_INFO_SIEVES</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sieves</span></div>
+
+
+<div class="viewcode-block" id="tag_info_sifter"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.tag_info_sifter">[docs]</a><span class="k">def</span> <span class="nf">tag_info_sifter</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a Sifter from the source using the default tag-info</span>
+<span class="sd">    Sieves.</span>
+
+<span class="sd">    :param source: sieve expressions source</span>
+<span class="sd">    :type source: stream or str</span>
+
+<span class="sd">    :rtype: Sifter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">Sifter</span><span class="p">(</span><span class="n">tag_info_sieves</span><span class="p">(),</span> <span class="n">source</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sift_tags"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.sift_tags">[docs]</a><span class="k">def</span> <span class="nf">sift_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">src_str</span><span class="p">,</span> <span class="n">tag_infos</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param src_str: sieve expressions source</span>
+<span class="sd">    :type src_str: src</span>
+
+<span class="sd">    :param build_infos: list of tag info dicts to filter</span>
+<span class="sd">    :type build_infos: list[dict]</span>
+
+<span class="sd">    :rtype: dict[str,list[dict]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sifter</span> <span class="o">=</span> <span class="n">tag_info_sifter</span><span class="p">(</span><span class="n">src_str</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sifter</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tag_infos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sift_tagnames"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.sift_tagnames">[docs]</a><span class="k">def</span> <span class="nf">sift_tagnames</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">src_str</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param src_str: sieve expressions source</span>
+<span class="sd">    :type src_str: src</span>
+
+<span class="sd">    :param nvrs: list of tag names to load and filter</span>
+<span class="sd">    :type nvrs: list[str]</span>
+
+<span class="sd">    :rtype: dict[str,list[dict]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">loaded</span> <span class="o">=</span> <span class="n">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">tag_dedup</span><span class="p">(</span><span class="n">itervalues</span><span class="p">(</span><span class="n">loaded</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">sift_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">src_str</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># The end.</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.sift</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>

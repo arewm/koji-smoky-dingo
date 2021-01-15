@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -81,10 +81,12 @@
     <span class="s2">&quot;BadDingo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FeatureUnavailable&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ManagedClientSession&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchArchive&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchBuild&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchChannel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchContentGenerator&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchPermission&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NoSuchRPM&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchTag&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchTarget&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NoSuchTask&quot;</span><span class="p">,</span>
@@ -92,9 +94,13 @@
     <span class="s2">&quot;NotPermitted&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ProfileClientSession&quot;</span><span class="p">,</span>
 
+    <span class="s2">&quot;as_archiveinfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_buildinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;as_hostinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;as_rpminfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_taginfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_targetinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;as_taskinfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_userinfo&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_build_archives&quot;</span><span class="p">,</span>
@@ -189,6 +195,14 @@
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such build&quot;</span></div>
 
 
+<span class="k">class</span> <span class="nc">NoSuchHost</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A host was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such host&quot;</span>
+
+
 <div class="viewcode-block" id="NoSuchChannel"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchChannel">[docs]</a><span class="k">class</span> <span class="nc">NoSuchChannel</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A channel was not found</span>
@@ -243,6 +257,22 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such permission&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchArchive"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchArchive">[docs]</a><span class="k">class</span> <span class="nc">NoSuchArchive</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An archive was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such archive&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchRPM"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NoSuchRPM">[docs]</a><span class="k">class</span> <span class="nc">NoSuchRPM</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An RPM was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;No such RPM&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotPermitted"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.NotPermitted">[docs]</a><span class="k">class</span> <span class="nc">NotPermitted</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
@@ -679,6 +709,20 @@
     <span class="k">return</span> <span class="n">info</span></div>
 
 
+<div class="viewcode-block" id="as_taskinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_taskinfo">[docs]</a><span class="k">def</span> <span class="nf">as_taskinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTaskInfo</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">task</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchTask</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
 <div class="viewcode-block" id="as_targetinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_targetinfo">[docs]</a><span class="k">def</span> <span class="nf">as_targetinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Coerces a target value into a koji target info dict.</span>
@@ -707,6 +751,108 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">NoSuchTarget</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="as_hostinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_hostinfo">[docs]</a><span class="k">def</span> <span class="nf">as_hostinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces a host value into a host info dict.</span>
+
+<span class="sd">    If target is an:</span>
+<span class="sd">     * int, will attempt to load as a host ID</span>
+<span class="sd">     * str, will attempt to load as a host name</span>
+<span class="sd">     * dict, will presume already a host info</span>
+
+<span class="sd">    :param host: value to lookup</span>
+
+<span class="sd">    :type host: int or str or dict</span>
+
+<span class="sd">    :raises NoSuchHost: if the host value could not be resolved</span>
+<span class="sd">      into a host info dict</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getHost</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">host</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchHost</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="as_archiveinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_archiveinfo">[docs]</a><span class="k">def</span> <span class="nf">as_archiveinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">archive</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces an archive value into an archive info dict.</span>
+
+<span class="sd">    If archive is an:</span>
+<span class="sd">     * int, will attempt to load as an archive ID</span>
+<span class="sd">     * str, will attempt to load as an archive filename</span>
+<span class="sd">     * dict, will presume already an archive info</span>
+
+<span class="sd">    :param archive: value to lookup</span>
+
+<span class="sd">    :type archive: int or str or dict</span>
+
+<span class="sd">    :raises NoSuchArchive: if the archive value could not be resolved</span>
+<span class="sd">      into an archive info dict</span>
+
+<span class="sd">    :rtype dict:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getArchive</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">archive</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">found</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">found</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">archive</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchArchive</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="as_rpminfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_rpminfo">[docs]</a><span class="k">def</span> <span class="nf">as_rpminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">rpm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces a host value into a RPM info dict.</span>
+
+<span class="sd">    If rpm is an:</span>
+<span class="sd">     * int, will attempt to load as a RPM ID</span>
+<span class="sd">     * str, will attempt to load as a RPM NVR</span>
+<span class="sd">     * dict, will presume already an RPM info</span>
+
+<span class="sd">    :param rpm: value to lookup</span>
+
+<span class="sd">    :type rpm: int or str or dict</span>
+
+<span class="sd">    :raises NoSuchRPM: if the rpm value could not be resolved</span>
+<span class="sd">      into a RPM info dict</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rpm</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getRPM</span><span class="p">(</span><span class="n">rpm</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rpm</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">rpm</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">info</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSuchRPM</span><span class="p">(</span><span class="n">rpm</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">info</span></div>
 
@@ -850,7 +996,6 @@
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-
     <span class="k">if</span> <span class="n">version_check</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="n">minimum</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
 
@@ -894,14 +1039,14 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.sift &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -86,7 +86,7 @@
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">BadDingo</span>
 <span class="kn">from</span> <span class="nn">.parse</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">Glob</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">,</span> <span class="n">Matcher</span><span class="p">,</span> <span class="n">ItemPath</span><span class="p">,</span> <span class="n">Number</span><span class="p">,</span>
+    <span class="n">Glob</span><span class="p">,</span> <span class="n">ItemPath</span><span class="p">,</span> <span class="n">Matcher</span><span class="p">,</span> <span class="n">Number</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">,</span> <span class="n">SymbolGroup</span><span class="p">,</span>
     <span class="n">convert_token</span><span class="p">,</span> <span class="n">parse_exprs</span><span class="p">,</span> <span class="p">)</span>
 
 
@@ -95,15 +95,18 @@
 
     <span class="s2">&quot;Flagged&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Flagger&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IntStrSieve&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ItemPathSieve&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ItemSieve&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Logic&quot;</span><span class="p">,</span>
     <span class="s2">&quot;LogicAnd&quot;</span><span class="p">,</span>
     <span class="s2">&quot;LogicNot&quot;</span><span class="p">,</span>
     <span class="s2">&quot;LogicOr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MatcherSieve&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Sieve&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Sifter&quot;</span><span class="p">,</span>
     <span class="s2">&quot;SifterError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SymbolSieve&quot;</span><span class="p">,</span>
     <span class="s2">&quot;VariadicSieve&quot;</span><span class="p">,</span>
 
     <span class="s2">&quot;ensure_all_int_or_str&quot;</span><span class="p">,</span>
@@ -141,17 +144,36 @@
                       <span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="ensure_all_symbol"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.ensure_all_symbol">[docs]</a><span class="k">def</span> <span class="nf">ensure_all_symbol</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ensure_all_symbol"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.ensure_all_symbol">[docs]</a><span class="k">def</span> <span class="nf">ensure_all_symbol</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks that all of the elements in values are Symbols, and returns</span>
 <span class="sd">    them as a new list.  If not, raises a SifterError.</span>
+
+<span class="sd">    If expand is True then any SymbolGroup instances will be expanded</span>
+<span class="sd">    to their full combination of Symbols and inlined. Otherwise, the</span>
+<span class="sd">    inclusion of a SymbolGroup is an error.</span>
 
 <span class="sd">    :type values: list</span>
 
 <span class="sd">    :rtype: list[Symbol]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="p">[</span><span class="n">ensure_symbol</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span></div>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">expand</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">SymbolGroup</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">msg</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Value must be a symbol&quot;</span>
+            <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2"> (type </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span>
+                              <span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="ensure_str"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.ensure_str">[docs]</a><span class="k">def</span> <span class="nf">ensure_str</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -289,6 +311,34 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">ensure_sieve</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span></div>
 
 
+<span class="k">def</span> <span class="nf">gather_args</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts list of values into an *args and **kwds pair for use in</span>
+<span class="sd">    creating a Sieve instance.</span>
+
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">missing</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kwds</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">ivals</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">ivals</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">ivals</span><span class="p">,</span> <span class="n">missing</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="n">missing</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Missing value for keyword argument </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">key</span>
+                <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">kwds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwds</span>
+
+
 <div class="viewcode-block" id="Sifter"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sifter">[docs]</a><span class="k">class</span> <span class="nc">Sifter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sieves</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -335,7 +385,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sieves</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">sieves</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">sieve</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sieve</span><span class="p">)</span> <span class="k">for</span> <span class="n">sieve</span> <span class="ow">in</span> <span class="n">sieves</span><span class="p">)</span>
+            <span class="c1"># convert a list of sieves into a dict mapping the sieve</span>
+            <span class="c1"># names and their aliases to the classes</span>
+            <span class="n">sieves</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sieves</span><span class="p">)</span>
+            <span class="n">sievedict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">sieve</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sieve</span><span class="p">)</span> <span class="k">for</span> <span class="n">sieve</span> <span class="ow">in</span> <span class="n">sieves</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sieve</span> <span class="ow">in</span> <span class="n">sieves</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">sieve</span><span class="o">.</span><span class="n">aliases</span><span class="p">:</span>
+                    <span class="n">sievedict</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">sieve</span>
+            <span class="n">sieves</span> <span class="o">=</span> <span class="n">sievedict</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_sieve_classes</span> <span class="o">=</span> <span class="n">sieves</span>
 
@@ -431,8 +488,25 @@
             <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="s2">&quot;No such sieve: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
 
+            <span class="n">args</span><span class="p">,</span> <span class="n">kwds</span> <span class="o">=</span> <span class="n">gather_args</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+                <span class="c1"># Note that we need to convolute it this way in order</span>
+                <span class="c1"># to support cases where some of the positional</span>
+                <span class="c1"># arguments have defaults but we also want</span>
+                <span class="c1"># keyword-only options to be available. subclasses of</span>
+                <span class="c1"># Sieve can define the positionals in their __init__</span>
+                <span class="c1"># method, and keyword-only via the set_options method.</span>
+
+                <span class="c1"># Very recent versions of Python introduced the</span>
+                <span class="c1"># concepts of positional-only and keyword-only</span>
+                <span class="c1"># parameters, but we need to work with much older</span>
+                <span class="c1"># versions that do not have these syntactic features</span>
+                <span class="c1"># available.</span>
+
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
             <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Error creating Sieve </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">te</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -529,12 +603,30 @@
         <span class="n">bfl</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">data</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="Sifter.get_cache"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sifter.get_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cachename</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">cachekey</span> <span class="o">=</span> <span class="p">(</span><span class="n">cachename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<div class="viewcode-block" id="Sifter.get_cache"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sifter.get_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cachename</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flexible storage for caching data in a sifter. Sieves can use this</span>
+<span class="sd">        to record data about individual info dicts, or to cache results</span>
+<span class="sd">        from arbitrary koji session calls.</span>
+
+<span class="sd">        This data is cleared when the `reset` method is invoked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cachekey</span> <span class="o">=</span> <span class="p">(</span><span class="n">cachename</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
         <span class="n">cch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cachekey</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">cachekey</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">cch</span></div></div>
+        <span class="k">return</span> <span class="n">cch</span></div>
+
+
+<div class="viewcode-block" id="Sifter.get_info_cache"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sifter.get_info_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_info_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cachename</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cache associated with a particular info dict.</span>
+
+<span class="sd">        This data is cleared when the `reset` method is invoked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cache</span><span class="p">(</span><span class="n">cachename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="Sieve"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve">[docs]</a><span class="nd">@add_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)</span>
@@ -570,10 +662,24 @@
         <span class="k">pass</span>
 
 
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">()</span>
+
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span> <span class="o">=</span> <span class="n">sifter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">sifter</span><span class="o">.</span><span class="n">key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">tokens</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># assign the default option values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_options</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Sieve.set_options"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.set_options">[docs]</a>    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        assign keyword arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">options</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">info_dicts</span><span class="p">):</span>
@@ -582,8 +688,13 @@
 
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
-            <span class="n">e</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">))</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">):</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">))</span>
@@ -635,8 +746,62 @@
         <span class="k">return</span> <span class="nb">filter</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">,</span> <span class="n">session</span><span class="p">),</span> <span class="n">info_dicts</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Sieve.get_cache"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.get_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span><span class="o">.</span><span class="n">get_cache</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="Sieve.get_cache"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.get_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a cache dict from the sifter using the name of this sieve</span>
+<span class="sd">        and the given key (which must be hashable)</span>
+
+<span class="sd">        The same cache dict will be returned for this key until the</span>
+<span class="sd">        sifter has its `reset` method invoked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span><span class="o">.</span><span class="n">get_cache</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Sieve.get_info_cache"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.get_info_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_info_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a cache dict from the sifter using the name of this sieve and</span>
+<span class="sd">        the sifter&#39;s designated key for the given info dict. The default</span>
+<span class="sd">        sifter key will get the &quot;id&quot; value from the info dict.</span>
+
+<span class="sd">        The same cache dict will be returned for this info dict until</span>
+<span class="sd">        the sifter has its `reset` method invoked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MatcherSieve"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.MatcherSieve">[docs]</a><span class="k">class</span> <span class="nc">MatcherSieve</span><span class="p">(</span><span class="n">Sieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Sieve that requires all of its arguments to be matchers. Calls</span>
+<span class="sd">    `ensure_all_matcher` on `tokens`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">ensure_all_matcher</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MatcherSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SymbolSieve"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.SymbolSieve">[docs]</a><span class="k">class</span> <span class="nc">SymbolSieve</span><span class="p">(</span><span class="n">Sieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Sieve that requires all of its arguments to be matchers. Calls</span>
+<span class="sd">    `ensure_all_symbol` on `tokens`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">ensure_all_symbol</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SymbolSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IntStrSieve"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.IntStrSieve">[docs]</a><span class="k">class</span> <span class="nc">IntStrSieve</span><span class="p">(</span><span class="n">Sieve</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Sieve that requires all of its arguments to be matchers. Calls</span>
+<span class="sd">    `ensure_all_int_or_str` on `tokens`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">ensure_all_int_or_str</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IntStrSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sifter</span><span class="p">,</span> <span class="o">*</span><span class="n">tokens</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Logic"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Logic">[docs]</a><span class="nd">@add_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)</span>
@@ -920,15 +1085,15 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

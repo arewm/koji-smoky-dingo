@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../clients/" title="kojismokydingo.clients"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Core API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -99,6 +99,54 @@ match.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.common.find_config_dirs">
+<code class="sig-name descname">find_config_dirs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#find_config_dirs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.find_config_dirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The site and user configuration dirs, as a tuple. Attempts to use
+the <code class="docutils literal notranslate"><span class="pre">appdirs</span></code> package if it is available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.find_config_files">
+<code class="sig-name descname">find_config_files</code><span class="sig-paren">(</span><em class="sig-param">dirs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#find_config_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.find_config_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ordered list of configuration files to be loaded.</p>
+<p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">dirs</span></code> is specified, it must be a sequence of directory names,
+from which conf files will be loaded in order. If unspecified,
+defaults to the result of <a class="reference internal" href="#kojismokydingo.common.find_config_dirs" title="kojismokydingo.common.find_config_dirs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_config_dirs</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) -- list of directories to look for config files within</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.get_plugin_config">
+<code class="sig-name descname">get_plugin_config</code><span class="sig-paren">(</span><em class="sig-param">conf</em>, <em class="sig-param">plugin</em>, <em class="sig-param">profile=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#get_plugin_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.get_plugin_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a loaded configuration, return the section specific to the
+given plugin, and optionally profile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conf</strong> (<em>ConfigParser</em>) -- Full configuration</p></li>
+<li><p><strong>plugin</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) -- Plugin name</p></li>
+<li><p><strong>profile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) -- Profile name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.common.globfilter">
 <code class="sig-name descname">globfilter</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">patterns</em>, <em class="sig-param">key=None</em>, <em class="sig-param">invert=False</em>, <em class="sig-param">ignore_case=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#globfilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.globfilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generator yielding members of sequence seq which match any of the
@@ -127,6 +175,37 @@ True. Default, False</p></li>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.load_full_config">
+<code class="sig-name descname">load_full_config</code><span class="sig-paren">(</span><em class="sig-param">config_files=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#load_full_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.load_full_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration object representing the full merged view of config
+files.</p>
+<p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">config_files</span></code> is None, use the results of <a class="reference internal" href="#kojismokydingo.common.find_config_files" title="kojismokydingo.common.find_config_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_config_files</span></code></a>.
+Otherwise, <code class="xref py py-obj docutils literal notranslate"><span class="pre">config_files</span></code> must be a sequence of filenames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ConfigParser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.common.load_plugin_config">
+<code class="sig-name descname">load_plugin_config</code><span class="sig-paren">(</span><em class="sig-param">plugin</em>, <em class="sig-param">profile=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/common/#load_plugin_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.common.load_plugin_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration specific to a given plugin, and optionally profile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plugin</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) -- Plugin name</p></li>
+<li><p><strong>profile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) -- Profile name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)">object</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,14 +401,14 @@ values may be extended</p></li>
         <li class="right" >
           <a href="../clients/" title="kojismokydingo.clients"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Core API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

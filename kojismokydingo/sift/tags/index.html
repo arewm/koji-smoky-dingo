@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>kojismokydingo.sift.tags &#8212; kojismokydingo 0.9.6 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Standalone API Reference" href="../../standalone/" />
+    <link rel="prev" title="kojismokydingo.sift.parse" href="../parse/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../standalone/" title="Standalone API Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../parse/" title="kojismokydingo.sift.parse"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Sift API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kojismokydingo.sift.tags">
+<span id="kojismokydingo-sift-tags"></span><h1>kojismokydingo.sift.tags<a class="headerlink" href="#module-kojismokydingo.sift.tags" title="Permalink to this headline">¶</a></h1>
+<p>Koji Smoky Dingo - Sifty Dingo filtering for Koji Tags</p>
+<p>This module provides sieves for filtering through koji tag info
+dicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Christopher O'Brien &lt;<a class="reference external" href="mailto:obriencj&#37;&#52;&#48;gmail&#46;com">obriencj<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>GPL v3</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.ArchSieve">
+<em class="property">class </em><code class="sig-name descname">ArchSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ArchSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ArchSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.MatcherSieve" title="kojismokydingo.sift.MatcherSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.MatcherSieve</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(arch</span> <span class="pre">[ARCH...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> patterns are specified, matches tags which have any
+architectures at all.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> patterns are specified, then only matches tags which
+have an architecture that matches any of the given patterns.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.ArchSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ArchSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ArchSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.ArchSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'arch'</em><a class="headerlink" href="#kojismokydingo.sift.tags.ArchSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.ArchSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ArchSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ArchSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.tags.ArchSieve.check" title="kojismokydingo.sift.tags.ArchSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.BuildTagSieve">
+<em class="property">class </em><code class="sig-name descname">BuildTagSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#BuildTagSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.BuildTagSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.TargetSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(build-tag</span> <span class="pre">[TARGET...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> is specified, then matches tags which are used as
+the build tag for any target.</p>
+<p>If any <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> patterns are specified, then matches tags which
+are used as the build tag for a target with a name matching any of
+the patterns.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.BuildTagSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'build-tag'</em><a class="headerlink" href="#kojismokydingo.sift.tags.BuildTagSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.BuildTagSieve.prep_targets">
+<code class="sig-name descname">prep_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#BuildTagSieve.prep_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.BuildTagSieve.prep_targets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.CompareLatestSieve">
+<em class="property">class </em><code class="sig-name descname">CompareLatestSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pkgname</em>, <em class="sig-param">op='&gt;='</em>, <em class="sig-param">ver='0'</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#CompareLatestSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.CompareLatestSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(compare-latest</span> <span class="pre">PKG</span> <span class="pre">[OP</span> <span class="pre">VER])</span></code></p>
+<p>If OP and VER are not specified, matches tags which have any build
+of the given package name as latest.</p>
+<p>If OP and VER are specified, matches tags which have the a latest
+build of the given package name which compare correctly. If tag
+doesn't have any build of the given package name, it will not
+match.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.CompareLatestSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#CompareLatestSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.CompareLatestSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.CompareLatestSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'compare-latest'</em><a class="headerlink" href="#kojismokydingo.sift.tags.CompareLatestSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.CompareLatestSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#CompareLatestSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.CompareLatestSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.tags.CompareLatestSieve.check" title="kojismokydingo.sift.tags.CompareLatestSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.DestTagSieve">
+<em class="property">class </em><code class="sig-name descname">DestTagSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#DestTagSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.DestTagSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.TargetSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(dest-tag</span> <span class="pre">[TARGET...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> is specified, then matches tags which are used as
+the destination tag for any target.</p>
+<p>If any <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> patterns are specified, then matches tags which
+are used as the destination tag for a target with a name matching
+any of the patterns.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.DestTagSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'dest-tag'</em><a class="headerlink" href="#kojismokydingo.sift.tags.DestTagSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.DestTagSieve.prep_targets">
+<code class="sig-name descname">prep_targets</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#DestTagSieve.prep_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.DestTagSieve.prep_targets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.ExactArchSieve">
+<em class="property">class </em><code class="sig-name descname">ExactArchSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ExactArchSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ExactArchSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.SymbolSieve" title="kojismokydingo.sift.SymbolSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.SymbolSieve</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(exact-arch</span> <span class="pre">[ARCH...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> names are specified, matches only tags which have
+no architectures.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> names are specified, they must be specified as
+symbols.  Only matches tags which have the exact same set of
+architectures.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.ExactArchSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ExactArchSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ExactArchSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.ExactArchSieve.get_info_cache">
+<code class="sig-name descname">get_info_cache</code><span class="sig-paren">(</span><em class="sig-param">tinfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ExactArchSieve.get_info_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ExactArchSieve.get_info_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a cache dict from the sifter using the name of this sieve and
+the sifter's designated key for the given info dict. The default
+sifter key will get the &quot;id&quot; value from the info dict.</p>
+<p>The same cache dict will be returned for this info dict until
+the sifter has its <code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code> method invoked.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.ExactArchSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'exact-arch'</em><a class="headerlink" href="#kojismokydingo.sift.tags.ExactArchSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.HasAncestorSieve">
+<em class="property">class </em><code class="sig-name descname">HasAncestorSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasAncestorSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasAncestorSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.InheritanceSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(has-ancestor</span> <span class="pre">[TAG...])</span></code>
+alias: <code class="docutils literal notranslate"><span class="pre">(inherits-from</span> <span class="pre">[TAG...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which have any
+parents.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which have a
+parent at any depth matching any of the given patterns.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasAncestorSieve.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ['inherits-from']</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasAncestorSieve.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasAncestorSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'has-ancestor'</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasAncestorSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.HasAncestorSieve.prep_inheritance">
+<code class="sig-name descname">prep_inheritance</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasAncestorSieve.prep_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasAncestorSieve.prep_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.HasChildSieve">
+<em class="property">class </em><code class="sig-name descname">HasChildSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasChildSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasChildSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.InheritanceSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(has-child</span> <span class="pre">[TAG...])</span></code>
+alias: <code class="docutils literal notranslate"><span class="pre">(parent-of</span> <span class="pre">[TAG...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are the direct
+parent to any other tag.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are the
+direct parent to any tag matching any of the given patterns.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasChildSieve.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ['parent-of']</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasChildSieve.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasChildSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'has-child'</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasChildSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.HasChildSieve.prep_inheritance">
+<code class="sig-name descname">prep_inheritance</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasChildSieve.prep_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasChildSieve.prep_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.HasDescendantSieve">
+<em class="property">class </em><code class="sig-name descname">HasDescendantSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasDescendantSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasDescendantSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.InheritanceSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(has-descendant</span> <span class="pre">[TAG...])</span></code>
+alias: <code class="docutils literal notranslate"><span class="pre">(inherited-by</span> <span class="pre">[TAG...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are inherited
+by any other tag.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which are inherited by
+any tag matching any of the patterns, at any depth.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasDescendantSieve.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ['inherited-by']</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasDescendantSieve.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasDescendantSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'has-descendant'</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasDescendantSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.HasDescendantSieve.prep_inheritance">
+<code class="sig-name descname">prep_inheritance</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasDescendantSieve.prep_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasDescendantSieve.prep_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.HasParentSieve">
+<em class="property">class </em><code class="sig-name descname">HasParentSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasParentSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasParentSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.InheritanceSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(has-parent</span> <span class="pre">[TAG...])</span></code>
+alias: <code class="docutils literal notranslate"><span class="pre">(child-of</span> <span class="pre">[TAG...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matches tags which have any
+parents.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">TAG</span></code> patterns are specified, matchs tags which have any
+direct parent matching any of the given patterns.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasParentSieve.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ['child-of']</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasParentSieve.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.HasParentSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'has-parent'</em><a class="headerlink" href="#kojismokydingo.sift.tags.HasParentSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.HasParentSieve.prep_inheritance">
+<code class="sig-name descname">prep_inheritance</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#HasParentSieve.prep_inheritance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.HasParentSieve.prep_inheritance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.GroupSieve">
+<em class="property">class </em><code class="sig-name descname">GroupSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">group</em>, <em class="sig-param">*groups</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.SymbolSieve" title="kojismokydingo.sift.SymbolSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.SymbolSieve</span></code></a>, <a class="reference internal" href="../common/#kojismokydingo.sift.common.CacheMixin" title="kojismokydingo.sift.common.CacheMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.common.CacheMixin</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(group</span> <span class="pre">GROUP</span> <span class="pre">[GROUP...])</span></code></p>
+<p>Matches tags which have any of the given install groups
+configured.  Honors inheritance.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.GroupSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.GroupSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'group'</em><a class="headerlink" href="#kojismokydingo.sift.tags.GroupSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.GroupSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.tags.GroupSieve.check" title="kojismokydingo.sift.tags.GroupSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.GroupPkgSieve">
+<em class="property">class </em><code class="sig-name descname">GroupPkgSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">group</em>, <em class="sig-param">pkg</em>, <em class="sig-param">*pkgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.SymbolSieve" title="kojismokydingo.sift.SymbolSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.SymbolSieve</span></code></a>, <a class="reference internal" href="../common/#kojismokydingo.sift.common.CacheMixin" title="kojismokydingo.sift.common.CacheMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.common.CacheMixin</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(group-pkg</span> <span class="pre">GROUP</span> <span class="pre">PKG</span> <span class="pre">[PKG...])</span></code></p>
+<p>Matches tags which have the given install group, which also
+contains any of the given <code class="docutils literal notranslate"><span class="pre">PKG</span></code> names</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.GroupPkgSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.GroupPkgSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'group-pkg'</em><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.GroupPkgSieve.prep">
+<code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve.prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override if some decoration of info_dicts is necessary. This
+allows bulk operations to be performed over the entire set of
+info dicts to be filtered, rather than one at a time in the
+<a class="reference internal" href="#kojismokydingo.sift.tags.GroupPkgSieve.check" title="kojismokydingo.sift.tags.GroupPkgSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.GroupPkgSieve.set_options">
+<code class="sig-name descname">set_options</code><span class="sig-paren">(</span><em class="sig-param">require_all=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve.set_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve.set_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>assign keyword arguments</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.LatestSieve">
+<em class="property">class </em><code class="sig-name descname">LatestSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">nvr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#LatestSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.LatestSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.NVRSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(latest</span> <span class="pre">[NVR...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">NVR</span></code> is specified, matches tags which have any builds
+tagged in them or inherited from parent tags.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">NVR</span></code> is specified, matches tags which have any of the given
+builds as the latest inherited build of the relevant package name.
+Each <code class="docutils literal notranslate"><span class="pre">NVR</span></code> must be valid a reference to a build in this koji
+instance, or a NoSuchBuild exception will be raised.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.LatestSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'latest'</em><a class="headerlink" href="#kojismokydingo.sift.tags.LatestSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.LatestSieve.prep_count">
+<code class="sig-name descname">prep_count</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#LatestSieve.prep_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.LatestSieve.prep_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.LatestSieve.prep_tagged">
+<code class="sig-name descname">prep_tagged</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">pkgname</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#LatestSieve.prep_tagged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.LatestSieve.prep_tagged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.LockedSieve">
+<em class="property">class </em><code class="sig-name descname">LockedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#LockedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.LockedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(locked)</span></code></p>
+<p>Matches tags which have been locked</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.LockedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#LockedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.LockedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.LockedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'locked'</em><a class="headerlink" href="#kojismokydingo.sift.tags.LockedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.NameSieve">
+<em class="property">class </em><code class="sig-name descname">NameSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#NameSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.NameSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<p>Usage: <code class="docutils literal notranslate"><span class="pre">(name</span> <span class="pre">NAME</span> <span class="pre">[NAME...])</span></code></p>
+<p>filters for dict infos whose name matches any of the given
+<code class="docutils literal notranslate"><span class="pre">NAME</span></code> matchers.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.NameSieve.field">
+<code class="sig-name descname">field</code><em class="property"> = 'name'</em><a class="headerlink" href="#kojismokydingo.sift.tags.NameSieve.field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.NameSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'name'</em><a class="headerlink" href="#kojismokydingo.sift.tags.NameSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.PermissionSieve">
+<em class="property">class </em><code class="sig-name descname">PermissionSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PermissionSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PermissionSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.MatcherSieve" title="kojismokydingo.sift.MatcherSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.MatcherSieve</span></code></a></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(permission</span> <span class="pre">[PERM...])`</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">PERM</span></code> is specified, then matches tags which have any
+non-None permission set.</p>
+<p>If any <code class="docutils literal notranslate"><span class="pre">PERM</span></code> patters are specified, then matches tags which
+have any of the listed permissions set.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.PermissionSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PermissionSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PermissionSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.PermissionSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'permission'</em><a class="headerlink" href="#kojismokydingo.sift.tags.PermissionSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.PkgAllowedSieve">
+<em class="property">class </em><code class="sig-name descname">PkgAllowedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pkgname</em>, <em class="sig-param">*pkgnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PkgAllowedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PkgAllowedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.PkgListSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(pkg-allowed</span> <span class="pre">PKG</span> <span class="pre">[PKG...])</span></code></p>
+<p>Matches tags which have a package listing with any of the given
+<code class="docutils literal notranslate"><span class="pre">PKG</span></code> contained therein and not blocked, honoring inheritance.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.PkgAllowedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PkgAllowedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PkgAllowedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.PkgAllowedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'pkg-allowed'</em><a class="headerlink" href="#kojismokydingo.sift.tags.PkgAllowedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.PkgBlockedSieve">
+<em class="property">class </em><code class="sig-name descname">PkgBlockedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pkgname</em>, <em class="sig-param">*pkgnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PkgBlockedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PkgBlockedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.PkgListSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(pkg-blocked</span> <span class="pre">PKG</span> <span class="pre">[PKG...])</span></code></p>
+<p>Matches tags which have a package listing with any of the given
+<code class="docutils literal notranslate"><span class="pre">PKG</span></code> contained therein and blocked, honoring inheritance.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.PkgBlockedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PkgBlockedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PkgBlockedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.PkgBlockedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'pkg-blocked'</em><a class="headerlink" href="#kojismokydingo.sift.tags.PkgBlockedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.PkgUnlistedSieve">
+<em class="property">class </em><code class="sig-name descname">PkgUnlistedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pkgname</em>, <em class="sig-param">*pkgnames</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PkgUnlistedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PkgUnlistedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.PkgListSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(pkg-unlisted</span> <span class="pre">PKG</span> <span class="pre">[PKG...])</span></code></p>
+<p>Matches tags which have no package listing (neither allowed nor
+blocked) for any of the given <code class="docutils literal notranslate"><span class="pre">PKG</span></code> names. Honors inheritance.</p>
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.PkgUnlistedSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfo</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#PkgUnlistedSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.PkgUnlistedSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.PkgUnlistedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'pkg-unlisted'</em><a class="headerlink" href="#kojismokydingo.sift.tags.PkgUnlistedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.tags.TaggedSieve">
+<em class="property">class </em><code class="sig-name descname">TaggedSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">nvr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#TaggedSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.TaggedSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.tags.NVRSieve</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(tagged</span> <span class="pre">[NVR...])</span></code></p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">NVR</span></code> is specified, matches tags which have any builds tagged
+in them.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">NVR</span></code> is specified, matches tags which have any of the given
+builds tagged in them. Each <code class="docutils literal notranslate"><span class="pre">NVR</span></code> must be a valid reference to a
+build in this koji instance, or a NoSuchBuild exception will be
+raised.</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.tags.TaggedSieve.name">
+<code class="sig-name descname">name</code><em class="property"> = 'tagged'</em><a class="headerlink" href="#kojismokydingo.sift.tags.TaggedSieve.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.TaggedSieve.prep_count">
+<code class="sig-name descname">prep_count</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#TaggedSieve.prep_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.TaggedSieve.prep_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.tags.TaggedSieve.prep_tagged">
+<code class="sig-name descname">prep_tagged</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">pkgname</em>, <em class="sig-param">tagids</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#TaggedSieve.prep_tagged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.TaggedSieve.prep_tagged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.tags.tag_info_sieves">
+<code class="sig-name descname">tag_info_sieves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#tag_info_sieves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.tag_info_sieves" title="Permalink to this definition">¶</a></dt>
+<dd><p>A new list containing the default tag-info sieve classes.</p>
+<p>This function is used by <a class="reference internal" href="#kojismokydingo.sift.tags.tag_info_sifter" title="kojismokydingo.sift.tags.tag_info_sifter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_info_sifter</span></code></a> when creating its
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">Sifter</span></code> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)">type</a>[<a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve">Sieve</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.tags.tag_info_sifter">
+<code class="sig-name descname">tag_info_sifter</code><span class="sig-paren">(</span><em class="sig-param">source</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#tag_info_sifter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.tag_info_sifter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Sifter from the source using the default tag-info
+Sieves.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source</strong> (<em>stream</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) -- sieve expressions source</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../#kojismokydingo.sift.Sifter" title="kojismokydingo.sift.Sifter">Sifter</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.tags.sift_tags">
+<code class="sig-name descname">sift_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">src_str</em>, <em class="sig-param">tag_infos</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#sift_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.sift_tags" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_str</strong> (<em>src</em>) -- sieve expressions source</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- list of tag info dicts to filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.sift.tags.sift_tagnames">
+<code class="sig-name descname">sift_tagnames</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">src_str</em>, <em class="sig-param">names</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#sift_tagnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.sift_tagnames" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_str</strong> (<em>src</em>) -- sieve expressions source</p></li>
+<li><p><strong>nvrs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) -- list of tag names to load and filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../parse/"
+                        title="previous chapter">kojismokydingo.sift.parse</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../../standalone/"
+                        title="next chapter">Standalone API Reference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/kojismokydingo/sift/tags.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../../standalone/" title="Standalone API Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../parse/" title="kojismokydingo.sift.parse"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Sift API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>

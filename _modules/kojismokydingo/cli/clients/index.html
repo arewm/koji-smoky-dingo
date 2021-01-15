@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.clients &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>kojismokydingo.cli.clients &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -70,11 +70,16 @@
 
 <span class="kn">import</span> <span class="nn">sys</span>
 
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">system</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iterkeys</span>
 <span class="kn">from</span> <span class="nn">six.moves.configparser</span> <span class="k">import</span> <span class="n">ConfigParser</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">pretty_json</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">BadDingo</span><span class="p">,</span> <span class="n">int_or_str</span><span class="p">,</span> <span class="n">pretty_json</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">as_archiveinfo</span><span class="p">,</span> <span class="n">as_buildinfo</span><span class="p">,</span> <span class="n">as_hostinfo</span><span class="p">,</span> <span class="n">as_rpminfo</span><span class="p">,</span>
+    <span class="n">as_taginfo</span><span class="p">,</span> <span class="n">as_targetinfo</span><span class="p">,</span> <span class="n">as_taskinfo</span><span class="p">,</span> <span class="n">as_userinfo</span><span class="p">,</span> <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..clients</span> <span class="k">import</span> <span class="n">rebuild_client_config</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="k">import</span> <span class="n">load_plugin_config</span>
 
 
 <div class="viewcode-block" id="cli_client_config"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.cli_client_config">[docs]</a><span class="k">def</span> <span class="nf">cli_client_config</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span>
@@ -153,6 +158,150 @@
                                  <span class="n">json</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
 
 
+<span class="n">OPEN_LOADFN</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;archive&quot;</span><span class="p">:</span> <span class="n">as_archiveinfo</span><span class="p">,</span>
+    <span class="s2">&quot;build&quot;</span><span class="p">:</span> <span class="n">as_buildinfo</span><span class="p">,</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="n">as_hostinfo</span><span class="p">,</span>
+    <span class="s2">&quot;rpm&quot;</span><span class="p">:</span> <span class="n">as_rpminfo</span><span class="p">,</span>
+    <span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">as_taginfo</span><span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">as_targetinfo</span><span class="p">,</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="n">as_taskinfo</span><span class="p">,</span>
+    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">as_userinfo</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="n">OPEN_CMD</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;darwin&quot;</span><span class="p">:</span> <span class="s2">&quot;open&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;linux&quot;</span><span class="p">:</span> <span class="s2">&quot;xdg-open&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;win32&quot;</span><span class="p">:</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="n">OPEN_URL</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;archive&quot;</span><span class="p">:</span> <span class="s2">&quot;archiveinfo?archiveID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;build&quot;</span><span class="p">:</span> <span class="s2">&quot;buildinfo?buildID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;hostinfo?hostID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rpm&quot;</span><span class="p">:</span> <span class="s2">&quot;rpminfo?rpmID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="s2">&quot;taginfo?tagID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;buildtargetinfo?targetID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;taskinfo?taskID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;userinfo?userID=</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_open_command"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.get_open_command">[docs]</a><span class="k">def</span> <span class="nf">get_open_command</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine the command used to open URLs. Attempts to load</span>
+<span class="sd">    profile-specific plugin configuration under the heading &#39;open&#39; and</span>
+<span class="sd">    the key &#39;command&#39; first. If that doesn&#39;t find a command, then fall</span>
+<span class="sd">    back to the per-platform mappings in the `OPEN_CMD` dict.</span>
+
+<span class="sd">    :param profile: name of koji profile</span>
+
+<span class="sd">    :type profile: str, optional</span>
+
+<span class="sd">    :param err: raise an exception if no command is discovered. If False</span>
+<span class="sd">      then will return None instead</span>
+
+<span class="sd">    :type err: bool, optional</span>
+
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    :raises BadDingo: when `err` is True and no command could be found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">default_command</span> <span class="o">=</span> <span class="n">OPEN_CMD</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
+
+    <span class="n">conf</span> <span class="o">=</span> <span class="n">load_plugin_config</span><span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="n">default_command</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BadDingo</span><span class="p">(</span><span class="s2">&quot;Unable to determine command for launching browser&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="cli_open"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.cli_open">[docs]</a><span class="k">def</span> <span class="nf">cli_open</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">goptions</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">datatype</span> <span class="o">=</span> <span class="n">datatype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">loadfn</span> <span class="o">=</span> <span class="n">OPEN_LOADFN</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">datatype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">loadfn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BadDingo</span><span class="p">(</span><span class="s2">&quot;Unsupported type for open </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">datatype</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">get_open_command</span><span class="p">(</span><span class="n">goptions</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+
+    <span class="n">weburl</span> <span class="o">=</span> <span class="n">goptions</span><span class="o">.</span><span class="n">weburl</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">weburl</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BadDingo</span><span class="p">(</span><span class="s2">&quot;Client has no weburl configured&quot;</span><span class="p">)</span>
+
+    <span class="n">loaded</span> <span class="o">=</span> <span class="n">loadfn</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+
+    <span class="n">weburl</span> <span class="o">=</span> <span class="n">weburl</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">typeurl</span> <span class="o">=</span> <span class="n">OPEN_URL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">datatype</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">loaded</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;</span><span class="si">{url}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">command</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">weburl</span><span class="p">,</span> <span class="n">typeurl</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">command</span><span class="p">,</span> <span class="s1">&#39; &quot;&#39;</span><span class="p">,</span> <span class="n">weburl</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">typeurl</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">))</span>
+
+    <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ClientOpen"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientOpen">[docs]</a><span class="k">class</span> <span class="nc">ClientOpen</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">):</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Launch web UI for koji data elements&quot;</span>
+
+
+<div class="viewcode-block" id="ClientOpen.arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientOpen.arguments">[docs]</a>    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;datatype&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;TYPE&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The koji data element type. build, tag, target, user,&quot;</span>
+               <span class="s2">&quot; host, rpm, archive, task&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;element&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">int_or_str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;KEY&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The key for the given element type.&quot;</span><span class="p">)</span>
+
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--command&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;COMMAND&quot;</span><span class="p">,</span>
+               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Command to exec with the discovered koji web URL&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="ClientOpen.validate"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientOpen.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="c1"># we made it so cli_open will attempt to discover a command if</span>
+        <span class="c1"># one isn&#39;t specified, but we want to do it this way to</span>
+        <span class="c1"># generate an error unique to this particular command. The</span>
+        <span class="c1"># `get_open_command` method can be used as a fallback for</span>
+        <span class="c1"># cases where other commands or plugins want to trigger a URL</span>
+        <span class="c1"># opening command</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">command</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">command</span><span class="p">:</span>
+            <span class="n">default_command</span> <span class="o">=</span> <span class="n">OPEN_CMD</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugin_config</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="n">default_command</span><span class="p">)</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">command</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unable to determine a default COMMAND for&quot;</span>
+                         <span class="s2">&quot; opening URLs.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;Please specify via the &#39;--command&#39; option.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ClientOpen.handle"><a class="viewcode-back" href="../../../../kojismokydingo/cli/clients/#kojismokydingo.cli.clients.ClientOpen.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">command</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugin_config</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cli_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span><span class="p">,</span>
+                        <span class="n">datatype</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">datatype</span><span class="p">,</span>
+                        <span class="n">element</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">element</span><span class="p">,</span>
+                        <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">)</span></div></div>
+
+
 <span class="c1">#</span>
 <span class="c1"># The end.</span>
 </pre></div>
@@ -185,7 +334,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -193,8 +342,8 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

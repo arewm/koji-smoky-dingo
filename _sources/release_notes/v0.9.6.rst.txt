@@ -1,0 +1,45 @@
+Koji Smoky Dingo preview 0.9.6 Release Notes
+============================================
+
+*January 15, 2021*
+
+General user-base is still very limited at this point in time, so we
+get very few bug reports or new ideas. If you're a koji-smoky-dingo
+user and you have feedback, please do let me know via the
+[tracker]. We need as many users as possible to try things out so that
+we can identify problems before a 1.0.0 release!
+
+[tracker]: https://github.com/obriencj/koji-smoky-dingo/issues
+
+Otherwise, still chugging along!
+
+- Refactored the sifty sieve caching mechanism so that it is easier to
+  associate cached calls with the sifter rather than the sieve
+  instance.
+- Added a ChacheMixin to kojismokydingo.sift.common with methods that
+  will cache the results of large tag queries. Sieve classes can
+  inherit this to make use of the cache.
+- Added build sieves compare-latest-nvr and compare-latest-id. These
+  allow for filtering builds using comparison operators against the
+  latest build of the same package in a given tag.
+- Added build sieve pkg-unlisted to filter builds which do not have a
+  package listing in a particular tag (neither allowed nor blocked)
+- Fixed an issue where the ksd-filter-builds standalone would still
+  require the '--profile' option to be specified on the command-line
+  even when the '#option --profile' directive was present in the
+  filter.
+- Added 'koji open' command which will launch a browser to the info
+  page for the relevant koji data type.
+- Added 'koji filter-tags' command and 'ksd-filter-tags' standalone
+  command for applying sifty predicates to filter a list of tags
+- Sieve predicats may now accept options via a keyword-like syntax if
+  they supply a 'set_options' method.
+- Enable loading of additional sieves via entry_points for the
+  'filter-tags', 'filter-builds', and 'list-component-builds' koji
+  commands and the 'ksd-filter-tags' and 'ksd-filter-builds'
+  standalone commands.
+- Adds functions to kojismokydingo.common for working with
+  plugin-oriented configuration, with optional per-profile settings.
+
+Closed Issues:
+<https://github.com/obriencj/koji-smoky-dingo/milestone/5?closed=1>

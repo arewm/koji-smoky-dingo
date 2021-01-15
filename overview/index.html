@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Overview &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>Overview &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -162,35 +162,43 @@ checking in lately</p></td>
 <td><p>Filter a list of NVRs by various
 criteria</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">latest-archives</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter-tags</span></code></p></td>
+<td><p>Filter a list of tags by various
+criteria</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">latest-archives</span></code></p></td>
 <td><p>Show selected latest archives from a
 tag</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-btypes</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-btypes</span></code></p></td>
 <td><p>Show build types</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-build-archives</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-build-archives</span></code></p></td>
 <td><p>Show selected archives attached to a
 build</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-cgs</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-cgs</span></code></p></td>
 <td><p>Show content generators</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-component-builds</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-component-builds</span></code></p></td>
 <td><p>Show builds which were used to produce
 others</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-env-vars</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-env-vars</span></code></p></td>
 <td><p>Show all inherited mock environment
 variables for a tag</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-rpm-macros</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-rpm-macros</span></code></p></td>
 <td><p>Show all inherited mock RPM macros for
 a tag</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list-tag-extras</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list-tag-extras</span></code></p></td>
 <td><p>Show all inherited extra fields for a
 tag</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">open</span></code></p></td>
+<td><p>Opens a brower to the info page for
+koji data types</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">perminfo</span></code></p></td>
 <td><p>Show information about a permission</p></td>
@@ -213,7 +221,7 @@ into the default site-packages for the python installation.</p>
 <p>If using an RPM-based distribution, this is easily achieved using the
 included spec to produce an RPM and install that.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make clean rpm
-dnf install dist/noarch/python3-kojismokydingo-0.9.5-1.fc32.noarch.rpm
+dnf install dist/noarch/python3-kojismokydingo-0.9.6-1.fc32.noarch.rpm
 </pre></div>
 </div>
 </div>
@@ -226,11 +234,11 @@ sudo python setup.py clean build install --root<span class="o">=</span>/
 
 <span class="c1"># Python 2.7 global install</span>
 python3 setup.py bdist_wheel
-pip3 install --prefix /usr -I dist/kojismokydingo-0.9.5-py2-none-any.whl
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.6-py2-none-any.whl
 
 <span class="c1"># Python 3 global install</span>
 python3 setup.py bdist_wheel
-pip3 install --prefix /usr -I dist/kojismokydingo-0.9.5-py3-none-any.whl
+pip3 install --prefix /usr -I dist/kojismokydingo-0.9.6-py3-none-any.whl
 </pre></div>
 </div>
 </div>
@@ -241,7 +249,7 @@ install it anywhere and tell koji to look in that particular
 <code class="docutils literal notranslate"><span class="pre">site-package/koji_cli_plugins</span></code> instance</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python 3 user install</span>
 python3 setup.py bdist_wheel
-pip3 install --user -I dist/kojismokydingo-0.9.5-py3-none-any.whl
+pip3 install --user -I dist/kojismokydingo-0.9.6-py3-none-any.whl
 </pre></div>
 </div>
 <p>And the following setting in ~/.koji/config assuming Python version 3.7
@@ -349,13 +357,13 @@ with this library; if not, see <a class="reference external" href="http://www.gn
         <li class="right" >
           <a href="../" title="Koji Smoky Dingo"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Sift API Reference &#8212; kojismokydingo 0.9.5 documentation</title>
+    <title>Sift API Reference &#8212; kojismokydingo 0.9.6 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../users/" title="kojismokydingo.users"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -123,6 +123,14 @@ info_dicts sequence.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.IntStrSieve">
+<em class="property">class </em><code class="sig-name descname">IntStrSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#IntStrSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.IntStrSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>A Sieve that requires all of its arguments to be matchers. Calls
+<a class="reference internal" href="#kojismokydingo.sift.ensure_all_int_or_str" title="kojismokydingo.sift.ensure_all_int_or_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_all_int_or_str</span></code></a> on <code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens</span></code></p>
 </dd></dl>
 
 <dl class="class">
@@ -282,6 +290,14 @@ info_dicts sequence.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="kojismokydingo.sift.MatcherSieve">
+<em class="property">class </em><code class="sig-name descname">MatcherSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#MatcherSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.MatcherSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>A Sieve that requires all of its arguments to be matchers. Calls
+<a class="reference internal" href="#kojismokydingo.sift.ensure_all_matcher" title="kojismokydingo.sift.ensure_all_matcher"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_all_matcher</span></code></a> on <code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens</span></code></p>
+</dd></dl>
+
+<dl class="class">
 <dt id="kojismokydingo.sift.Sieve">
 <em class="property">class </em><code class="sig-name descname">Sieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
@@ -303,6 +319,11 @@ attribute. This property is the key used to define how the Sieve
 is invoked by the source. For example, a source of
 <code class="docutils literal notranslate"><span class="pre">(check-enabled</span> <span class="pre">X)</span></code> is going to expect that the Sifter has a
 Sieve class available with a name of <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;check-enabled&quot;</span></code></p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.Sieve.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ()</em><a class="headerlink" href="#kojismokydingo.sift.Sieve.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.check">
 <em class="property">abstract </em><code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.check" title="Permalink to this definition">¶</a></dt>
@@ -323,8 +344,22 @@ included in the results.</p>
 
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.get_cache">
-<code class="sig-name descname">get_cache</code><span class="sig-paren">(</span><em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.get_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.get_cache" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">get_cache</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.get_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.get_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a cache dict from the sifter using the name of this sieve
+and the given key (which must be hashable)</p>
+<p>The same cache dict will be returned for this key until the
+sifter has its <code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code> method invoked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.Sieve.get_info_cache">
+<code class="sig-name descname">get_info_cache</code><span class="sig-paren">(</span><em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.get_info_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.get_info_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a cache dict from the sifter using the name of this sieve and
+the sifter's designated key for the given info dict. The default
+sifter key will get the &quot;id&quot; value from the info dict.</p>
+<p>The same cache dict will be returned for this info dict until
+the sifter has its <code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code> method invoked.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.name">
@@ -357,6 +392,12 @@ info_dicts sequence.</p>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="kojismokydingo.sift.Sieve.set_options">
+<code class="sig-name descname">set_options</code><span class="sig-paren">(</span><em class="sig-param">**options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.set_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.set_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>assign keyword arguments</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -365,8 +406,19 @@ info_dicts sequence.</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="kojismokydingo.sift.Sifter.get_cache">
-<code class="sig-name descname">get_cache</code><span class="sig-paren">(</span><em class="sig-param">cachename</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sifter.get_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sifter.get_cache" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">get_cache</code><span class="sig-paren">(</span><em class="sig-param">cachename</em>, <em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sifter.get_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sifter.get_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flexible storage for caching data in a sifter. Sieves can use this
+to record data about individual info dicts, or to cache results
+from arbitrary koji session calls.</p>
+<p>This data is cleared when the <a class="reference internal" href="#kojismokydingo.sift.Sifter.reset" title="kojismokydingo.sift.Sifter.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a> method is invoked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.Sifter.get_info_cache">
+<code class="sig-name descname">get_info_cache</code><span class="sig-paren">(</span><em class="sig-param">cachename</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sifter.get_info_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sifter.get_info_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cache associated with a particular info dict.</p>
+<p>This data is cleared when the <a class="reference internal" href="#kojismokydingo.sift.Sifter.reset" title="kojismokydingo.sift.Sifter.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a> method is invoked</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="kojismokydingo.sift.Sifter.is_flagged">
@@ -417,6 +469,14 @@ flagname.</p>
 <code class="sig-name descname">complaint</code><em class="property"> = 'Error compiling Sifter'</em><a class="headerlink" href="#kojismokydingo.sift.SifterError.complaint" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="kojismokydingo.sift.SymbolSieve">
+<em class="property">class </em><code class="sig-name descname">SymbolSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">*tokens</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#SymbolSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.SymbolSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
+<p>A Sieve that requires all of its arguments to be matchers. Calls
+<a class="reference internal" href="#kojismokydingo.sift.ensure_all_symbol" title="kojismokydingo.sift.ensure_all_symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_all_symbol</span></code></a> on <code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens</span></code></p>
 </dd></dl>
 
 <dl class="class">
@@ -472,9 +532,12 @@ returns them in a new list. If not, raises a SifterError.</p>
 
 <dl class="function">
 <dt id="kojismokydingo.sift.ensure_all_symbol">
-<code class="sig-name descname">ensure_all_symbol</code><span class="sig-paren">(</span><em class="sig-param">values</em>, <em class="sig-param">msg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#ensure_all_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.ensure_all_symbol" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ensure_all_symbol</code><span class="sig-paren">(</span><em class="sig-param">values</em>, <em class="sig-param">expand=True</em>, <em class="sig-param">msg=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#ensure_all_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.ensure_all_symbol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that all of the elements in values are Symbols, and returns
 them as a new list.  If not, raises a SifterError.</p>
+<p>If expand is True then any SymbolGroup instances will be expanded
+to their full combination of Symbols and inlined. Otherwise, the
+inclusion of a SymbolGroup is an error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="parse/#kojismokydingo.sift.parse.Symbol" title="kojismokydingo.sift.parse.Symbol">Symbol</a>]</p>
@@ -556,7 +619,9 @@ not a Symbol, raises a SifterError.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="builds/">kojismokydingo.sift.builds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="common/">kojismokydingo.sift.common</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse/">kojismokydingo.sift.parse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tags/">kojismokydingo.sift.tags</a></li>
 </ul>
 </div>
 </div>
@@ -618,13 +683,13 @@ not a Symbol, raises a SifterError.</p>
         <li class="right" >
           <a href="../users/" title="kojismokydingo.users"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2020-12-18.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>

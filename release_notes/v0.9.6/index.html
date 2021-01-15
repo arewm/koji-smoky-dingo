@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>Koji Smoky Dingo preview 0.9.6 Release Notes &#8212; kojismokydingo 0.9.6 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Koji Smoky Dingo preview 0.9.5 Release Notes" href="../v0.9.5/" />
+    <link rel="prev" title="Release Notes" href="../" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../v0.9.5/" title="Koji Smoky Dingo preview 0.9.5 Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Release Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Release Notes</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-smoky-dingo-preview-0-9-6-release-notes">
+<h1>Koji Smoky Dingo preview 0.9.6 Release Notes<a class="headerlink" href="#koji-smoky-dingo-preview-0-9-6-release-notes" title="Permalink to this headline">¶</a></h1>
+<p><em>January 15, 2021</em></p>
+<p>General user-base is still very limited at this point in time, so we
+get very few bug reports or new ideas. If you're a koji-smoky-dingo
+user and you have feedback, please do let me know via the
+[tracker]. We need as many users as possible to try things out so that
+we can identify problems before a 1.0.0 release!</p>
+<p>[tracker]: <a class="reference external" href="https://github.com/obriencj/koji-smoky-dingo/issues">https://github.com/obriencj/koji-smoky-dingo/issues</a></p>
+<p>Otherwise, still chugging along!</p>
+<ul class="simple">
+<li><p>Refactored the sifty sieve caching mechanism so that it is easier to
+associate cached calls with the sifter rather than the sieve
+instance.</p></li>
+<li><p>Added a ChacheMixin to kojismokydingo.sift.common with methods that
+will cache the results of large tag queries. Sieve classes can
+inherit this to make use of the cache.</p></li>
+<li><p>Added build sieves compare-latest-nvr and compare-latest-id. These
+allow for filtering builds using comparison operators against the
+latest build of the same package in a given tag.</p></li>
+<li><p>Added build sieve pkg-unlisted to filter builds which do not have a
+package listing in a particular tag (neither allowed nor blocked)</p></li>
+<li><p>Fixed an issue where the ksd-filter-builds standalone would still
+require the '--profile' option to be specified on the command-line
+even when the '#option --profile' directive was present in the
+filter.</p></li>
+<li><p>Added 'koji open' command which will launch a browser to the info
+page for the relevant koji data type.</p></li>
+<li><p>Added 'koji filter-tags' command and 'ksd-filter-tags' standalone
+command for applying sifty predicates to filter a list of tags</p></li>
+<li><p>Sieve predicats may now accept options via a keyword-like syntax if
+they supply a 'set_options' method.</p></li>
+<li><p>Enable loading of additional sieves via entry_points for the
+'filter-tags', 'filter-builds', and 'list-component-builds' koji
+commands and the 'ksd-filter-tags' and 'ksd-filter-builds'
+standalone commands.</p></li>
+<li><p>Adds functions to kojismokydingo.common for working with
+plugin-oriented configuration, with optional per-profile settings.</p></li>
+</ul>
+<p>Closed Issues:
+&lt;<a class="reference external" href="https://github.com/obriencj/koji-smoky-dingo/milestone/5?closed=1">https://github.com/obriencj/koji-smoky-dingo/milestone/5?closed=1</a>&gt;</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../v0.9.5/"
+                        title="next chapter">Koji Smoky Dingo preview 0.9.5 Release Notes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/release_notes/v0.9.6.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../v0.9.5/" title="Koji Smoky Dingo preview 0.9.5 Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Release Notes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Release Notes</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2021-01-15.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>
