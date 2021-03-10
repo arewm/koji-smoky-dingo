@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.common &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -135,7 +135,6 @@
             <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">seqlen</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">))</span></div>
 
 
-
 <span class="k">def</span> <span class="nf">escapable_replace</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">character</span><span class="p">,</span> <span class="n">replacement</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Single-character string substitutions. Doubled sentinel characters</span>
@@ -160,23 +159,24 @@
 
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">character</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;escapable_replace requires single characters&quot;</span>
 
-    <span class="n">collect</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">gather</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">collect</span> <span class="o">=</span> <span class="n">gather</span><span class="o">.</span><span class="n">append</span>
 
     <span class="n">pieces</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pieces</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="n">character</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">pieces</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">collect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replacement</span><span class="p">)</span>
+                <span class="n">collect</span><span class="p">(</span><span class="n">replacement</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="n">character</span><span class="p">:</span>
-                <span class="n">collect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">character</span><span class="p">)</span>
+                <span class="n">collect</span><span class="p">(</span><span class="n">character</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">collect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replacement</span><span class="p">)</span>
-                <span class="n">collect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                <span class="n">collect</span><span class="p">(</span><span class="n">replacement</span><span class="p">)</span>
+                <span class="n">collect</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">collect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="n">collect</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">collect</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gather</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="fnmatches"><a class="viewcode-back" href="../../../kojismokydingo/common/#kojismokydingo.common.fnmatches">[docs]</a><span class="k">def</span> <span class="nf">fnmatches</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -713,14 +713,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

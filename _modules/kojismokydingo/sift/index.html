@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.sift &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -77,7 +77,7 @@
 
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">abstractproperty</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractproperty</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">itemgetter</span>
@@ -123,6 +123,10 @@
 
 
 <div class="viewcode-block" id="SifterError"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.SifterError">[docs]</a><span class="k">class</span> <span class="nc">SifterError</span><span class="p">(</span><span class="n">BadDingo</span><span class="p">):</span>
+    <span class="c1"># Indicates an problem during the compilation of a Sifter, either</span>
+    <span class="c1"># due to a syntactic problem or in the initialization of a Sieve</span>
+    <span class="c1"># instance with incompatible parameter types.</span>
+
     <span class="n">complaint</span> <span class="o">=</span> <span class="s2">&quot;Error compiling Sifter&quot;</span></div>
 
 
@@ -416,18 +420,6 @@
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parse_exprs</span><span class="p">(</span><span class="n">source</span><span class="p">)]</span>
 
 
-    <span class="k">def</span> <span class="nf">_convert_sym_aliases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sym</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">sym</span> <span class="o">==</span> <span class="s2">&quot;!&quot;</span><span class="p">:</span>
-            <span class="c1"># treat ! as an alias for not</span>
-            <span class="n">sym</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;not&quot;</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">sym</span> <span class="o">==</span> <span class="s2">&quot;?&quot;</span><span class="p">:</span>
-            <span class="c1"># tread ? as an alias for flagged</span>
-            <span class="n">sym</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;flagged&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">sym</span>
-
-
     <span class="k">def</span> <span class="nf">_convert_sieve_aliases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sym</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        When there is no sieve with a matchin name for sym, we check if it</span>
@@ -471,23 +463,31 @@
                 <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="s2">&quot;Empty expression: ()&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ItemPath</span><span class="p">):</span>
+                <span class="c1"># a shortcut to the built-in &#39;item&#39; sieve is to start the</span>
+                <span class="c1"># sieve with an ItemPath</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">)</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="n">parsed</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">ensure_symbol</span><span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Sieve names must be symbols&quot;</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_sym_aliases</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
             <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sieve_classes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># no direct matches, so we&#39;ll look up syntactic</span>
+                <span class="c1"># aliases.  This is where conversion of the ! prefix</span>
+                <span class="c1"># and the ?  suffix would happen.</span>
                 <span class="n">newname</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_sieve_aliases</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
                 <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sieve_classes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">newname</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># even after converting for aliases we have no match, so</span>
+                <span class="c1"># we cannot compile the sieve.</span>
                 <span class="k">raise</span> <span class="n">SifterError</span><span class="p">(</span><span class="s2">&quot;No such sieve: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
 
+            <span class="c1"># looks for positional and option parameters from the tail</span>
+            <span class="c1"># of the list.</span>
             <span class="n">args</span><span class="p">,</span> <span class="n">kwds</span> <span class="o">=</span> <span class="n">gather_args</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
 
             <span class="k">try</span><span class="p">:</span>
@@ -498,14 +498,13 @@
                 <span class="c1"># Sieve can define the positionals in their __init__</span>
                 <span class="c1"># method, and keyword-only via the set_options method.</span>
 
-                <span class="c1"># Very recent versions of Python introduced the</span>
-                <span class="c1"># concepts of positional-only and keyword-only</span>
-                <span class="c1"># parameters, but we need to work with much older</span>
-                <span class="c1"># versions that do not have these syntactic features</span>
-                <span class="c1"># available.</span>
+                <span class="c1"># Newer versions of Python introduced the concepts of</span>
+                <span class="c1"># positional-only and keyword-only parameters, but we</span>
+                <span class="c1"># need to work with much older versions that do not</span>
+                <span class="c1"># have these syntactic features available.</span>
 
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">receive_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
 
             <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Error creating Sieve </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">te</span><span class="p">)</span>
@@ -513,6 +512,8 @@
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">parsed</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+                <span class="c1"># this is a parameter reference, and should be</span>
+                <span class="c1"># converted to the value of the parameter.</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">convert_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">parsed</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -520,6 +521,8 @@
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="s2">&quot;{&quot;</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">:</span>
+                <span class="c1"># strings can have {param_name} entries in them which</span>
+                <span class="c1"># will allow for substitutions with parameters</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">parsed</span>
@@ -657,6 +660,7 @@
 <span class="sd">    Sieve class available with a name of `&quot;check-enabled&quot;`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+
     <span class="nd">@abstractproperty</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -671,15 +675,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">tokens</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c1"># assign the default option values</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_options</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Sieve.receive_options"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.receive_options">[docs]</a>    <span class="k">def</span> <span class="nf">receive_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Sieve.set_options"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.set_options">[docs]</a>    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="Sieve.set_options"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.set_options">[docs]</a>    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        assign keyword arguments</span>
+<span class="sd">        override to accept keyword arguments relevant to the sieve</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">options</span><span class="p">)</span></div>
+
+        <span class="k">pass</span></div>
 
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">info_dicts</span><span class="p">):</span>
@@ -700,8 +707,7 @@
             <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="Sieve.check"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.check">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+<div class="viewcode-block" id="Sieve.check"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override to return True if the predicate matches the given</span>
 <span class="sd">        info dict.</span>
@@ -721,10 +727,12 @@
 
 <div class="viewcode-block" id="Sieve.prep"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.Sieve.prep">[docs]</a>    <span class="k">def</span> <span class="nf">prep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">info_dicts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Override if some decoration of info_dicts is necessary. This</span>
-<span class="sd">        allows bulk operations to be performed over the entire set of</span>
-<span class="sd">        info dicts to be filtered, rather than one at a time in the</span>
-<span class="sd">        `check` method</span>
+<span class="sd">        Override if some bulk pre-loading operations are necessary.</span>
+
+<span class="sd">        This is used by the default `run` implementation to allow bulk</span>
+<span class="sd">        operations to be performed over the entire set of info dicts</span>
+<span class="sd">        to be filtered, rather than one at a time in the `check`</span>
+<span class="sd">        method</span>
 
 <span class="sd">        :type info_dicts: list[dict]</span>
 <span class="sd">        :rtype: None</span>
@@ -870,6 +878,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;not&quot;</span>
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="p">)</span>
 
 
 <div class="viewcode-block" id="LogicNot.run"><a class="viewcode-back" href="../../../kojismokydingo/sift/#kojismokydingo.sift.LogicNot.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">info_dicts</span><span class="p">):</span>
@@ -950,6 +959,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;flagged&quot;</span>
+    <span class="n">aliases</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sifter</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -1085,14 +1095,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

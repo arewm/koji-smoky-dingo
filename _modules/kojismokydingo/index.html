@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -113,6 +113,7 @@
     <span class="s2">&quot;bulk_load_tags&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_tasks&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bulk_load_users&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hub_version&quot;</span><span class="p">,</span>
     <span class="s2">&quot;iter_bulk_load&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version_check&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version_require&quot;</span><span class="p">,</span>
@@ -437,6 +438,13 @@
 <span class="sd">      100</span>
 
 <span class="sd">    :type size: int, optional</span>
+
+<span class="sd">    :param results: mapping to store the results in. Default, produce</span>
+<span class="sd">      a new OrderedDict</span>
+
+<span class="sd">    :type results: Mapping, optional</span>
+
+<span class="sd">    :rtype: Mapping</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
@@ -453,6 +461,13 @@
 
 <div class="viewcode-block" id="bulk_load_tasks"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tasks">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tasks</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">task_ids</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load many taskinfo dicts from a koji client session and a sequence</span>
+<span class="sd">    of task IDs.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual IDs with their</span>
+<span class="sd">    resulting taskinfo.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
@@ -468,6 +483,17 @@
 
 
 <div class="viewcode-block" id="bulk_load_tags"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_tags">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param err: Raise an exception if a tag fails to load. Default,</span>
+<span class="sd">      True.</span>
+
+<span class="sd">    :type err: bool, optional</span>
+
+<span class="sd">    :param size: Count of tags to load in a single multicall. Default,</span>
+<span class="sd">      100</span>
+
+<span class="sd">    :type size: int, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
@@ -506,6 +532,17 @@
 
 <div class="viewcode-block" id="bulk_load_buildroot_archives"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_buildroot_archives">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_buildroot_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                  <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a chunking multicall to fetch the archives of buildroots</span>
+<span class="sd">    via `session.listArchives` for each buildroot ID in buildrood_ids.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual buildroot IDs with</span>
+<span class="sd">    their resulting archive lists.</span>
+
+<span class="sd">    If results is non-None, it must support dict-like update method,</span>
+<span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
+<span class="sd">    store and return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listArchives</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">btype</span><span class="p">)</span>
@@ -515,6 +552,17 @@
 
 <div class="viewcode-block" id="bulk_load_buildroot_rpms"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_buildroot_rpms">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_buildroot_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">buildroot_ids</span><span class="p">,</span>
                              <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a chunking multicall to fetch the RPMs of buildroots via</span>
+<span class="sd">    `session.listRPMs` for each buildroot ID in buildrood_ids.</span>
+
+<span class="sd">    Returns an OrderedDict associating the individual buildroot IDs with</span>
+<span class="sd">    their resulting RPM lists.</span>
+
+<span class="sd">    If results is non-None, it must support dict-like update method,</span>
+<span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
+<span class="sd">    store and return the results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
     <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">listRPMs</span><span class="p">(</span><span class="n">componentBuildrootID</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
@@ -525,8 +573,8 @@
 <div class="viewcode-block" id="bulk_load_build_archives"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_build_archives">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">btype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up a chunking multicall to fetch the the archives of builds</span>
-<span class="sd">    via session.listArchives for each build ID in build_ids.</span>
+<span class="sd">    Set up a chunking multicall to fetch the archives of builds</span>
+<span class="sd">    via `session.listArchives` for each build ID in build_ids.</span>
 
 <span class="sd">    Returns an OrderedDict associating the individual build IDs with</span>
 <span class="sd">    their resulting archive lists.</span>
@@ -544,11 +592,11 @@
 
 <div class="viewcode-block" id="bulk_load_build_rpms"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_build_rpms">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_build_rpms</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_ids</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up a chunking multicall to fetch the the archives of builds</span>
-<span class="sd">    via session.listArchives for each build ID in build_ids.</span>
+<span class="sd">    Set up a chunking multicall to fetch the RPMs of builds via</span>
+<span class="sd">    `session.listRPMS` for each build ID in build_ids.</span>
 
 <span class="sd">    Returns an OrderedDict associating the individual build IDs with</span>
-<span class="sd">    their resulting archive lists.</span>
+<span class="sd">    their resulting RPM lists.</span>
 
 <span class="sd">    If results is non-None, it must support a dict-like update method,</span>
 <span class="sd">    and will be used in place of a newly allocated OrderedDict to</span>
@@ -597,17 +645,33 @@
 <span class="sd">    return the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">results</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">users</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">results</span>
 
+    <span class="c1"># we need to identify which signature the getUser API will</span>
+    <span class="c1"># support.  Unfortunately the change in signatures happened before</span>
+    <span class="c1"># there was a way to check the hub version. First we&#39;ll check</span>
+    <span class="c1"># whether there&#39;s already a cached answer as to which API is</span>
+    <span class="c1"># available</span>
     <span class="n">session_vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
     <span class="n">new_get_user</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">new_get_user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># there wasn&#39;t already an answer, so we&#39;ll have to find out</span>
+        <span class="c1"># ourselves. In this case we&#39;ll load the first user in the</span>
+        <span class="c1"># list of users separately, outside of a multicall, and using</span>
+        <span class="c1"># the as_userinfo function. This function will first try the</span>
+        <span class="c1"># newer signature. If successful, it will record</span>
+        <span class="c1"># __new_get_user as True, and we&#39;ll know to use the newer</span>
+        <span class="c1"># signature. If not, the function will retry with the older</span>
+        <span class="c1"># signature and set __new_get_user to False.</span>
+
         <span class="n">key</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">as_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">NoSuchUser</span><span class="p">:</span>
@@ -616,10 +680,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c1"># the use of as_userinfo will have updates the __new_get_user</span>
+        <span class="c1"># the use of as_userinfo will have updated the __new_get_user</span>
         <span class="c1"># sentinel attribute to either True or False</span>
         <span class="n">new_get_user</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__new_get_user&quot;</span><span class="p">)</span>
-        <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">if</span> <span class="n">new_get_user</span><span class="p">:</span>
         <span class="n">fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">session</span><span class="o">.</span><span class="n">getUser</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -710,6 +773,23 @@
 
 
 <div class="viewcode-block" id="as_taskinfo"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.as_taskinfo">[docs]</a><span class="k">def</span> <span class="nf">as_taskinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coerces a task value into a koji task info dict.</span>
+
+<span class="sd">    If task is an</span>
+<span class="sd">     * int, will attempt to load as a task ID</span>
+<span class="sd">     * dict, will presume already a task info</span>
+
+<span class="sd">    :param task: value to lookup</span>
+
+<span class="sd">    :type task: int or dict</span>
+
+<span class="sd">    :raises NoSuchTask: if the task value could not be resolved</span>
+<span class="sd">      into a task info dict</span>
+
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getTaskInfo</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -918,6 +998,42 @@
     <span class="k">return</span> <span class="n">val</span>
 
 
+<div class="viewcode-block" id="hub_version"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.hub_version">[docs]</a><span class="k">def</span> <span class="nf">hub_version</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper for ``session.getKojiVersion`` which caches the results on</span>
+<span class="sd">    the session and splits the value into a tuple of ints for easy</span>
+<span class="sd">    comparison.</span>
+
+<span class="sd">    If the getKojiVersion method isn&#39;t implemented on the hub, we</span>
+<span class="sd">    presume that we&#39;re version 1.22 ``(1, 22)`` which is the last</span>
+<span class="sd">    version before getKojiVersion was added.</span>
+
+<span class="sd">    :rtype: tuple[int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># we need to use this instead of getattr as koji sessions will</span>
+    <span class="c1"># automatically create all missing properties as proxies to a</span>
+    <span class="c1"># remote hub method.</span>
+    <span class="n">session_vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+    <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__hub_version&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hub_ver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getKojiVersion</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">GenericError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">hub_ver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hub_ver</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hub_ver</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">hub_ver</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_int</span><span class="p">,</span> <span class="n">hub_ver</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)))</span>
+
+        <span class="n">session_vars</span><span class="p">[</span><span class="s2">&quot;__hub_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hub_ver</span>
+
+    <span class="k">return</span> <span class="n">hub_ver</span></div>
+
+
 <div class="viewcode-block" id="version_check"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.version_check">[docs]</a><span class="k">def</span> <span class="nf">version_check</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Verifies that the requested minimum version is met compared</span>
@@ -941,25 +1057,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">minimum</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">minimum</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_int</span><span class="p">,</span> <span class="n">minimum</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)))</span>
 
-    <span class="c1"># we need to use this instead of getattr as koji sessions will</span>
-    <span class="c1"># automatically create all missing properties as proxies to a</span>
-    <span class="c1"># remote hub method.</span>
-    <span class="n">session_vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
-
-    <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">session_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__hub_version&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">hub_ver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">getKojiVersion</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">GenericError</span><span class="p">:</span>
-            <span class="k">pass</span>
-
-        <span class="k">if</span> <span class="n">hub_ver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">hub_ver</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hub_ver</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">hub_ver</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_int</span><span class="p">,</span> <span class="n">hub_ver</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)))</span>
-
-        <span class="n">session_vars</span><span class="p">[</span><span class="s2">&quot;__hub_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hub_ver</span>
+    <span class="n">hub_ver</span> <span class="o">=</span> <span class="n">hub_version</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">hub_ver</span> <span class="ow">and</span> <span class="n">hub_ver</span> <span class="o">&gt;=</span> <span class="n">minimum</span><span class="p">)</span></div>
 
@@ -1039,13 +1137,13 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

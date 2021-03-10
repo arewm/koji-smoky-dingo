@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.sift &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.cli.sift &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -65,6 +65,7 @@
 <span class="sd">:license: GPL v3</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -93,6 +94,38 @@
 
 
 <span class="k">def</span> <span class="nf">_entry_point_sieves</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">on_err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load all Sieve instances from entry points using the given</span>
+<span class="sd">    key. Returns a list of Sieve subclasses that can be used to</span>
+<span class="sd">    augment the predicates in a Sifter.</span>
+
+<span class="sd">    The individual endpoints can resolve to any of the following:</span>
+<span class="sd">     * a Sieve subclass</span>
+<span class="sd">     * a list or tuple of Sieve subclasses</span>
+<span class="sd">     * a callable which returns a Sieve subclass</span>
+<span class="sd">     * a callable which returns a list or tuple of Sieve subclasses</span>
+
+<span class="sd">    The entry points are sorted by their module name and name, and</span>
+<span class="sd">    the results are combined into a list.</span>
+
+<span class="sd">    If on_err is None, then any exceptions raised during the</span>
+<span class="sd">    resolution of entry points into Sieves will simply be skipped.</span>
+
+<span class="sd">    If on_err is not None, then is must be a callable that accepts two</span>
+<span class="sd">    arguments: an entry point and an exception. This callable will be</span>
+<span class="sd">    invoked if there is an exception raised during the resolution of</span>
+<span class="sd">    the entry point into Sieves. If the callable returns True, loading</span>
+<span class="sd">    of any additional entry points will continue. Otherwise no further</span>
+<span class="sd">    entry points will be loaded.</span>
+
+<span class="sd">    :param key: entry point key to load</span>
+<span class="sd">    :type key: str</span>
+
+<span class="sd">    :param on_err: error handling function</span>
+<span class="sd">    :type on_err: callable, optional</span>
+
+<span class="sd">    :rtype: list[type]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">points</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iter_entry_points</span><span class="p">(</span><span class="n">key</span><span class="p">),</span>
                     <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">module_name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
@@ -107,7 +140,7 @@
             <span class="c1"># any of:</span>
             <span class="c1">#  * Sieve subclass</span>
             <span class="c1">#  * list/tuple of Sieve subclasses</span>
-            <span class="c1">#  * null arityy callable which returns the above</span>
+            <span class="c1">#  * null arity callable which returns the above</span>
 
             <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">,</span> <span class="n">Sieve</span><span class="p">):</span>
                 <span class="n">collected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ep_ref</span><span class="p">)</span>
@@ -418,7 +451,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -426,7 +459,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

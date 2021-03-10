@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Core API Reference &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>Core API Reference &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../siftylang/" title="Sifty Dingo Filtering Language"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -413,7 +413,27 @@ into a target info dict</p>
 <dl class="function">
 <dt id="kojismokydingo.as_taskinfo">
 <code class="sig-name descname">as_taskinfo</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">task</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#as_taskinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.as_taskinfo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Coerces a task value into a koji task info dict.</p>
+<dl class="simple">
+<dt>If task is an</dt><dd><ul class="simple">
+<li><p>int, will attempt to load as a task ID</p></li>
+<li><p>dict, will presume already a task info</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- value to lookup</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#kojismokydingo.NoSuchTask" title="kojismokydingo.NoSuchTask"><strong>NoSuchTask</strong></a> -- if the task value could not be resolved
+into a task info dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.as_userinfo">
@@ -479,8 +499,8 @@ occurrs while invoking the <code class="xref py py-obj docutils literal notransl
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_build_archives">
 <code class="sig-name descname">bulk_load_build_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_archives" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up a chunking multicall to fetch the the archives of builds
-via session.listArchives for each build ID in build_ids.</p>
+<dd><p>Set up a chunking multicall to fetch the archives of builds
+via <code class="xref py py-obj docutils literal notranslate"><span class="pre">session.listArchives</span></code> for each build ID in build_ids.</p>
 <p>Returns an OrderedDict associating the individual build IDs with
 their resulting archive lists.</p>
 <p>If results is non-None, it must support dict-like update method,
@@ -491,10 +511,10 @@ store and return the results.</p>
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_build_rpms">
 <code class="sig-name descname">bulk_load_build_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_build_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_build_rpms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up a chunking multicall to fetch the the archives of builds
-via session.listArchives for each build ID in build_ids.</p>
+<dd><p>Set up a chunking multicall to fetch the RPMs of builds via
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">session.listRPMS</span></code> for each build ID in build_ids.</p>
 <p>Returns an OrderedDict associating the individual build IDs with
-their resulting archive lists.</p>
+their resulting RPM lists.</p>
 <p>If results is non-None, it must support a dict-like update method,
 and will be used in place of a newly allocated OrderedDict to
 store and return the results.</p>
@@ -521,7 +541,12 @@ return the results.</p>
 True.</p></li>
 <li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of NVRs to load in a single multicall. Default,
 100</p></li>
+<li><p><strong>results</strong> (<em>Mapping</em><em>, </em><em>optional</em>) -- mapping to store the results in. Default, produce
+a new OrderedDict</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Mapping</p>
 </dd>
 </dl>
 </dd></dl>
@@ -529,12 +554,26 @@ True.</p></li>
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_buildroot_archives">
 <code class="sig-name descname">bulk_load_buildroot_archives</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">buildroot_ids</em>, <em class="sig-param">btype=None</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroot_archives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroot_archives" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set up a chunking multicall to fetch the archives of buildroots
+via <code class="xref py py-obj docutils literal notranslate"><span class="pre">session.listArchives</span></code> for each buildroot ID in buildrood_ids.</p>
+<p>Returns an OrderedDict associating the individual buildroot IDs with
+their resulting archive lists.</p>
+<p>If results is non-None, it must support dict-like update method,
+and will be used in place of a newly allocated OrderedDict to
+store and return the results.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_buildroot_rpms">
 <code class="sig-name descname">bulk_load_buildroot_rpms</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">buildroot_ids</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_buildroot_rpms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_buildroot_rpms" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set up a chunking multicall to fetch the RPMs of buildroots via
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">session.listRPMs</span></code> for each buildroot ID in buildrood_ids.</p>
+<p>Returns an OrderedDict associating the individual buildroot IDs with
+their resulting RPM lists.</p>
+<p>If results is non-None, it must support dict-like update method,
+and will be used in place of a newly allocated OrderedDict to
+store and return the results.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_buildroots">
@@ -563,12 +602,26 @@ store and return the results.</p>
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_tags">
 <code class="sig-name descname">bulk_load_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tags</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tags" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Raise an exception if a tag fails to load. Default,
+True.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of tags to load in a single multicall. Default,
+100</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_tasks">
 <code class="sig-name descname">bulk_load_tasks</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">task_ids</em>, <em class="sig-param">request=False</em>, <em class="sig-param">err=True</em>, <em class="sig-param">size=100</em>, <em class="sig-param">results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#bulk_load_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.bulk_load_tasks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load many taskinfo dicts from a koji client session and a sequence
+of task IDs.</p>
+<p>Returns an OrderedDict associating the individual IDs with their
+resulting taskinfo.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="kojismokydingo.bulk_load_users">
@@ -583,6 +636,22 @@ substituted into the ordered dict for the result.</p>
 <p>If results is non-None, it must support dict assignment, and will
 be used in place of a newly allocated OrderedDict to store and
 return the results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.hub_version">
+<code class="sig-name descname">hub_version</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kojismokydingo/#hub_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.hub_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">session.getKojiVersion</span></code> which caches the results on
+the session and splits the value into a tuple of ints for easy
+comparison.</p>
+<p>If the getKojiVersion method isn't implemented on the hub, we
+presume that we're version 1.22 <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">22)</span></code> which is the last
+version before getKojiVersion was added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -743,12 +812,12 @@ fails. Default, with a minimum of <code class="docutils literal notranslate"><sp
         <li class="right" >
           <a href="../siftylang/" title="Sifty Dingo Filtering Language"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../">kojismokydingo 0.9.7 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

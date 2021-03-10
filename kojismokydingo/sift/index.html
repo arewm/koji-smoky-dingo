@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>Sift API Reference &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>Sift API Reference &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../users/" title="kojismokydingo.users"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -74,6 +74,11 @@ Sifter and Sieve were good names for something that filters stuff.</p>
 <p>Usage: <code class="docutils literal notranslate"><span class="pre">(flagged</span> <span class="pre">NAME</span> <span class="pre">[NAME...])</span></code></p>
 <p>filters for info dicts which have been marked with any of the
 given named flags</p>
+<dl class="attribute">
+<dt id="kojismokydingo.sift.Flagged.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ('?',)</em><a class="headerlink" href="#kojismokydingo.sift.Flagged.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="kojismokydingo.sift.Flagged.check">
 <code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">_session</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Flagged.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Flagged.check" title="Permalink to this definition">¶</a></dt>
@@ -246,6 +251,11 @@ info_dicts sequence.</p>
 <p>Usage: <code class="docutils literal notranslate"><span class="pre">(not</span> <span class="pre">EXPR</span> <span class="pre">[EXPR...])</span></code></p>
 <p>filters for info dicts which match none of the sub expressions.</p>
 <dl class="attribute">
+<dt id="kojismokydingo.sift.LogicNot.aliases">
+<code class="sig-name descname">aliases</code><em class="property"> = ('!',)</em><a class="headerlink" href="#kojismokydingo.sift.LogicNot.aliases" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="kojismokydingo.sift.LogicNot.name">
 <code class="sig-name descname">name</code><em class="property"> = 'not'</em><a class="headerlink" href="#kojismokydingo.sift.LogicNot.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -326,7 +336,7 @@ Sieve class available with a name of <code class="xref py py-obj docutils litera
 
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.check">
-<em class="property">abstract </em><code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override to return True if the predicate matches the given
 info dict.</p>
 <p>This is used by the default <a class="reference internal" href="#kojismokydingo.sift.Sieve.run" title="kojismokydingo.sift.Sieve.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a> implementation in a filter.
@@ -369,16 +379,22 @@ the sifter has its <code class="xref py py-obj docutils literal notranslate"><sp
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.prep">
 <code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">info_dicts</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.prep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override if some decoration of info_dicts is necessary. This
-allows bulk operations to be performed over the entire set of
-info dicts to be filtered, rather than one at a time in the
-<a class="reference internal" href="#kojismokydingo.sift.Sieve.check" title="kojismokydingo.sift.Sieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dd><p>Override if some bulk pre-loading operations are necessary.</p>
+<p>This is used by the default <a class="reference internal" href="#kojismokydingo.sift.Sieve.run" title="kojismokydingo.sift.Sieve.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a> implementation to allow bulk
+operations to be performed over the entire set of info dicts
+to be filtered, rather than one at a time in the <a class="reference internal" href="#kojismokydingo.sift.Sieve.check" title="kojismokydingo.sift.Sieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>
+method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="method">
+<dt id="kojismokydingo.sift.Sieve.receive_options">
+<code class="sig-name descname">receive_options</code><span class="sig-paren">(</span><em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.receive_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.receive_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.run">
@@ -394,8 +410,8 @@ info_dicts sequence.</p>
 
 <dl class="method">
 <dt id="kojismokydingo.sift.Sieve.set_options">
-<code class="sig-name descname">set_options</code><span class="sig-paren">(</span><em class="sig-param">**options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.set_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.set_options" title="Permalink to this definition">¶</a></dt>
-<dd><p>assign keyword arguments</p>
+<code class="sig-name descname">set_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/sift/#Sieve.set_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.Sieve.set_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>override to accept keyword arguments relevant to the sieve</p>
 </dd></dl>
 
 </dd></dl>
@@ -683,12 +699,12 @@ not a Symbol, raises a SifterError.</p>
         <li class="right" >
           <a href="../users/" title="kojismokydingo.users"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

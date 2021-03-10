@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Core API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -152,6 +152,23 @@ omitted.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.builds.bulk_move_builds">
+<code class="sig-name descname">bulk_move_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">srctag</em>, <em class="sig-param">dsttag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_move_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_move_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move a large number of builds using multicalls of tagBuildBypass and
+untagBuildBypass.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.bulk_move_nvrs">
+<code class="sig-name descname">bulk_move_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">srctag</em>, <em class="sig-param">dsttag</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_move_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_move_nvrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move a large number of NVRs using multicalls of tagBuildBypass and
+untagBuildBypass.</p>
+<p>NVRs will be resolved to builds. If strict is True then any
+missing builds will result in a NoSuchBuild exception being
+raised. Otherwise missing builds will be ignored.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.builds.bulk_tag_builds">
 <code class="sig-name descname">bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -217,6 +234,75 @@ exist</p></li>
 <li><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p></li>
 <li><p><strong>koji.GenericError</strong> -- If strict and a tag policy prevents
 tagging</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.bulk_untag_builds">
+<code class="sig-name descname">bulk_untag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_untag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_untag_builds" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>koji.ClientSession</em>) -- an active koji session</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) -- Destination tag's name or ID</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- Build infos to be untagged</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Force untagging. Bypasses policy. Default, False</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Send untagging notifications. Default, False</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of untagging operations to perform in a single
+multicall. Default, 100</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Raise an exception and discontinue execution at the
+first error. Default, False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>]</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.bulk_untag_nvrs">
+<code class="sig-name descname">bulk_untag_nvrs</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">nvrs</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#bulk_untag_nvrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.bulk_untag_nvrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Untags a large number of builds using multicall invocations of
+untagBuildBypass.</p>
+<p>The entire list of NVRs is validated first, checking that such a
+build exists. If strict is True then a missing build will cause a
+NoSuchBuild exception to be raised. If strict is False, then
+missing builds will be omitted from the untagging operation.</p>
+<p>The list of builds is de-duplicated, preserving order of the first
+instance found in the list of NVRs.</p>
+<p>Returns a list of tuples, pairing build info dicts with the result
+of an untagBuildBypass call for that build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>koji.ClientSession</em>) -- an active koji session</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) -- Tag's name or ID</p></li>
+<li><p><strong>nvrs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) -- list of NVRs</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Bypass policy checks</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Start tagNotification tasks to send a notification
+email for every untagging event. Default, do not send
+notifications.  Warning, sending hundreds or thousands of
+tagNotification tasks can be overwhelming for the hub and may
+impact the system.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of untagging calls to make per multicall
+chunk. Default is 100</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Stop at the first failure. Default, continue after
+any failures. Errors will be available in the return results.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../#kojismokydingo.NoSuchBuild" title="kojismokydingo.NoSuchBuild"><strong>kojismokydingo.NoSuchBuild</strong></a> -- If strict and an NVR does not
+exist</p></li>
+<li><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p></li>
+<li><p><strong>koji.GenericError</strong> -- If strict and a tag policy prevents
+untagging</p></li>
 </ul>
 </dd>
 </dl>
@@ -435,6 +521,43 @@ with the underlying wrapped build info from the request.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="kojismokydingo.builds.iter_bulk_move_builds">
+<code class="sig-name descname">iter_bulk_move_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">srctag</em>, <em class="sig-param">dsttag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_move_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_move_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves a large number of builds from one tag to another using
+multicall invocations of tagBuildBypass and untagBuildBypass.
+Builds are specified by build info dicts.</p>
+<p>yields lists of tuples containing a build info dict and either
+None if tagging/untagging was successful, or a fault dict if the
+tagging or untagging failed. This gives the caller a chance to
+record the results of each multicall and to present feedback to a
+user to indicate that the operations are continuing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>srctag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- Source tag's name or ID. Builds will be removed
+from this tag.</p></li>
+<li><p><strong>dsttag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- Destination tag's name or ID. Builds will be added
+to this tag.</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- Build infos to be tagged</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Force tagging/untagging. Re-tags if necessary, bypasses
+policy. Default, False</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Send tagging/untagging notifications. Default, False</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of tagging operations to perform in a single
+multicall. Default, 100</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Raise an exception and discontinue execution at the
+first error. Default, False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>]]</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="kojismokydingo.builds.iter_bulk_tag_builds">
 <code class="sig-name descname">iter_bulk_tag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_tag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_tag_builds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tags a large number of builds using multicall invocations of
@@ -446,12 +569,43 @@ feedback to a user to indicate that the operations are continuing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) -- Destination tag's name or ID</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- Destination tag's name or ID</p></li>
 <li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- Build infos to be tagged</p></li>
 <li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Force tagging. Re-tags if necessary, bypasses
 policy. Default, False</p></li>
 <li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Send tagging notifications. Default, False</p></li>
 <li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of tagging operations to perform in a single
+multicall. Default, 100</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Raise an exception and discontinue execution at the
+first error. Default, False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>]]</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../#kojismokydingo.NoSuchTag" title="kojismokydingo.NoSuchTag"><strong>kojismokydingo.NoSuchTag</strong></a> -- If tag does not exist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kojismokydingo.builds.iter_bulk_untag_builds">
+<code class="sig-name descname">iter_bulk_untag_builds</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tag</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">force=False</em>, <em class="sig-param">notify=False</em>, <em class="sig-param">size=100</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#iter_bulk_untag_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.iter_bulk_untag_builds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Untags a large number of builds using multicall invocations of
+untagBuildBypass. Builds are specified by build info dicts.</p>
+<p>yields lists of tuples containing a build info dict and the result
+of the untagBuildBypass call for that build. This gives the caller
+a chance to record the results of each multicall, and to present
+feedback to a user to indicate that the operations are continuing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- Tag's name or ID</p></li>
+<li><p><strong>build_infos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) -- Build infos to be untagged</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Force untagging, bypasses policy. Default, False</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Send untagging notifications. Default, False</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) -- Count of untagging operations to perform in a single
 multicall. Default, 100</p></li>
 <li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) -- Raise an exception and discontinue execution at the
 first error. Default, False</p></li>
@@ -544,13 +698,13 @@ package names are returned.</p>
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Core API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

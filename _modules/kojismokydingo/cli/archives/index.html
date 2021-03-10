@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.cli.archives &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -74,15 +74,28 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">pretty_json</span><span class="p">,</span> <span class="n">resplit</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">bulk_load_builds</span>
-<span class="kn">from</span> <span class="nn">..archives</span> <span class="k">import</span> \
-    <span class="n">filter_archives</span><span class="p">,</span> <span class="n">gather_build_archives</span><span class="p">,</span> <span class="n">gather_latest_archives</span>
+<span class="kn">from</span> <span class="nn">..archives</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">filter_archives</span><span class="p">,</span> <span class="n">gather_build_archives</span><span class="p">,</span> <span class="n">gather_latest_archives</span><span class="p">,</span> <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..builds</span> <span class="k">import</span> <span class="n">BUILD_COMPLETE</span><span class="p">,</span> <span class="n">build_dedup</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;ArchiveFiltering&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LatestArchives&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ListBuildArchives&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;cli_latest_tag_archives&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cli_list_build_archives&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="cli_list_build_archives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.cli_list_build_archives">[docs]</a><span class="k">def</span> <span class="nf">cli_list_build_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
                             <span class="n">atypes</span><span class="o">=</span><span class="p">(),</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
                             <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                             <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the ``koji list-build-archives`` command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">loaded</span> <span class="o">=</span> <span class="n">bulk_load_builds</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">nvrs</span><span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
@@ -111,6 +124,9 @@
                             <span class="n">atypes</span><span class="o">=</span><span class="p">(),</span> <span class="n">arches</span><span class="o">=</span><span class="p">(),</span> <span class="n">rpmkeys</span><span class="o">=</span><span class="p">(),</span>
                             <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the ``koji latest-archives`` command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">found</span> <span class="o">=</span> <span class="n">gather_latest_archives</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">tagname</span><span class="p">,</span> <span class="n">btype</span><span class="p">,</span>
                                    <span class="n">rpmkeys</span><span class="p">,</span> <span class="n">inherit</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
@@ -129,14 +145,13 @@
 
 
 <div class="viewcode-block" id="ArchiveFiltering.archive_arguments"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ArchiveFiltering.archive_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">archive_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">goptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span>
 
         <span class="n">addarg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span>
         <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output archive information as JSON&quot;</span><span class="p">)</span>
 
-        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--urls&quot;</span><span class="p">,</span> <span class="s2">&quot;-U&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
-               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">goptions</span><span class="o">.</span><span class="n">topurl</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">goptions</span><span class="o">.</span><span class="n">topdir</span><span class="p">,</span>
+        <span class="n">addarg</span><span class="p">(</span><span class="s2">&quot;--urls&quot;</span><span class="p">,</span> <span class="s2">&quot;-U&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+               <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;as_url&quot;</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Present archives as URLs using the configured topurl.&quot;</span>
                <span class="s2">&quot; Default: use the configured topdir&quot;</span><span class="p">)</span>
 
@@ -209,7 +224,13 @@
         <span class="n">keys</span> <span class="o">=</span> <span class="n">resplit</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">keys</span> <span class="ow">and</span> <span class="n">options</span><span class="o">.</span><span class="n">unsigned</span><span class="p">:</span>
             <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">options</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span></div></div>
+        <span class="n">options</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span>
+
+        <span class="n">goptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goptions</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">as_url</span><span class="p">:</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">goptions</span><span class="o">.</span><span class="n">topurl</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">goptions</span><span class="o">.</span><span class="n">topdir</span></div></div>
 
 
 <div class="viewcode-block" id="ListBuildArchives"><a class="viewcode-back" href="../../../../kojismokydingo/cli/archives/#kojismokydingo.cli.archives.ListBuildArchives">[docs]</a><span class="k">class</span> <span class="nc">ListBuildArchives</span><span class="p">(</span><span class="n">AnonSmokyDingo</span><span class="p">,</span> <span class="n">ArchiveFiltering</span><span class="p">):</span>
@@ -313,7 +334,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -321,7 +342,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

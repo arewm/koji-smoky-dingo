@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.cli &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -411,8 +411,7 @@
 <span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">lines</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">txt</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="int_or_str"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.int_or_str">[docs]</a><span class="k">def</span> <span class="nf">int_or_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -466,6 +465,9 @@
 
 <span class="sd">      * the `SmokyDingo.activate` method authenticates with the hub</span>
 
+<span class="sd">      * the `SmokyDingo.pre_handle` method verifies that any required</span>
+<span class="sd">        permissions are present for the user</span>
+
 <span class="sd">      * the `SmokyDingo.handle` method invokes the actual work of the</span>
 <span class="sd">        sub-command</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -473,8 +475,9 @@
     <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;misc&quot;</span>
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;A CLI Plugin&quot;</span>
 
-    <span class="c1"># set of permission names that can grant use of this command. None</span>
-    <span class="c1"># or empty for anonymous access. Checked in pre_handle</span>
+    <span class="c1"># permission name required for use of this command. A value of</span>
+    <span class="c1"># None indicates anonymous access. Checked in the pre_handle</span>
+    <span class="c1"># method.</span>
     <span class="n">permission</span> <span class="o">=</span> <span class="kc">None</span>
 
 
@@ -527,6 +530,13 @@
 
 
 <div class="viewcode-block" id="SmokyDingo.parser"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo.parser">[docs]</a>    <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new ArgumentParser instance and decorates it with</span>
+<span class="sd">        arguments from the `arguments` method.</span>
+
+<span class="sd">        :rtype: `argparse.ArgumentParser`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">invoke</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="n">argp</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="n">invoke</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">(</span><span class="n">argp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">argp</span></div>
@@ -544,7 +554,7 @@
 <div class="viewcode-block" id="SmokyDingo.validate"><a class="viewcode-back" href="../../../kojismokydingo/cli/#kojismokydingo.cli.SmokyDingo.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override to perform validation on options values. Return value is</span>
-<span class="sd">        ignored, use parser.error if needed.</span>
+<span class="sd">        ignored, use `parser.error` if needed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">pass</span></div>
@@ -652,8 +662,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A SmokyDingo which upon activation will connect to koji hub, but</span>
 <span class="sd">    will not authenticate. This means only hub RPC endpoints which do</span>
-<span class="sd">    not enforce require some permission will work. This is normal for</span>
-<span class="sd">    many information-only endpoints.</span>
+<span class="sd">    not require some permission will work. This is normal for most</span>
+<span class="sd">    read-only informational endpoints.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
@@ -753,14 +763,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

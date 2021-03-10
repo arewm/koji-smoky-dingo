@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>Koji Smoky Dingo preview 0.9.7 Release Notes &#8212; kojismokydingo 0.9.7 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Koji Smoky Dingo preview 0.9.6 Release Notes" href="../v0.9.6/" />
+    <link rel="prev" title="Release Notes" href="../" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../v0.9.6/" title="Koji Smoky Dingo preview 0.9.6 Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Release Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Release Notes</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-smoky-dingo-preview-0-9-7-release-notes">
+<h1>Koji Smoky Dingo preview 0.9.7 Release Notes<a class="headerlink" href="#koji-smoky-dingo-preview-0-9-7-release-notes" title="Permalink to this headline">¶</a></h1>
+<p><em>March 10, 2021</em></p>
+<p>I hope that this will be the final preview release, with the next
+version being the official 1.0.0. There may be some final API
+adjustments (renaming, etc) but otherwise I am happy with the current
+set of features.</p>
+<p>Still chugging along!</p>
+<ul class="simple">
+<li><p>removed AllGroupPkgs tag sieve in favor of the GroupPkgs sieve with a
+new <code class="docutils literal notranslate"><span class="pre">require_all:</span></code> option</p></li>
+<li><p>removed <code class="xref py py-obj docutils literal notranslate"><span class="pre">Sifter._convert_sym_aliases</span></code> in favor of using the aliases field
+on the <code class="xref py py-obj docutils literal notranslate"><span class="pre">LogicNot</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">Flagged</span></code> sieves</p></li>
+<li><p>the <code class="xref py py-obj docutils literal notranslate"><span class="pre">Sieve.check</span></code> method is no longer abstract, and by default returns
+<a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></a> (ie. no results are included). This allows Sieve subclasses to
+opt to override the <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> method without having to still include an
+otherwise useless <code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code> implementation as well.</p></li>
+<li><p>added command <code class="docutils literal notranslate"><span class="pre">bulk-untag-builds</span></code> and related API</p></li>
+<li><p>added command <code class="docutils literal notranslate"><span class="pre">bulk-move-builds</span></code> and related API</p></li>
+<li><p>removed the <code class="docutils literal notranslate"><span class="pre">--strict</span></code> option from <code class="docutils literal notranslate"><span class="pre">list-component-builds</span></code>
+command, checking of input NVRs is mandatory now</p></li>
+</ul>
+<p>Closed Issues:
+&lt;<a class="reference external" href="https://github.com/obriencj/koji-smoky-dingo/milestone/6?closed=1">https://github.com/obriencj/koji-smoky-dingo/milestone/6?closed=1</a>&gt;</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../v0.9.6/"
+                        title="next chapter">Koji Smoky Dingo preview 0.9.6 Release Notes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/release_notes/v0.9.7.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../v0.9.6/" title="Koji Smoky Dingo preview 0.9.6 Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Release Notes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Release Notes</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Christopher O&#39;Brien.
+      Last updated on 2021-03-10.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>

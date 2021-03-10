@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift.tags &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.sift.tags &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../parse/" title="kojismokydingo.sift.parse"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Sift API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -97,10 +97,11 @@ included in the results.</p>
 <dl class="method">
 <dt id="kojismokydingo.sift.tags.ArchSieve.prep">
 <code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#ArchSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.ArchSieve.prep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override if some decoration of info_dicts is necessary. This
-allows bulk operations to be performed over the entire set of
-info dicts to be filtered, rather than one at a time in the
-<a class="reference internal" href="#kojismokydingo.sift.tags.ArchSieve.check" title="kojismokydingo.sift.tags.ArchSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dd><p>Override if some bulk pre-loading operations are necessary.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation to allow bulk
+operations to be performed over the entire set of info dicts
+to be filtered, rather than one at a time in the <a class="reference internal" href="#kojismokydingo.sift.tags.ArchSieve.check" title="kojismokydingo.sift.tags.ArchSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>
+method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
@@ -169,10 +170,11 @@ included in the results.</p>
 <dl class="method">
 <dt id="kojismokydingo.sift.tags.CompareLatestSieve.prep">
 <code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#CompareLatestSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.CompareLatestSieve.prep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override if some decoration of info_dicts is necessary. This
-allows bulk operations to be performed over the entire set of
-info dicts to be filtered, rather than one at a time in the
-<a class="reference internal" href="#kojismokydingo.sift.tags.CompareLatestSieve.check" title="kojismokydingo.sift.tags.CompareLatestSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dd><p>Override if some bulk pre-loading operations are necessary.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation to allow bulk
+operations to be performed over the entire set of info dicts
+to be filtered, rather than one at a time in the <a class="reference internal" href="#kojismokydingo.sift.tags.CompareLatestSieve.check" title="kojismokydingo.sift.tags.CompareLatestSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>
+method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
@@ -390,10 +392,11 @@ included in the results.</p>
 <dl class="method">
 <dt id="kojismokydingo.sift.tags.GroupSieve.prep">
 <code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupSieve.prep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override if some decoration of info_dicts is necessary. This
-allows bulk operations to be performed over the entire set of
-info dicts to be filtered, rather than one at a time in the
-<a class="reference internal" href="#kojismokydingo.sift.tags.GroupSieve.check" title="kojismokydingo.sift.tags.GroupSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dd><p>Override if some bulk pre-loading operations are necessary.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation to allow bulk
+operations to be performed over the entire set of info dicts
+to be filtered, rather than one at a time in the <a class="reference internal" href="#kojismokydingo.sift.tags.GroupSieve.check" title="kojismokydingo.sift.tags.GroupSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>
+method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
@@ -407,7 +410,7 @@ info dicts to be filtered, rather than one at a time in the
 <dt id="kojismokydingo.sift.tags.GroupPkgSieve">
 <em class="property">class </em><code class="sig-name descname">GroupPkgSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">group</em>, <em class="sig-param">pkg</em>, <em class="sig-param">*pkgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.SymbolSieve" title="kojismokydingo.sift.SymbolSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.SymbolSieve</span></code></a>, <a class="reference internal" href="../common/#kojismokydingo.sift.common.CacheMixin" title="kojismokydingo.sift.common.CacheMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.common.CacheMixin</span></code></a></p>
-<p>usage: <code class="docutils literal notranslate"><span class="pre">(group-pkg</span> <span class="pre">GROUP</span> <span class="pre">PKG</span> <span class="pre">[PKG...])</span></code></p>
+<p>usage: <code class="docutils literal notranslate"><span class="pre">(group-pkg</span> <span class="pre">GROUP</span> <span class="pre">PKG</span> <span class="pre">[PKG...]</span> <span class="pre">[require_all:</span> <span class="pre">False])</span></code></p>
 <p>Matches tags which have the given install group, which also
 contains any of the given <code class="docutils literal notranslate"><span class="pre">PKG</span></code> names</p>
 <dl class="method">
@@ -436,10 +439,11 @@ included in the results.</p>
 <dl class="method">
 <dt id="kojismokydingo.sift.tags.GroupPkgSieve.prep">
 <code class="sig-name descname">prep</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">taginfos</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve.prep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve.prep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override if some decoration of info_dicts is necessary. This
-allows bulk operations to be performed over the entire set of
-info dicts to be filtered, rather than one at a time in the
-<a class="reference internal" href="#kojismokydingo.sift.tags.GroupPkgSieve.check" title="kojismokydingo.sift.tags.GroupPkgSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a> method</p>
+<dd><p>Override if some bulk pre-loading operations are necessary.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation to allow bulk
+operations to be performed over the entire set of info dicts
+to be filtered, rather than one at a time in the <a class="reference internal" href="#kojismokydingo.sift.tags.GroupPkgSieve.check" title="kojismokydingo.sift.tags.GroupPkgSieve.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>
+method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
@@ -450,7 +454,7 @@ info dicts to be filtered, rather than one at a time in the
 <dl class="method">
 <dt id="kojismokydingo.sift.tags.GroupPkgSieve.set_options">
 <code class="sig-name descname">set_options</code><span class="sig-paren">(</span><em class="sig-param">require_all=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/tags/#GroupPkgSieve.set_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.tags.GroupPkgSieve.set_options" title="Permalink to this definition">¶</a></dt>
-<dd><p>assign keyword arguments</p>
+<dd><p>override to accept keyword arguments relevant to the sieve</p>
 </dd></dl>
 
 </dd></dl>
@@ -801,13 +805,13 @@ Sieves.</p>
         <li class="right" >
           <a href="../parse/" title="kojismokydingo.sift.parse"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Sift API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

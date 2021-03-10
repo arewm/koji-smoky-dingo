@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift.tags &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.sift.tags &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.sift</a> &#187;</li> 
@@ -763,7 +763,7 @@
 
 <div class="viewcode-block" id="GroupPkgSieve"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupPkgSieve">[docs]</a><span class="k">class</span> <span class="nc">GroupPkgSieve</span><span class="p">(</span><span class="n">SymbolSieve</span><span class="p">,</span> <span class="n">CacheMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    usage: ``(group-pkg GROUP PKG [PKG...])``</span>
+<span class="sd">    usage: ``(group-pkg GROUP PKG [PKG...] [require_all: False])``</span>
 
 <span class="sd">    Matches tags which have the given install group, which also</span>
 <span class="sd">    contains any of the given ``PKG`` names</span>
@@ -778,7 +778,6 @@
 
 
 <div class="viewcode-block" id="GroupPkgSieve.set_options"><a class="viewcode-back" href="../../../../kojismokydingo/sift/tags/#kojismokydingo.sift.tags.GroupPkgSieve.set_options">[docs]</a>    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">require_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">GroupPkgSieve</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">require_all</span><span class="o">=</span><span class="n">require_all</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">require_all</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">require_all</span><span class="p">)</span></div>
 
 
@@ -825,35 +824,7 @@
                 <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
-
-
-<span class="k">class</span> <span class="nc">AllGroupPkgSieve</span><span class="p">(</span><span class="n">GroupPkgSieve</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    usage: ``(all-group-pkg GROUP PKG [PKG...])``</span>
-
-<span class="sd">    Matches tags which have the given install group, which must also</span>
-<span class="sd">    contain all of the given ``PKG`` names</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;all-group-pkg&quot;</span>
-
-
-    <span class="k">def</span> <span class="nf">get_info_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
-        <span class="c1"># borrow the same cache from group-pkg</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sifter</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="s2">&quot;group-pkg&quot;</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">taginfo</span><span class="p">):</span>
-        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_info_cache</span><span class="p">(</span><span class="n">taginfo</span><span class="p">)</span>
-        <span class="n">groups</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_pkgs&quot;</span><span class="p">)</span>
-
-        <span class="n">pkgs</span> <span class="o">=</span> <span class="n">groups</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pkgs</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-
 <span class="n">DEFAULT_TAG_INFO_SIEVES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">AllGroupPkgSieve</span><span class="p">,</span>
     <span class="n">ArchSieve</span><span class="p">,</span>
     <span class="n">BuildTagSieve</span><span class="p">,</span>
     <span class="n">CompareLatestSieve</span><span class="p">,</span>
@@ -970,7 +941,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.sift</a> &#187;</li> 
@@ -978,7 +949,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

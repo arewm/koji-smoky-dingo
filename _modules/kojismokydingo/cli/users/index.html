@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.cli.users &#8212; kojismokydingo 0.9.6 documentation</title>
+    <title>kojismokydingo.cli.users &#8212; kojismokydingo 0.9.7 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" accesskey="U">kojismokydingo.cli</a> &#187;</li> 
@@ -74,10 +74,33 @@
 <span class="kn">from</span> <span class="nn">..users</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">USER_NORMAL</span><span class="p">,</span> <span class="n">USER_HOST</span><span class="p">,</span> <span class="n">USER_GROUP</span><span class="p">,</span>
     <span class="n">STATUS_NORMAL</span><span class="p">,</span> <span class="n">STATUS_BLOCKED</span><span class="p">,</span>
-    <span class="n">collect_cgs</span><span class="p">,</span> <span class="n">collect_perminfo</span><span class="p">,</span> <span class="n">collect_userinfo</span><span class="p">)</span>
+    <span class="n">collect_cgs</span><span class="p">,</span> <span class="n">collect_perminfo</span><span class="p">,</span> <span class="n">collect_userinfo</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;CGInfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PermissionInfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;UserInfo&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;cli_cginfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cli_perminfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cli_userinfo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_userstatus_str&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_usertype_str&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_usertype_str"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.get_usertype_str">[docs]</a><span class="k">def</span> <span class="nf">get_usertype_str</span><span class="p">(</span><span class="n">userinfo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provide a human-readable label for the koji user type enum value</span>
+<span class="sd">    in a koji user info dict.</span>
+
+<span class="sd">    :param userinfo: user info</span>
+<span class="sd">    :type userinfo: dict</span>
+
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">val</span> <span class="o">=</span> <span class="n">userinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;usertype&quot;</span><span class="p">,</span> <span class="n">USER_NORMAL</span><span class="p">)</span> <span class="ow">or</span> <span class="n">USER_NORMAL</span>
     <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">USER_NORMAL</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;NORMAL (user)&quot;</span>
@@ -90,6 +113,16 @@
 
 
 <div class="viewcode-block" id="get_userstatus_str"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.get_userstatus_str">[docs]</a><span class="k">def</span> <span class="nf">get_userstatus_str</span><span class="p">(</span><span class="n">userinfo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provide a human-readable label for the koji user status enum value</span>
+<span class="sd">    in a koji user info dict.</span>
+
+<span class="sd">    :param userinfo: user info</span>
+<span class="sd">    :type userinfo: dict</span>
+
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">val</span> <span class="o">=</span> <span class="n">userinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="n">STATUS_NORMAL</span><span class="p">)</span> <span class="ow">or</span> <span class="n">STATUS_NORMAL</span>
     <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">STATUS_NORMAL</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;NORMAL (enabled)&quot;</span>
@@ -100,6 +133,9 @@
 
 
 <div class="viewcode-block" id="cli_userinfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.cli_userinfo">[docs]</a><span class="k">def</span> <span class="nf">cli_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the ``koji userinfo`` command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">userinfo</span> <span class="o">=</span> <span class="n">collect_userinfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
@@ -163,6 +199,9 @@
 <div class="viewcode-block" id="cli_perminfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.cli_perminfo">[docs]</a><span class="k">def</span> <span class="nf">cli_perminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">permission</span><span class="p">,</span>
                  <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">by_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the ``koji perminfo`` command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">perminfo</span> <span class="o">=</span> <span class="n">collect_perminfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">permission</span><span class="p">)</span>
 
@@ -217,6 +256,9 @@
 
 
 <div class="viewcode-block" id="cli_cginfo"><a class="viewcode-back" href="../../../../kojismokydingo/cli/users/#kojismokydingo.cli.users.cli_cginfo">[docs]</a><span class="k">def</span> <span class="nf">cli_cginfo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the ``koji cginfo`` command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">cgs</span> <span class="o">=</span> <span class="n">collect_cgs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -291,7 +333,7 @@
         <li class="right" >
           <a href="../../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../" >kojismokydingo</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../" >kojismokydingo.cli</a> &#187;</li> 
@@ -299,7 +341,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-01-16.
+      Last updated on 2021-03-10.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
