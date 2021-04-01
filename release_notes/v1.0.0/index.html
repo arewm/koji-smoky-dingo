@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="English">
+  <head>
+    <meta charset="utf-8" />
+    <title>Koji Smoky Dingo 1.0.0 Release Notes &#8212; kojismokydingo 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Koji Smoky Dingo preview 0.9.7 Release Notes" href="../v0.9.7/" />
+    <link rel="prev" title="Release Notes" href="../" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../v0.9.7/" title="Koji Smoky Dingo preview 0.9.7 Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Release Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" accesskey="U">Release Notes</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="koji-smoky-dingo-1-0-0-release-notes">
+<h1>Koji Smoky Dingo 1.0.0 Release Notes<a class="headerlink" href="#koji-smoky-dingo-1-0-0-release-notes" title="Permalink to this headline">¶</a></h1>
+<p><em>April 1, 2021</em></p>
+<p>We've finally made it to the first official full release!</p>
+<p>Version 1.0.0 provides the following koji client commands</p>
+<ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">affected—targets</span></code> Show targets which would be impacted by
+modifications to the given tag</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">block-env-var</span></code> Blocks a mock environment variable from a tag.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">block-rpm-macro</span></code> Blocks a mock RPM macro from a tag.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">bulk—move-builds</span></code> Move a large amount of builds, bypassing the
+creation of individual tasks.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">bulk—tag-builds</span></code> Tag a large amount of builds, bypassing the
+creation of individual tasks.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">bulk—untag-builds</span></code> Untag a large amount of builds, bypassing
+the creation of individual tasks.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">cginfo</span></code> Show content generators and their permitted users</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">check—hosts</span></code> Show builder hosts which haven't been checking in lately</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">client-config</span></code> Show settings for client profiles</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">filter-builds</span></code> Filter a list of NVRs by various criteria</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">filter-tags</span></code> Filter a list of tags by various criteria</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">latest-archives</span></code> Show selected latest archives from a tag</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-btypes</span></code> Show build types</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-build-archives</span></code> Show selected archives attached to a build</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-cgs</span></code> Show content generators</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-component-builds</span></code> Show builds which were used to produce others</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-env-vars</span></code> Show all inherited mock environment variables for a tag</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-rpm-macros</span></code> Show all inherited mock RPM macros for a tag</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">list-tag-extras</span></code> Show all inherited extra fields for a tag</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">open</span></code> Opens a brower to the info page for data types</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">perminfo</span></code> Show information about a permission</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">remove-env-var</span></code> Removes a mock environment variable from a tag.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">remove-rpm-macro</span></code> Removes a mock RPM macro from a tag.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">renum—tag-inheritance</span></code> Adjust the priority values of a tag to
+maintain the same inheritance order, but to create an even amount of
+space between each entry.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">set-env-var</span></code> Sets, unsets, or blocks the value of a mock
+environment variable on a tag.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">set-rpm-macro</span></code> Sets, unsets, or blocks the value of a mock RPM
+macro on a tag.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">swap—tag-inheritance</span></code> Adjust the inheritance of a tag by
+replacing one entry for another. If both entries are already parents
+of a tag, then swap the priority of the two.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">userinfo</span></code> Show information about a user account</p></li>
+</ul>
+<p>And the following standalone filtering commands</p>
+<ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ksd-filter-builds</span></code> Similar to <code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">filter-builds</span></code> but usable as a
+shebang</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ksd-filter-tags</span></code> Similar to <code class="xref py py-obj docutils literal notranslate"><span class="pre">koji</span> <span class="pre">filter-tagss</span></code> but usable as a
+shebang</p></li>
+</ul>
+<p>The version 1 stream will continue to support Python 2 while
+maintaining API compatability moving forward. Version 2.0 will drop
+Python 2 support, and may introduce API compatability changes.</p>
+<p>Changes from the v0.9.7 preview release:</p>
+<ul class="simple">
+<li><p>fixed error with strict option still being looked for from the
+<code class="docutils literal notranslate"><span class="pre">list-component-builds</span></code> command</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_by_state</span></code> renamed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_builds_by_state</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_by_tags</span></code> ranamed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_builds_by_tags</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_imported</span></code> renamed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_imported_builds</span></code></p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../"
+                        title="previous chapter">Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../v0.9.7/"
+                        title="next chapter">Koji Smoky Dingo preview 0.9.7 Release Notes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/release_notes/v1.0.0.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../v0.9.7/" title="Koji Smoky Dingo preview 0.9.7 Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../" title="Release Notes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../" >Release Notes</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020-2021, Christopher O&#39;Brien.
+      Last updated on 2021-04-01.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
+    </div>
+  </body>
+</html>

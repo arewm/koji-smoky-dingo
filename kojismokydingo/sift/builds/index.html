@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.sift.builds &#8212; kojismokydingo 0.9.7 documentation</title>
+    <title>kojismokydingo.sift.builds &#8212; kojismokydingo 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../" title="Sift API Reference"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Sift API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -797,8 +797,8 @@ method</p>
 
 <dl class="class">
 <dt id="kojismokydingo.sift.builds.StateSieve">
-<em class="property">class </em><code class="sig-name descname">StateSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">pattern</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#StateSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.ItemSieve" title="kojismokydingo.sift.ItemSieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.ItemSieve</span></code></a></p>
+<em class="property">class </em><code class="sig-name descname">StateSieve</code><span class="sig-paren">(</span><em class="sig-param">sifter</em>, <em class="sig-param">name</em>, <em class="sig-param">*names</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#StateSieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../#kojismokydingo.sift.Sieve" title="kojismokydingo.sift.Sieve"><code class="xref py py-class docutils literal notranslate"><span class="pre">kojismokydingo.sift.Sieve</span></code></a></p>
 <p>Usage: <code class="docutils literal notranslate"><span class="pre">(state</span> <span class="pre">BUILD_STATE</span> <span class="pre">[BUILD_STATE...])</span></code></p>
 <p>filters for dict infos whose <code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code> key matches any of the given
 koji build states. Build states may be specified as either an
@@ -810,10 +810,23 @@ integer or one of the following strings or symbols</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">FAILED</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">CANCELED</span></code></p></li>
 </ul>
-<dl class="attribute">
-<dt id="kojismokydingo.sift.builds.StateSieve.field">
-<code class="sig-name descname">field</code><em class="property"> = 'state'</em><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve.field" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="kojismokydingo.sift.builds.StateSieve.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/kojismokydingo/sift/builds/#StateSieve.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.sift.builds.StateSieve.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to return True if the predicate matches the given
+info dict.</p>
+<p>This is used by the default <code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code> implementation in a filter.
+Only the info dicts which return True from this method will be
+included in the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) -- The info dict to be checked.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="kojismokydingo.sift.builds.StateSieve.name">
@@ -1047,13 +1060,13 @@ Sieves.</p>
         <li class="right" >
           <a href="../" title="Sift API Reference"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Sift API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-03-10.
+        &#169; Copyright 2020-2021, Christopher O&#39;Brien.
+      Last updated on 2021-04-01.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

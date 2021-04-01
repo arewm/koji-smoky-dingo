@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo &#8212; kojismokydingo 0.9.7 documentation</title>
+    <title>kojismokydingo &#8212; kojismokydingo 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -514,7 +514,7 @@
 <div class="viewcode-block" id="bulk_load_rpm_sigs"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_rpm_sigs">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_rpm_sigs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">rpm_ids</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up a chunking multicall to fetch the signatures for a list of</span>
-<span class="sd">    RPM via session.queryRPMSigs for each ID in rpm_ids.</span>
+<span class="sd">    RPM via `session.queryRPMSigs` for each ID in rpm_ids.</span>
 
 <span class="sd">    Returns an OrderedDict associating the individual RPM IDs with their</span>
 <span class="sd">    resulting RPM signature lists.</span>
@@ -612,7 +612,7 @@
 <div class="viewcode-block" id="bulk_load_buildroots"><a class="viewcode-back" href="../../kojismokydingo/#kojismokydingo.bulk_load_buildroots">[docs]</a><span class="k">def</span> <span class="nf">bulk_load_buildroots</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">broot_ids</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up a chunking multicall to fetch the buildroot data via</span>
-<span class="sd">    session.getBuildroot for each ID in broot_ids.</span>
+<span class="sd">    `session.getBuildroot` for each ID in broot_ids.</span>
 
 <span class="sd">    Returns an OrderedDict associating the individual buildroot IDs</span>
 <span class="sd">    with their resulting buildroot info dicts.</span>
@@ -643,6 +643,28 @@
 <span class="sd">    If results is non-None, it must support dict assignment, and will</span>
 <span class="sd">    be used in place of a newly allocated OrderedDict to store and</span>
 <span class="sd">    return the results.</span>
+
+<span class="sd">    :param session: active koji session</span>
+
+<span class="sd">    :type session: koji.ClientSession</span>
+
+<span class="sd">    :param users: user names or IDs to load</span>
+
+<span class="sd">    :type users: Iterator[str] or Iterator[int]</span>
+
+<span class="sd">    :param err: halt on problems and raise an exception. Default, True</span>
+
+<span class="sd">    :type err: bool, optional</span>
+
+<span class="sd">    :param size: number of users to load in a single</span>
+<span class="sd">      multicall. Default, 100</span>
+
+<span class="sd">    :type size: int, optional</span>
+
+<span class="sd">    :param results: dict to store results in. Default, allocate a new</span>
+<span class="sd">      OrderedDict</span>
+
+<span class="sd">    :type results: dict, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">users</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
@@ -1137,13 +1159,13 @@
         <li class="right" >
           <a href="../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-03-10.
+        &#169; Copyright 2020-2021, Christopher O&#39;Brien.
+      Last updated on 2021-04-01.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

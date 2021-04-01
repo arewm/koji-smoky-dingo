@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.7 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" accesskey="U">kojismokydingo</a> &#187;</li> 
       </ul>
@@ -108,9 +108,9 @@
     <span class="s2">&quot;decorate_builds_btypes&quot;</span><span class="p">,</span>
     <span class="s2">&quot;decorate_builds_cg_list&quot;</span><span class="p">,</span>
     <span class="s2">&quot;decorate_builds_maven&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;filter_by_state&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;filter_by_tags&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;filter_imported&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filter_builds_by_state&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filter_builds_by_tags&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filter_imported_builds&quot;</span><span class="p">,</span>
     <span class="s2">&quot;gather_buildroots&quot;</span><span class="p">,</span>
     <span class="s2">&quot;gather_rpm_sigkeys&quot;</span><span class="p">,</span>
     <span class="s2">&quot;gather_component_build_ids&quot;</span><span class="p">,</span>
@@ -995,8 +995,8 @@
     <span class="k">return</span> <span class="n">build_infos</span></div>
 
 
-<div class="viewcode-block" id="filter_by_tags"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_by_tags">[docs]</a><span class="k">def</span> <span class="nf">filter_by_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
-                   <span class="n">limit_tag_ids</span><span class="o">=</span><span class="p">(),</span> <span class="n">lookaside_tag_ids</span><span class="o">=</span><span class="p">()):</span>
+<div class="viewcode-block" id="filter_builds_by_tags"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_builds_by_tags">[docs]</a><span class="k">def</span> <span class="nf">filter_builds_by_tags</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
+                          <span class="n">limit_tag_ids</span><span class="o">=</span><span class="p">(),</span> <span class="n">lookaside_tag_ids</span><span class="o">=</span><span class="p">()):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param build_infos: build infos to filter through</span>
@@ -1046,7 +1046,7 @@
     <span class="k">return</span> <span class="n">itervalues</span><span class="p">(</span><span class="n">builds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_by_state">[docs]</a><span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">BUILD_COMPLETE</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_builds_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_builds_by_state">[docs]</a><span class="k">def</span> <span class="nf">filter_builds_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">BUILD_COMPLETE</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dicts, return a generator of those</span>
 <span class="sd">    matching the given state.</span>
@@ -1082,7 +1082,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">build_infos</span> <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">state</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="filter_imported"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_imported">[docs]</a><span class="k">def</span> <span class="nf">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">by_cg</span><span class="o">=</span><span class="p">(),</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_imported_builds"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.filter_imported_builds">[docs]</a><span class="k">def</span> <span class="nf">filter_imported_builds</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="n">by_cg</span><span class="o">=</span><span class="p">(),</span> <span class="n">negate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a sequence of build info dicts, yield those which are</span>
 <span class="sd">    imports.</span>
@@ -1377,9 +1377,9 @@
         <span class="n">lookaside</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookaside_tag_ids</span>
 
         <span class="k">if</span> <span class="n">limit</span> <span class="ow">or</span> <span class="n">lookaside</span><span class="p">:</span>
-            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">filter_by_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
-                                         <span class="n">limit_tag_ids</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
-                                         <span class="n">lookaside_tag_ids</span><span class="o">=</span><span class="n">lookaside</span><span class="p">)</span>
+            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">filter_builds_by_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">,</span>
+                                                <span class="n">limit_tag_ids</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+                                                <span class="n">lookaside_tag_ids</span><span class="o">=</span><span class="n">lookaside</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">build_infos</span></div>
 
 
@@ -1402,7 +1402,7 @@
             <span class="n">negate</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imported</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imported</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="n">build_infos</span> <span class="o">=</span> <span class="n">decorate_builds_cg_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">filter_imported</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span><span class="p">,</span> <span class="n">negate</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filter_imported_builds</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cg_list</span><span class="p">,</span> <span class="n">negate</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">build_infos</span></div>
@@ -1410,7 +1410,7 @@
 
 <div class="viewcode-block" id="BuildFilter.filter_by_state"><a class="viewcode-back" href="../../../kojismokydingo/builds/#kojismokydingo.builds.BuildFilter.filter_by_state">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_infos</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">filter_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+            <span class="n">build_infos</span> <span class="o">=</span> <span class="n">filter_builds_by_state</span><span class="p">(</span><span class="n">build_infos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">build_infos</span></div>
 
@@ -1472,14 +1472,14 @@
         <li class="right" >
           <a href="../../../py-modindex/" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../" >kojismokydingo</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-03-10.
+        &#169; Copyright 2020-2021, Christopher O&#39;Brien.
+      Last updated on 2021-04-01.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>

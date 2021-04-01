@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="English">
   <head>
     <meta charset="utf-8" />
-    <title>kojismokydingo.builds &#8212; kojismokydingo 0.9.7 documentation</title>
+    <title>kojismokydingo.builds &#8212; kojismokydingo 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" accesskey="U">Core API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -371,8 +371,8 @@ data.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="kojismokydingo.builds.filter_by_state">
-<code class="sig-name descname">filter_by_state</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">state=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_by_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_by_state" title="Permalink to this definition">¶</a></dt>
+<dt id="kojismokydingo.builds.filter_builds_by_state">
+<code class="sig-name descname">filter_builds_by_state</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">state=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_builds_by_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_builds_by_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dicts, return a generator of those
 matching the given state.</p>
 <ul class="simple">
@@ -401,8 +401,8 @@ the COMPLETE state are returned</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="kojismokydingo.builds.filter_by_tags">
-<code class="sig-name descname">filter_by_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">limit_tag_ids=()</em>, <em class="sig-param">lookaside_tag_ids=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_by_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_by_tags" title="Permalink to this definition">¶</a></dt>
+<dt id="kojismokydingo.builds.filter_builds_by_tags">
+<code class="sig-name descname">filter_builds_by_tags</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">build_infos</em>, <em class="sig-param">limit_tag_ids=()</em>, <em class="sig-param">lookaside_tag_ids=()</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_builds_by_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_builds_by_tags" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -420,8 +420,8 @@ with to pass. Default, do not filter against any tag membership.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="kojismokydingo.builds.filter_imported">
-<code class="sig-name descname">filter_imported</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">by_cg=()</em>, <em class="sig-param">negate=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_imported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported" title="Permalink to this definition">¶</a></dt>
+<dt id="kojismokydingo.builds.filter_imported_builds">
+<code class="sig-name descname">filter_imported_builds</code><span class="sig-paren">(</span><em class="sig-param">build_infos</em>, <em class="sig-param">by_cg=()</em>, <em class="sig-param">negate=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kojismokydingo/builds/#filter_imported_builds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kojismokydingo.builds.filter_imported_builds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a sequence of build info dicts, yield those which are
 imports.</p>
 <p>build_infos may have been decorated by the
@@ -698,13 +698,13 @@ package names are returned.</p>
         <li class="right" >
           <a href="../archives/" title="kojismokydingo.archives"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 0.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../">kojismokydingo 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../" >Core API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Christopher O&#39;Brien.
-      Last updated on 2021-03-10.
+        &#169; Copyright 2020-2021, Christopher O&#39;Brien.
+      Last updated on 2021-04-01.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
